@@ -88,9 +88,10 @@ GNU项目旨在为Unix系统管理员打造出一套可用的类Unix环境。这
 - Wayland
 
 ### 1.3.2 Linux常用的桌面环境
-    - KDE（K desktop environment，K桌面环境）
-    - GNOME（ GNU network object model environment，GNU网络对象模型环境）
-    - Cinnamon：Cinnamon桌面是由Linux Mint发行版于2011年开发的，旨在延续原先的GNOME 2桌面。   
-    - MATE：MATE桌面是由讨厌GNOME 3的Arch Linux用户于2011年开发的。该桌面融入了一些GNOME 3的特性（比如替换了任务栏）​，但是维持了GNOME 2的整体观感。
+
+- KDE（K desktop environment，K桌面环境）
+- GNOME（ GNU network object model environment，GNU网络对象模型环境）
+- Cinnamon：Cinnamon桌面是由Linux Mint发行版于2011年开发的，旨在延续原先的GNOME 2桌面。   
+- MATE：MATE桌面是由讨厌GNOME 3的Arch Linux用户于2011年开发的。该桌面融入了一些GNOME 3的特性（比如替换了任务栏）​，但是维持了GNOME 2的整体观感。
 
 ## 1.4 应用软件
