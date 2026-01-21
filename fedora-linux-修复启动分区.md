@@ -32,6 +32,7 @@ mount /dev/sda1 /mnt/boot/efi  # EFI 分区
 ```bash
 for i in /dev /dev/pts /proc /sys /run /sys/firmware/efi/efivars; do sudo mount -B $i /mnt$i; done
 ```
+
 # 2. 然后 chroot
 
 ``` bash
@@ -43,7 +44,9 @@ for i in /dev /dev/pts /proc /sys /run /sys/firmware/efi/efivars; do sudo mount 
 ```bash
 dnf reinstall shim-x64 grub2-efi-x64 grub2-common
 ```
+
 这会确保 `/boot/efi/EFI/fedora/shimx64.efi` 和 `grubx64.efi` 都是最新的且带有正确签名。
+
 # 4. 重新生成 initramfs
 
 ```bash
@@ -55,7 +58,9 @@ dracut --force
 ```bash
 grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
+
 注意：即使是 UEFI 系统，在 Fedora 中现在的推荐做法也是更新 `/boot/grub2/grub.cfg`，因为它会自动链接到 EFI 分区。
+
 # 6. 验证文件
 
 ```bash
