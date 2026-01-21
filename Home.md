@@ -17,6 +17,7 @@
 
 ## 常见问题
 
-- [[Fedora-Linux-修复启动分区]]
+- [[fedora-Linux-修复启动分区]]
+- [[fedora-linux-nvidian-安装英伟达显卡驱动并开启硬件编解码]]
 
 ## 疑难杂症
