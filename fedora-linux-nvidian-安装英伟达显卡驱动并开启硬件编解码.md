@@ -162,36 +162,25 @@ modinfo -F version nvidia
 
 如果输出错误信息或者没有输出，请等待（官方文档的描述是最长5分钟）模块编译完成再尝试。
 
-可以使用这个命令查看是否编译完成 `systemctl list-jobs` ，如果有akmod.service说明还在编译中，等待任务结束消失驱动才可用。
+可以使用这个命令查看是否编译完成 `systemctl list-jobs` ，如果有akmod.service说明还在编译中，等待任务结束消失驱动才可用。（试了几次都没输出，如果是不使用安全启动的话直接启动没什么问题，其实驱动程序已经正常编译和安装了。需要开启安全启动，确保万无一失不建议直接重启，执行下面出现错误后的操作，在完全确定后我会考虑删除上面这段说明。）
 
-- 如果一直没有输出，重启系统
+- （使用了安全启动后，不建议直接重启）重启系统
 
 ```bash
 systemctl reboot
 ```
 
-- 如果重启进入桌面直接黑屏了可以参考以下操作，注意操作顺序
+- 如果重启进入桌面直接黑屏了,cpu带核显的话还是能进桌面，但是会出现模块未加载的提示，解决办法参考以下操作，注意操作顺序
 
 ```bash
-# 1.验证驱动是否安装成功，有输出版本号即成功，报错即失败，失败则进行下面操作
+# 1. 验证驱动是否安装成功，有输出版本号即成功，报错即失败，失败则进行下面操作
 nvidia-smi
 
-# 2.更新软件包
+# 2. 更新软件包
 sudo dnf upgrade -y
 
-# 3.1 查看软件包安装记录
-sudo dnf history list
-
-# 3.2 回退到akmod-nvidia软件包之前，也就是取消安装显卡驱动，报错的话可以手动执行下一步
-sudo dnf history undo <这是ID>
-
-# 没有执行上面 3.1 和 3.2 执行下面 3.1 和3.2
-
-# 3.1 手动卸载相应软件包
- sudo dnf remove akmod-nvidia
-
-# 3.2 手动重新安装驱动
-sudo dnf install akmod-nvidia
+# 3. 重装相关软件包
+sudo dnf reinstall akmod-nvidia
 
 # 4.检查内核模块是否加载
 lsmod | grep nvidia
@@ -200,19 +189,24 @@ lsmod | grep nvidia
 rpm -qa | grep nvidia
 sudo dnf list installed | grep nvidia
 
-# 6.视情况而定，gdm换为你使用的显示管理器
+# 6. (可选) 停止的显示管理器
+#gnome 桌面环境
 sudo systemctl stop gdm
 
+# kde桌面环境(未来可能会更换)
+sudo systemctl stop sddm
+
 # 7.强制重建 NVIDIA 内核模块
-sudo akmods --force
-sudo dracut --force --kver $(uname -r)
+sudo akmods --rebuild --force
+sudo dracut --force 
 
 # 8.检查 Secure Boot 状态
 mokutil --sb-state
 
 # 9.如果启用了 Secure Boot
-sudo kmodgenca -a
+sudo kmodgenca -a --force
 sudo mokutil --import /etc/pki/akmods/certs/public_key.der
+# 在 /usr/share/doc/akmods/README.secureboot 文件中有英文说明。
 
 # 10.重启
 sudo reboot
@@ -221,19 +215,7 @@ sudo reboot
 nvidia-smi
 ```
 
-- 在启动界面（具有 Fedora logo 的界面）可能显示大意是Nvidia 不可用，回到Nouveau的错误提示，不用管，可能是因为 NVIDIA 内核模块没有签名。
-
-- 重新运行上一步 生成密钥 与导入和注册密钥 的步骤。
-
-- 完成和重启后再次检测
-
-```bash
-modinfo -F version nvidia
-# 以及
-nvidia-smi
-```
-
-如果输出正常，能看到驱动和显卡信息则说明安装完成。
+- 如果输出正常，能看到驱动和显卡信息则说明安装完成。
 
 # 5. 其他依赖
 
