@@ -1,0 +1,78 @@
+⚠️注意： 再安装驱动程序后需要重新导入密钥，如显卡驱动。
+# 1. 安全启动简介及说明
+
+- 安全启动是一项自 Fedora 18 及更高版本引入的功能，旨在保护 EFI 固件下的启动阶段，并被 Windows 10 及以上系统所要求。
+
+- 从 Fedora 36 开始，akmods 软件包支持使用自生成的密钥自动为本地构建的内核模块 (kmod) 进行签名。此密钥必须导入到 EFI 固件中（您需要拥有访问 EFI 固件的权限）。
+
+- 无需禁用安全启动（甚至不需要切换到 BIOS 兼容模式）。
+# 2. 保护密钥
+
+- 由于安全启动密钥存储在本地的计算机上（默认位于 /etc/pki/akmods 目录），您可能需要考虑对根文件系统进行加密，以保护该密钥。请务必将此视为一项强制性要求，或者考虑将密钥转移到外部（且安全）的位置，甚至可以使用硬件令牌。
+
+# 3. 导入密钥
+
+- 安装以下工具：
+
+```bash
+sudo dnf install kmodtool akmods mokutil openssl
+```
+
+步骤如下所述。更多信息请参考 /usr/share/doc/akmods/README.secureboot。
+
+- 使用默认值生成密钥：
+
+```bash
+sudo kmodgenca -a
+```
+
+- 现在您需要在 MOK 中注册公钥，使用以下命令注册带有证书的新密钥对：
+
+```bash
+sudo mokutil --import /etc/pki/akmods/certs/public_key.der
+```
+
+Mokutil 会要求生成一个密码来注册公钥。您很快将需要这个密码。
+
+需要重启系统以便 MOK 注册新的公钥。
+
+```bash
+systemctl reboot
+```
+
+- 在下一次启动时，系统会启动 MOK 管理程序，您需要选择“Enroll MOK”。
+选择“Continue”以注册密钥，或选择“View key 0”查看已注册的密钥。
+
+选择“Yes”确认注册。
+
+- 系统会提示您输入之前生成的密码。
+
+警告：此时键盘布局被映射为 QWERTY！
+
+- 新密钥注册成功后，系统会提示您重启。
+
+- 更新 BIOS/EFI
+
+- 当更新 BIOS / EFI 时，请注意您可能需要重新导入安全启动密钥。您可以使用导入命令来完成：
+
+```bash
+sudo mokutil --import /etc/pki/akmods/certs/public_key.der
+```
+
+# 4. 如何禁用安全启动
+
+仍可以从 EFI 固件中禁用安全启动。
+
+# 5. 重新导入密钥
+
+```bash
+# 1.检查 Secure Boot 状态
+mokutil --sb-state
+
+# 2.如果启用了 Secure Boot
+sudo kmodgenca -a
+sudo mokutil --import /etc/pki/akmods/certs/public_key.der
+```
+参考文章：
+
+[Secure Boot](https://rpmfusion.org/Howto/Secure%20Boot)
