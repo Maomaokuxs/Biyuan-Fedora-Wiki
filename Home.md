@@ -19,5 +19,6 @@
 
 - [[fedora-Linux-修复启动分区]]
 - [[fedora-linux-nvidian-安装英伟达显卡驱动并开启硬件编解码]]
+- [[fedora-linux-音频相关组件]]
 
 ## 疑难杂症
