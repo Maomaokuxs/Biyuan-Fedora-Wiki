@@ -286,7 +286,10 @@ Build targets in project: 1
 # 错误示例
 $ meson setup build
 
-Directory already configured. Just run your build command (e.g. ninja) and Meson will regenerate as necessary. Run "meson setup --reconfigure" to force Meson to regenerate. If build failures persist, run "meson setup --wipe" to rebuild from scratch using the same options as passed when configuring the build.
+Directory already configured. Just run your build command (e.g. ninja) and Meson will regenerate as necessary.
+Run "meson setup --reconfigure" to force Meson to regenerate. 
+If build failures persist, run "meson setup --wipe" to rebuild from scratch using the same options as passed 
+when configuring the build.
 
 # 如果配置已存在但缺少依赖需要重新构建目录
 meson setup build --reconfigure
@@ -300,6 +303,7 @@ ls -a /usr/lib64/dri | grep "nvidia_drv_video.so"
 # 得到输出为：vidia_drv_video.so 说明驱动成功安装。
 
 # 5.2 使用vainfo命令
+# 需要安装 libva-utils 软件包
 vainfo
 # 输出示例：
 Trying display: wayland  
@@ -317,7 +321,7 @@ vainfo: Supported profile and entrypoints
 
 # 6.(可选) 如果解码 H.264 还是卡顿，那么需要执行以下命令将 fedora 官方仓库提供的只包含自由/开源编解码器的 FFmpeg 更改为 RPM Fusion 仓库中包含完整编解码器（包括非自由如 H.264）的 FFmpeg
 # 在执行之前确保开启了 RPM Fusion 仓库的软件源
-sudo dnf install ffmpeg ffmpeg-libs --allowerasing
+sudo dnf swap ffmpeg-free ffmpeg --allowerasing
 ```
 
 # 6. 卸载驱动
