@@ -1,16 +1,20 @@
+# 说明
+
 ⚠️注意： 再安装驱动程序后需要重新导入密钥，如显卡驱动。
-# 1. 安全启动简介及说明
+
+## 1. 安全启动简介及说明
 
 - 安全启动是一项自 Fedora 18 及更高版本引入的功能，旨在保护 EFI 固件下的启动阶段，并被 Windows 10 及以上系统所要求。
 
 - 从 Fedora 36 开始，akmods 软件包支持使用自生成的密钥自动为本地构建的内核模块 (kmod) 进行签名。此密钥必须导入到 EFI 固件中（您需要拥有访问 EFI 固件的权限）。
 
 - 无需禁用安全启动（甚至不需要切换到 BIOS 兼容模式）。
-# 2. 保护密钥
+
+## 2. 保护密钥
 
 - 由于安全启动密钥存储在本地的计算机上（默认位于 /etc/pki/akmods 目录），您可能需要考虑对根文件系统进行加密，以保护该密钥。请务必将此视为一项强制性要求，或者考虑将密钥转移到外部（且安全）的位置，甚至可以使用硬件令牌。
 
-# 3. 导入密钥
+## 3. 导入密钥
 
 - 安装以下工具：
 
@@ -59,11 +63,11 @@ systemctl reboot
 sudo mokutil --import /etc/pki/akmods/certs/public_key.der
 ```
 
-# 4. 如何禁用安全启动
+## 4. 如何禁用安全启动
 
 仍可以从 EFI 固件中禁用安全启动。
 
-# 5. 重新导入密钥
+## 5. 重新导入密钥
 
 ```bash
 # 1.检查 Secure Boot 状态
@@ -73,6 +77,7 @@ mokutil --sb-state
 sudo kmodgenca -a
 sudo mokutil --import /etc/pki/akmods/certs/public_key.der
 ```
+
 参考文章：
 
-[Secure Boot](https://rpmfusion.org/Howto/Secure%20Boot)
+- [Secure Boot](https://rpmfusion.org/Howto/Secure%20Boot)
