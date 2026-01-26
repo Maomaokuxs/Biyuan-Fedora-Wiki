@@ -13,17 +13,21 @@
 
 ## 基础知识
 
-- [什么是Fedora]
+- [[什么是Fedora]]
 - [[Linux组成]]
 
 ## 常用软件的使用
 
-[[fedora-linux-hyprland-安装图形化提权工具]]
+- [[fedora-linux-hyprland-安装图形化提权工具]]
+- [[fedora-linux-dnf-常用命令]]
+- [[fedora-linux-snapper-实现快照功能]]
 
 ## 常见问题
 
 - [[fedora-Linux-修复启动分区]]
 - [[fedora-linux-nvidian-安装英伟达显卡驱动并开启硬件编解码]]
 - [[fedora-linux-音频相关组件]]
+- [[fedora-linux-secure-boot-实现安全启动]]
+- [[linux-将home目录中的默认中文文件夹改为英文]]
 
-## 疑难杂症
+## 已知bug
