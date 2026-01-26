@@ -6,7 +6,7 @@
 
 - WM: KWin (Wayland)
 
-# 1. 启用自由和非自由软件仓库
+## 1. 启用自由和非自由软件仓库
 
 ```bash
 sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
@@ -19,7 +19,7 @@ sudo dnf config-manager setopt fedora-cisco-openh264.enabled=1
 sudo dnf config-manager --enable fedora-cisco-openh264
 ```
 
-# 2. 检查GPU型号
+## 2. 检查GPU型号
 
 ```bash
 /sbin/lspci | grep -e VGA
@@ -42,7 +42,7 @@ sudo dnf config-manager --enable fedora-cisco-openh264
 - [Configuration - RPM Fusion](https://rpmfusion.org/Configuration#Installing_Free_and_Nonfree_Repositories)
 - [Fedora 安装 NVIDIA 驱动的方法 （Fedora 42、43）](https://zhuanlan.zhihu.com/p/1904281445544989652)
 
-# 3.检测安全启动并安装密钥
+## 3.检测安全启动并安装密钥
 
 ## 3.1 检测安全启动（Secure Boot）并安装密钥
 
@@ -61,7 +61,7 @@ mokutil --sb-state
 
 如果显示 `SecureBoot enabled` 则说明系统启用了 安全启动，需要进行下面的签名步骤，如果不想了解安全启动直接跳至3.4。
 
-## 3.2 安全启动简介及说明
+### 3.2 安全启动简介及说明
 
 - 安全启动是一项自 Fedora 18 及更高版本引入的功能，旨在保护 EFI 固件下的启动阶段，并被 Windows 10 及以上系统所要求。
 
@@ -69,11 +69,11 @@ mokutil --sb-state
 
 - 无需禁用安全启动（甚至不需要切换到 BIOS 兼容模式）。
 
-## 3.3 保护密钥
+### 3.3 保护密钥
 
 - 由于安全启动密钥存储在本地的计算机上（默认位于 /etc/pki/akmods 目录），您可能需要考虑对根文件系统进行加密，以保护该密钥。请务必将此视为一项强制性要求，或者考虑将密钥转移到外部（且安全）的位置，甚至可以使用硬件令牌。
 
-## 3. 4 导入密钥
+### 3. 4 导入密钥
 
 - 安装以下工具：
 
@@ -126,9 +126,9 @@ sudo mokutil --import /etc/pki/akmods/certs/public_key.der
 
 [Secure Boot](https://rpmfusion.org/Howto/Secure%20Boot)
 
-# 4. 安装驱动
+## 4. 安装驱动
 
-Fedora 的 RPM Fusion 仓库提供 akmod-nvidia 驱动，akmod 指的是 Automatic Kernel Module，基于 DKMS (Dynamic Kernal Module Support) ，能在系统内核升级时自动触发Nvidia内核模块重新编译，自动保证驱动与内核兼容，免去每次更新内核都要手动编译Nvidia内核模块的麻烦。另外 akmod-nvidia 自动处理相关依赖，不会与系统配置冲突，使用官方脚本安装需要提前手动安装依赖 gcc 、kernel-devel 等，因此 Fedora 推荐使用 RPM Fusion 的驱动。 
+Fedora 的 RPM Fusion 仓库提供 akmod-nvidia 驱动，akmod 指的是 Automatic Kernel Module，基于 DKMS (Dynamic Kernal Module Support) ，能在系统内核升级时自动触发Nvidia内核模块重新编译，自动保证驱动与内核兼容，免去每次更新内核都要手动编译Nvidia内核模块的麻烦。另外 akmod-nvidia 自动处理相关依赖，不会与系统配置冲突，使用官方脚本安装需要提前手动安装依赖 gcc 、kernel-devel 等，因此 Fedora 推荐使用 RPM Fusion 的驱动。
 
 - 安装前更新系统
 
@@ -217,7 +217,7 @@ nvidia-smi
 
 - 如果输出正常，能看到驱动和显卡信息则说明安装完成。
 
-# 5. 其他依赖
+## 5. 其他依赖
 
 - **NVENC / NVDEC**
 
@@ -324,7 +324,7 @@ vainfo: Supported profile and entrypoints
 sudo dnf swap ffmpeg-free ffmpeg --allowerasing
 ```
 
-# 6. 卸载驱动
+## 6. 卸载驱动
 
 ```bash
 sudo dnf remove xorg-x11-drv-nvidia\*

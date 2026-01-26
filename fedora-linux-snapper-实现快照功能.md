@@ -1,4 +1,8 @@
-# 1. 安装snapper，snapper-gui
+# 说明
+
+本篇文章旨在提供 snapper 使用的一些基础方式。
+
+## 1. 安装snapper，snapper-gui
 
 ```bash
 # 1.启用corp仓库
@@ -20,20 +24,20 @@ sudo python3 setup.py install
  snapper-gui
  
  # 5.安装完之后可以删除克隆的仓库文件，工作文件夹在主目录，默认文件在$HOME/
-``` 
+```
 
 参考文档：
 
-1.  [snapper-gui](https://github.com/ricardomv/snapper-gui)
+- [snapper-gui](https://github.com/ricardomv/snapper-gui)
 
-#  2. 显示当前挂载的btrfs子卷
+## 2. 显示当前挂载的btrfs子卷
 
 ``` bash
 # 确定能实现快照的子卷
 sudo btrfs subvolume list /
-``` 
+```
 
-# 3. 为根目录创建配置文件
+## 3. 为根目录创建配置文件
 
 ``` bash
 # 1.创建配置文件
@@ -55,11 +59,11 @@ sudo tee /etc/sysconfig/snapper << 'EOF'
 # System config for snapper
 # See snapper(8) for details
 
-## Path:	Systems/Snapper
-## Description:	System configuration for Snapper
-## Type:		text
-## Default:		""
-## ServiceRestart:	-
+## Path:Systems/Snapper
+## Description:System configuration for Snapper
+## Type:text
+## Default:""
+## ServiceRestart:
 
 # Enable/disable cron jobs.
 # Disabling the cron jobs is especially useful when
@@ -122,7 +126,7 @@ sudo btrfs subvolume list /
 # 说明已经创建了对应子卷的快照配置文件，如果要删除配置文件请执行下面命令，将root改为相对应的配置文件ID，请勿直接删除该/etc/snapper/configs/目录下的文件，因为在/etc/sysconfig/snapper中SNAPPER_CONFIGS参数记录着已经创建了的配置文件ID。
 sudo snapper -c root delete-config 2>/dev/null
 # ⚠️注意：配置文件删除后对应的快照也会被删除。
-``` 
+```
 
 - 根据 `/usr/share/snapper/config-templates/default` 处的默认配置模板创建一个配置文件 `/etc/snapper/configs/root`。
 - 在 `/subvolume/.snapshots` 处创建一个子卷，用于存储未来该配置文件产生的子卷。子卷的路径将会是 `/subvolume/.snapshots/#/snapshot`，`#` 是子卷序号。
@@ -140,13 +144,13 @@ sudo snapper -c root delete-config 2>/dev/null
 │       └── ...
 ```
 
-- 将 `config` 加入到 `/etc/conf.d/snapper` 的 `SNAPPER_CONFIGS` 中，
-
+- 将 `config` 加入到 `/etc/conf.d/snapper` 的 `SNAPPER_CONFIGS` 中。
 
 参考文档：
 
-1. [snapper-archwiki](https://wiki.archlinuxcn.org/wiki/Snapper)
-# 4. 优化配置文件(结合自身需求，不必与下面相同)
+- [snapper-archwiki](https://wiki.archlinuxcn.org/wiki/Snapper)
+
+## 4. 优化配置文件(结合自身需求，不必与下面相同)
 
 ```bash
 # 1.查看当前配置
@@ -180,7 +184,7 @@ echo "=== Home 配置 ==="
 sudo snapper -c home get-config | grep -E "(SPACE_LIMIT|TIMELINE_CREATE|NUMBER_LIMIT)"
 ```
 
-# 5.  启用自动服务
+## 5. 启用自动服务
 
 ``` bash
 # 1.1启用定时服务
@@ -213,10 +217,11 @@ sudo dnf copr enable douglascdev/dnf5-autosnapper && sudo dnf install dnf5-autos
 
 参考文档：
 
-1. [dnf5-autosnapper](https://github.com/douglascdev/dnf5-autosnapper)
-# 6. 快照操作指南
+- [dnf5-autosnapper](https://github.com/douglascdev/dnf5-autosnapper)
 
-## 6.0 快速预览
+## 6. 快照操作指南
+
+### 6.0 快速预览
 
 ```bash
 # 1.创建快照
@@ -239,7 +244,7 @@ sudo snapper -c root cleanup timeline
 sudo snapper -c root cleanup number
 ```
 
-## 6.1 手动创建快照
+### 6.1 手动创建快照
 
 ``` bash
 # 1.创建手动快照
@@ -251,7 +256,7 @@ sudo snapper -c root create --description "系统更新前"
 sudo snapper -c home create --description "重要文件备份"
 ```
 
-## 6.2  查看和管理快照
+### 6.2  查看和管理快照
 
 ```bash
 # 1.列出所有快照
@@ -268,7 +273,7 @@ sudo snapper -c root status PREVIOUS（前一个快照）..CURRENT（当前快�
 sudo snapper -c root delete SNAPSHOT_NUMBER（快照ID）
 ```
 
-## 6.3 从快照恢复文件
+### 6.3 从快照恢复文件
 
 ```bash
 # 查看快照内容

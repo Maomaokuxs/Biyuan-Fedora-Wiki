@@ -1,8 +1,10 @@
+# 说明
+
 在 Fedora 43 中，音频系统默认基于 **PipeWire** 构建，它集成了低延迟音频处理和多媒体流管理。如果你需要确保音频系统的完整性，或是在最小化安装的基础上构建音频环境，可以按照以下步骤操作。
 
 ---
 
-# 1. 核心音频驱动与服务
+## 1. 核心音频驱动与服务
 
 除了`alsa-firmware`没有预装，其他软件包在`fedora 43`上都安装了。
 
@@ -19,13 +21,13 @@ Fedora 43 使用 `PipeWire` 代替了传统的 PulseAudio 和 Jack。确保这�
 sudo dnf install pipewire pipewire-pulseaudio pipewire-alsa pipewire-jack-audio-connection-kit wireplumber alsa-firmware
 ```
 
-# 2. 增强多媒体解码器 (Codecs)
+## 2. 增强多媒体解码器 (Codecs)
 
 因为`fedora`是百分百开源的系统所以一些专利格式都不受支持。
 
 Fedora 官方库不包含某些受限格式的解码器（如 AAC, MP3, H.264 等）。需要启用 **RPM Fusion** 仓库。
 
-## 2.1 启用 RPM Fusion
+### 2.1 启用 RPM Fusion
 
 安装了显卡驱动那一节就没必要再执行这一步了
 
@@ -35,7 +37,7 @@ sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-releas
 
 ```
 
-## 2.2 安装多媒体增强包
+### 2.2 安装多媒体增强包
 
 ```bash
 # 1. 安装多媒体组包
@@ -48,7 +50,7 @@ dnf group info multimedia
 sudo dnf install gstreamer1-plugins-bad-free-extras gstreamer1-plugins-ugly gstreamer1-plugins-bad-freeworld
 ```
 
-# 3. (可选) 音频管理与可视化工具
+## 3. (可选) 音频管理与可视化工具
 
 如果你需要更精细地控制音量、路由或查看频谱，可以安装以下实用工具：
 
@@ -59,7 +61,7 @@ sudo dnf install gstreamer1-plugins-bad-free-extras gstreamer1-plugins-ugly gstr
 | **helvum** | 一个 PipeWire 节点连接管理工具 | `sudo dnf install helvum` |
 | **alsamixer** | 终端界面的底层驱动增益调节工具 | `sudo dnf install alsa-utils` |
 
-# 4. 检查服务状态
+## 4. 检查服务状态
 
 ```bash
 # 查看 PipeWire 和 WirePlumber 状态
