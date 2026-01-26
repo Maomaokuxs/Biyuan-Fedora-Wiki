@@ -3,6 +3,7 @@
 ## 🔧 配置 bellsoft-java25 为默认 Java
 
 ### **步骤1：查找安装位置**
+
 ```bash
 # bellsoft Java 通常安装在 /usr/lib/jvm/
 ls -la /usr/lib/jvm/ | grep -i bellsoft
@@ -16,6 +17,7 @@ find /usr -name "*bellsoft*" -type d 2>/dev/null
 ```
 
 ### **步骤2：使用 alternatives 配置**
+
 ```bash
 # 查看当前 alternatives 配置
 sudo alternatives --config java
@@ -30,6 +32,7 @@ find /usr/lib/jvm -name "java" -type f | xargs ls -la
 ```
 
 ### **步骤3：验证安装**
+
 ```bash
 # 检查 bellsoft Java 是否正常工作
 /usr/lib/jvm/bellsoft-java25/bin/java -version
@@ -43,6 +46,7 @@ sudo alternatives --set javac /usr/lib/jvm/bellsoft-java25/bin/javac
 ## 📝 快速诊断脚本
 
 运行这个脚本找出正确路径：
+
 ```bash
 #!/bin/bash
 echo "=== 查找 bellsoft-java25 ==="
@@ -77,6 +81,7 @@ sudo alternatives --display java | grep -A5 "link currently points"
 ## 🎯 针对 Gradle 的配置
 
 ### **方案A：设置 JAVA_HOME**
+
 ```bash
 # 找到 bellsoft-java25 的安装路径后
 export JAVA_HOME=/usr/lib/jvm/bellsoft-java25  # 根据实际路径调整
@@ -92,6 +97,7 @@ cd ~/Documents/github/HMCL
 ```
 
 ### **方案B：创建 shell 别名（永久生效）**
+
 ```bash
 # 编辑 ~/.bashrc 或 ~/.zshrc
 nano ~/.bashrc
@@ -112,7 +118,9 @@ gradle25 --version
 ```
 
 ### **方案C：项目级配置**
+
 在 HMCL 项目目录中：
+
 ```bash
 # 创建 gradle.properties 文件
 echo "org.gradle.java.home=/usr/lib/jvm/bellsoft-java25" > gradle.properties
@@ -125,6 +133,7 @@ JAVA_HOME=/usr/lib/jvm/bellsoft-java25 /opt/gradle-9.2.0/bin/gradle clean makeEx
 ## 🔄 如果仍然失败的处理方法
 
 ### **检查 bellsoft-java25 是否包含开发工具**
+
 ```bash
 # 检查是否有 javac
 ls -la /usr/lib/jvm/bellsoft-java25/bin/javac
@@ -135,6 +144,7 @@ dnf list installed | grep bellsoft
 ```
 
 ### **使用 dnf 重新配置**
+
 ```bash
 # 查看 bellsoft 相关包
 dnf list installed "*bellsoft*"
@@ -176,12 +186,14 @@ cd ~/Documents/github/HMCL
 如果 `bellsoft-java25` 仍然缺少 `javac` 或其他开发工具，你可能需要：
 
 1. **安装 OpenJDK 17 作为备选**
+
    ```bash
    sudo dnf install java-17-openjdk-devel
    export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
    ```
 
 2. **使用 HMCL 项目的 wrapper**（它可能自己管理 Java 版本）
+
    ```bash
    cd ~/Documents/github/HMCL
    ./gradlew clean makeExecutables

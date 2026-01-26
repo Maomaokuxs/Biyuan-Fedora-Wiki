@@ -56,8 +56,6 @@ sudo dnf copr enable vaniiiiii/kaczynski-ted
 
 - **维护者**：任何 Fedora 用户都可以创建和维护 COPR 仓库
 
-### 官方支持但非官方内容
-
 - **平台是官方的**：COPR 服务由 Fedora 基础设施团队维护
 
 - **内容是第三方的**：仓库中的软件包由个人或社区维护
