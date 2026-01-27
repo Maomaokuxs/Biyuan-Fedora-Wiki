@@ -4,7 +4,7 @@
 
 ## 0. 当前分区情况
 
-[[images/分区情况.png]]
+[[images/my-photo.png]]
 
 ## 1. 扩大容量
 
