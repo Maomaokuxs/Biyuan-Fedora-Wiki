@@ -232,18 +232,19 @@ sudo dnf install xorg-x11-drv-nvidia-cuda-libs
 视频播放器的硬件解码会用到
 
 ```bash
-sudo dnf install nvidia-vaapi-driver libva-utils vdpauinfo
+sudo dnf install libva-nvidia-driver libva-utils vdpauinfo
 ```
 
-- 处理不能正确安装`nvidia-vaapi-driver`问题
+- 处理不能正确安装`libva-nvidia-driver`问题。
+- 注意一点，在官方仓库中打包的github项目`vidia-vaapi-driver`被称为`libva-nvidia-driver`。
 
 ```bash
 # 0.错误示例
-sudo dnf install nvidia-vaapi-driver
+sudo dnf install libva-nvidia-driver
 仓库更新和加载中:
 仓库加载完成。
 Failed to resolve the transaction:
-No match for argument: nvidia-vaapi-driver
+No match for argument: libva-nvidia-driver
 # 也就是说不能找到相关软件包
 
 # 1. 重新执行第一节启用自由和非自由软件仓库中的命令
@@ -252,11 +253,10 @@ No match for argument: nvidia-vaapi-driver
 sudo dnf makecache
 
 # 3. 再次安装
-sudo dnf install nvidia-vaapi-driver
+sudo dnf install libva-nvidia-driver
 # 如果再次出现上面的错误那就说明仓库中并不包含相关软件包
 # 使用下面命令验证
-sudo dnf search nvidia-vaapi-driver
-# 发现 RPM Fusion 尚未为 Fedora 43 正式打包 nvidia-vaapi-driver 该包通常滞后于新 Fedora 版本几周甚至几个月。
+sudo dnf search libva-nvidia-driver
 # 由此，可以自己先手动编译，等 RPM Fusion 适配打包后再删除自己手动编译的驱动，安装统一打包维护的 nvidia-vaapi-driver 驱动。
 
 # 4.手动编译安装
