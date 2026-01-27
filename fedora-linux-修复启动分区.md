@@ -1,4 +1,4 @@
-## 说明
+# 说明
 
 不建议使用grub2-install命令,Fedora 使用 Shim 和 GRUB 的组合来支持 UEFI Secure Boot，直接使用 grub2-install 会绕过 Secure Boot 安全机制。
 
@@ -6,14 +6,14 @@
 
 ## 1\. 挂载分区（根据你的实际情况调整设备名）
 
-*   一般情况
+- 一般情况
 
 ```plaintext
 mount /dev/sda2 /mnt  # 根分区
 mount /dev/sda1 /mnt/boot/efi  # EFI 分区
 ```
 
-*   对于使用了 btrfs 文件系统并创建了子卷
+- 对于使用了 btrfs 文件系统并创建了子卷
 
 ```plaintext
 mount -o subvol=/@ /dev/sda2/ /mnt  # 根分区
@@ -21,7 +21,7 @@ mount -o subvol=/@home /dev/sda2 /mnt/home
 mount /dev/sda1 /mnt/boot/efi  # EFI 分区
 ```
 
-*   挂载系统 API 虚拟文件系统：
+- 挂载系统 API 虚拟文件系统：
 
 ```plaintext
 for i in /dev /dev/pts /proc /sys /run /sys/firmware/efi/efivars; do sudo mount -B $i /mnt$i; done

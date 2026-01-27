@@ -1,10 +1,10 @@
 # 说明
 
-可以使用 LVM 管理，也可以使用 btrfs 自带的功能。
+可以使用 LVM 管理，也可以使用 btrfs 自带的功能,这一部分后面应该会加上。
 
 ## 0. 当前分区情况
 
-[[images/my-photo.png]]
+[[images/fedora/LVM-btrfs/disk-status-1.png]]
 
 ## 1. 扩大容量
 
@@ -31,19 +31,20 @@ sudo btrfs filesystem resize max /
 # 或指定大小：sudo btrfs filesystem resize +50G /
 ```
 
-# 1.3 扩容后分区挂载情况
+### 1.3 扩容后分区挂载情况
 
-![[Pasted image 20260118153146.png]]
+[[images/fedora/LVM-btrfs/disk-status-2.png]]
 
-# 2.缩小容量
+## 2.缩小容量
 
-## 2.1 缩小btrfs文件系统
+### 2.1 缩小btrfs文件系统
 
 ```bash
 # 缩小100GB
 sudo btrfs filesystem resize -100G /
 ```
-## 2.2 缩小逻辑卷
+
+### 2.2 缩小逻辑卷
 
 ```bash
 # 1. 缩小100GB
@@ -56,13 +57,14 @@ sudo lvdisplay /dev/vgroup0/lvol0 | grep "LV Size"
 sudo pvs
 ```
 
-## 2.3  (可选)迁移数据
+### 2.3  (可选)迁移数据
 
-```bash 
+```bash
 # (可选)迁移需要移除物理卷的大小
 sudo pvmove /dev/nvme1n1p7
 ```
-## 2.4 (可选)移除物理卷
+
+### 2.4 (可选)移除物理卷
 
 ```bash
 # 1. 从卷组中移除物理卷
@@ -72,7 +74,7 @@ sudo vgreduce vgroup0 /dev/nvme1n1p7
 sudo pvremove /dev/nvme1n1p7
 ```
 
-## 2.5. 验证状态
+### 2.5. 验证状态
 
 ```bash
 # 验证移除结果
@@ -80,6 +82,6 @@ sudo pvs
 sudo vgdisplay vgroup0
 ```
 
-## 2.6 缩小容量后
+### 2.6 缩小容量后
 
-![[Pasted image 20260119112503.png]]
+[[images/fedora/LVM-btrfs/disk-status-3.png]]

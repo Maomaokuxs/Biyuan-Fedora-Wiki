@@ -1,26 +1,30 @@
+# 说明
 
-- 创建挂载点
+下面所用的方法是手动修改 /etc/fstab 文件来手动挂载。
+
+## 1.创建挂载点
 
 ```bash
 sudo mkdir /disk/
 ```
 
-- 编辑/etc/fstab文件
+## 2.编辑/etc/fstab文件
 
 ```bash
 vim /etc/fstab
 ```
 
-- 添加文本
+## 3.添加文本
 
-```
+```text
  <file system> <mount point> <type> <optinons> <dump> <pass>
- UUID=   /    btrfs  defaults o  o
+ UUID=<分区号>   /<挂载点>    btrfs  defaults o  o
+# 例如
+UUID=2A887E6B887E3603 /date ntfs default, 0 0
 ```
 
-- 重启
+## 4.重启
 
-- 特殊
+## 5.特殊情况
 
-	如果在window启动中开启了快速启动，会导致该磁盘不能够执行写入操作，需要在windows中关闭快速启动并重启进入windows系统一次。
-	
+如果在window启动中开启了快速启动，会导致该磁盘不能够执行写入操作，需要在windows中关闭快速启动并重启进入windows系统一次。

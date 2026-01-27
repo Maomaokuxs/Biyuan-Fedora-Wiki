@@ -16,10 +16,15 @@
 - [[什么是Fedora]]
 - [[Linux组成]]
 
+## 常用命令
+
+- [[linux-killall-命令]]
+- [[linux-解压文件]]
+- [[fedora-linux-dnf-常用命令]]
+
 ## 常用软件的使用
 
 - [[fedora-linux-hyprland-安装图形化提权工具]]
-- [[fedora-linux-dnf-常用命令]]
 - [[fedora-linux-snapper-实现快照功能]]
 
 ## 常见问题
@@ -28,6 +33,11 @@
 - [[fedora-linux-nvidian-安装英伟达显卡驱动并开启硬件编解码]]
 - [[fedora-linux-音频相关组件]]
 - [[fedora-linux-secure-boot-实现安全启动]]
+- [[linux-解决分区表变更使设备号发生改变导致物理卷不能被识别]]
 - [[linux-将home目录中的默认中文文件夹改为英文]]
+- [[linux-使用LVM并使用btrfs文件系统并实现扩充及缩小容量]]
+- [[linux-找不到命令]]
+- [[linux-更改系统语言]]
+- [[linux-创建桌面快捷方式]]
 
 ## 已知bug

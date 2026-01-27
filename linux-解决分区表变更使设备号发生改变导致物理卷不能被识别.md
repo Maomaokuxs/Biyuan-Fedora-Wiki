@@ -1,4 +1,8 @@
-# 1. 查看当前的 LVM 结构
+# 说明
+
+有一些磁盘管理工具合并非相邻磁盘分区的时候会更改分区表，UUID是不会改变，这一部分是为了解决分区表变更导致物理卷不能被识别的情况。
+
+## 1. 查看当前的 LVM 结构
 
 ``` bash
 # 查看物理卷（PV）情况
@@ -13,7 +17,7 @@ sudo lvdisplay
 
 - 报错示例：
 
-``` 
+``` text
 # 可以看到 vgroup0 丢失 物理卷 PV EOAf56-s2OK-i9Qf-qRee-5AXY-zeyw-VIAFpt 其写入到 设备/dev/nvme1n1p9
 
 WARNING: Couldn't find device with uuid EOAf56-s2OK-i9Qf-qRee-5AXY-zeyw-VIAFpt.
@@ -41,15 +45,17 @@ WARNING: Couldn't find device with uuid EOAf56-s2OK-i9Qf-qRee-5AXY-zeyw-VIAFpt.
   Allocated PE          28514
   PV UUID               EOAf56-s2OK-i9Qf-qRee-5AXY-zeyw-VIAFpt
 ```
-# 2. 尝试查找丢失的 PV
+
+## 2. 尝试查找丢失的 PV
 
 ```bash
 # 1.查看所有存储设备
 lsblk -f
-
-# 在下面的图中可以看到设备 /dev/nvme1n1p5 中包含有逻辑卷组，且 UUID 可以对应上丢失的设备 /dev/nvme1n1p9
 ```
-![[Pasted image 20260118142629.png]]
+
+在下面的图中可以看到设备 /dev/nvme1n1p5 中包含有逻辑卷组，且 UUID 可以对应上丢失的设备 /dev/nvme1n1p9
+
+[[images/fedora/LVM-disk-chage/disk-chage-status-1.png]]
 
 ```bash
 # （可选）2.扫描所有设备上的物理卷
@@ -59,7 +65,7 @@ sudo pvscan
 sudo vgdisplay -v vgroup0（修改为对应的逻辑卷组）
 ```
 
-# 3. 尝试重新激活 PV
+## 3. 尝试重新激活 PV
 
 ```bash
 # 1.重新激活物理卷
@@ -70,11 +76,11 @@ sudo pvdisplay /dev/nvme1n1p5
 
 - 报错示例
 
-![[Pasted image 20260118144156.png]]
+[[images/fedora/LVM-disk-chage/disk-chage-status-2.png]]
 
 - 报错原因
 
-```markdown
+```text
 # 1. 什么是 LVM Devices File？
 
 这是 LVM 2.03+ 引入的安全特性：
@@ -97,7 +103,7 @@ sudo pvdisplay /dev/nvme1n1p5
 3. 显示错误：device is not in devices file
 ```
 
-# 4. 直接更新设备数据库
+## 4. 直接更新设备数据库
 
 ``` bash
 # 1. 清除旧的缓存（在删除前可以1进行备份）
@@ -129,7 +135,7 @@ IDTYPE=sys_wwid IDNAME=naa.5000c500faed0560 DEVNAME=/dev/sda3 PVID=XQslOSnecUYGl
 IDTYPE=sys_wwid IDNAME=eui.00000000000000008ce38e03009dcb67 DEVNAME=/dev/nvme1n1p5 PVID=EOAf56s2OKi9QfqRee5AXYzeywVIAFpt PART=5
 ```
 
-# 5. 验证修复
+## 5. 验证修复
 
 ```bash
 # 1. 检查物理卷状态
@@ -141,9 +147,10 @@ sudo vgdisplay vgroup0
 # 3. 检查逻辑卷状态
 sudo lvdisplay /dev/vgroup0/lvol0
 ```
-# 6. 可能需要进行的操作，上面恢复正常的话不用执行
 
-```
+## 6. 可能需要进行的操作，上面恢复正常的话不用执行
+
+```bash
 # 1. 备份当前 LVM 配置
 sudo cp /etc/lvm/backup/vgroup0 /etc/lvm/backup/vgroup0.backup.$(date +%Y%m%d)
 
