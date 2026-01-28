@@ -9,9 +9,11 @@
 sudo dnf copr enable gasinvein/snapper-edge
 
 # 2.安装 snapper 和 btrfs-progs
+
+# 2.1 安装 snapper 
 sudo dnf install snapper btrfs-progs
 
-# 3.安装依赖，并克隆仓库文件编译安装
+# 2.2.安装依赖，并克隆仓库文件编译安装snapper-gui
 sudo dnf install python3-devel python3-setuptools gtksourceview3
  
 git clone https://github.com/ricardo-vieira/snapper-gui/
@@ -20,10 +22,39 @@ cd snapper-gui/
  
 sudo python3 setup.py install
  
- # 4.测试是否能启动软件
- snapper-gui
+# 3.(可选)安装 grub-btrfs 和 dnf5-autosnapper
+
+⚠️注意：这两个软件包需要将snapper配置完成后再使用。
+
+# 3.1 安装并启用grub-btrfs
+
+# 启用第三方仓库
+sudo dnf copr enable kylegospo/grub-btrfs  
+
+# 安装 grub-btrfs 软件包
+sudo dnf install grub-btrfs
+
+# 启用相关服务
+sudo systemctl enable --now grub-btrfs.service
+
+# 确认状态 
+sudo systemctl status grub-btrfs.service
+
+# 生成 grub2 配置文件
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+
+# 3.2 安装 dnf5-autosnapper
+
+# 启用第三方仓库
+sudo dnf copr enable douglascdev/dnf5-autosnapper 
+
+# 安装软件包
+sudo dnf install dnf5-autosnapper
+
+# 4.测试是否能启动软件
+snapper-gui
  
- # 5.安装完之后可以删除克隆的仓库文件，工作文件夹在主目录，默认文件在$HOME/
+# 5.安装完之后可以删除克隆的仓库文件，工作文件夹在主目录，默认文件在$HOME/
 ```
 
 参考文档：
@@ -152,11 +183,44 @@ sudo snapper -c root delete-config 2>/dev/null
 
 ## 4. 优化配置文件(结合自身需求，不必与下面相同)
 
+示例：
+
+```text
+$ sudo snapper -c home get-config
+
+键                       │ 值
+─────────────────────────┼──────
+ALLOW_GROUPS             │ wheel # 允许执行此配置命令的用户组。
+ALLOW_USERS              │       # 允许执行此配置命令的特定用户，默认root/wheel用户组。
+BACKGROUND_COMPARISON    │ yes   # 是否在后台预计算快照之间的差异。
+EMPTY_PRE_POST_CLEANUP   │ yes   # 是否自动清理内容完全一致的 Pre/Post 快照。
+EMPTY_PRE_POST_MIN_AGE   │ 3600  # 空 Pre/Post 快照被清理前的最小存活时间。
+FREE_LIMIT               │ 0.2   # 磁盘剩余空间临界值，0.2 表示当磁盘空间不足 20% 时，开始积极清理。
+FSTYPE                   │ btrfs # 文件系统类型。
+NUMBER_CLEANUP           │ yes   # 是否启用数量清理，针对非定时生成的（如 DNF 插件生成的）快照。
+NUMBER_LIMIT             │ 50    # 普通快照保留的数量上限。
+NUMBER_LIMIT_IMPORTANT   │ 10    # 重要快照保留的数量上限。
+NUMBER_MIN_AGE           │ 3600  # 数量快照被清理前的最小存活时间，保证新生成的快照不会瞬间被清理掉。
+QGROUP                   │       # 如果为空，Snapper 无法准确计算快照实际占用的物理空间
+SPACE_LIMIT              │ 0.15  # 快照占用总空间上限，0.15 表示快照占用超过 15% 磁盘空间时触发清理。
+SUBVOLUME                │ /home # 该配置管理的子卷路径。
+SYNC_ACL                 │ yes   # 是否将 ACL（访问控制列表）同步到快照中，确保恢复后权限一致。
+TIMELINE_CLEANUP         │ yes   # 是否启用“时间线”定期清理机制。
+TIMELINE_CREATE          │ yes   # 是否每小时自动创建一条快照。
+TIMELINE_LIMIT_DAILY     │ 1     # 每日快照保留个数。
+TIMELINE_LIMIT_HOURLY    │ 5     # 每小时快照保留个数。
+TIMELINE_LIMIT_MONTHLY   │ 1     # 每月快照保留个数。
+TIMELINE_LIMIT_QUARTERLY │ 3     # 每季度快照保留个数。
+TIMELINE_LIMIT_WEEKLY    │ 1     # 每周快照保留个数。
+TIMELINE_LIMIT_YEARLY    │ 1     # 每年快照保留个数。
+TIMELINE_MIN_AGE         │ 3600  # 自动生成的定时快照最小存活时间。
+```
+
 ```bash
 # 1.查看当前配置
 sudo snapper -c root get-config
 
-# 2.优化root配置
+# 2.自定义 root配置
 sudo snapper -c root set-config ALLOW_GROUPS="wheel"
 sudo snapper -c root set-config SYNC_ACL="yes"
 sudo snapper -c root set-config SPACE_LIMIT="0.25"
@@ -167,21 +231,44 @@ sudo snapper -c root set-config TIMELINE_LIMIT_HOURLY="6"
 sudo snapper -c root set-config TIMELINE_LIMIT_DAILY="7"
 sudo snapper -c root set-config TIMELINE_LIMIT_WEEKLY="2"
 sudo snapper -c root set-config TIMELINE_LIMIT_MONTHLY="1"
-sudo snapper -c root set-config TIMELINE_LIMIT_YEARLY="0"
+sudo snapper -c root set-config TIMELINE_LIMIT_YEARLY="1"
 
-# 3.专用 home 配置（更保守）
+# 3.自定义 home 配置
+sudo snapper -c home set-config ALLOW_GROUPS="wheel"
+sudo snapper -c home set-config NUMBER_LIMIT="20"
+sudo snapper -c home set-config NUMBER_LIMIT_IMPORTANT="5"
 sudo snapper -c home set-config SPACE_LIMIT="0.15"
-sudo snapper -c home set-config TIMELINE_CREATE="no"
-sudo snapper -c home set-config NUMBER_LIMIT="10"
-sudo snapper -c home set-config BACKGROUND_COMPARISON="no"
+sudo snapper -c home set-config SYNC_ACL="yes"
+sudo snapper -c home set-config TIMELINE_LIMIT_DAILY="1"
+sudo snapper -c home set-config TIMELINE_LIMIT_HOURLY="5"
+sudo snapper -c home set-config TIMELINE_LIMIT_MONTHLY="1"
+sudo snapper -c home set-config TIMELINE_LIMIT_QUARTERLY="3"
+sudo snapper -c home set-config TIMELINE_LIMIT_WEEKLY="1"
+sudo snapper -c home set-config TIMELINE_LIMIT_YEARLY="1"
 
-# 4查看最终配置
-echo "=== 根配置 ==="
-sudo snapper -c root get-config | grep -E "(SPACE_LIMIT|NUMBER_LIMIT|TIMELINE_LIMIT)"
+# 4. 单独配置 QGROUP 参数
 
-echo ""
-echo "=== Home 配置 ==="
-sudo snapper -c home get-config | grep -E "(SPACE_LIMIT|TIMELINE_CREATE|NUMBER_LIMIT)"
+# QGROUP 是 Quota Group（配额组）的缩写。它是 Btrfs 文件系统中的一种机制，专门用来统计和限制子卷（Subvolumes）及其快照（Snapshots）所占用的磁盘空间。
+
+sudo btrfs quota enable <挂载点> （开启内核支持）
+
+sudo snapper -c <配置名> setup-quota （建立 Snapper 关联）
+
+sudo snapper -c <配置名> get-config | grep QGROUP （确认握手成功）
+
+# 例如root分区，配置文件名为root
+
+sudo btrfs quota enable /
+
+sudo snapper -c root setup-quota
+
+sudo snapper -c root get-config | grep QGROUP
+
+# 5. 查看最终配置
+
+sudo snapper -c root get-config
+
+sudo snapper -c home get-config
 ```
 
 ## 5. 启用自动服务
