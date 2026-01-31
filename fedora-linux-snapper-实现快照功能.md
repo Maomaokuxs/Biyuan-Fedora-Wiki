@@ -2,18 +2,18 @@
 
 本篇文章旨在提供 snapper 使用的一些基础方式。
 
-## 1. 安装snapper，snapper-gui
+## 1. 安装snapper，snapper-gui，btrfs-assistant
 
 ```bash
 # 1.启用corp仓库
 sudo dnf copr enable gasinvein/snapper-edge
 
-# 2.安装 snapper 和 btrfs-progs
+# 2.安装 snapper，btrfs-progs 和 btrfs-assistant
 
-# 2.1 安装 snapper 
-sudo dnf install snapper btrfs-progs
+# 2.1 安装 snapper 和 btrfs-assistant
+sudo dnf install snapper btrfs-progs btrfs-assistant
 
-# 2.2.安装依赖，并克隆仓库文件编译安装snapper-gui
+# 2.2.(可选)安装依赖，并克隆仓库文件编译安装snapper-gui
 sudo dnf install python3-devel python3-setuptools gtksourceview3
  
 git clone https://github.com/ricardo-vieira/snapper-gui/
@@ -222,15 +222,15 @@ sudo snapper -c root get-config
 
 # 2.自定义 root配置
 sudo snapper -c root set-config ALLOW_GROUPS="wheel"
-sudo snapper -c root set-config SYNC_ACL="yes"
-sudo snapper -c root set-config SPACE_LIMIT="0.25"
-sudo snapper -c root set-config FREE_LIMIT="0.3"
 sudo snapper -c root set-config NUMBER_LIMIT="20"
 sudo snapper -c root set-config NUMBER_LIMIT_IMPORTANT="5"
-sudo snapper -c root set-config TIMELINE_LIMIT_HOURLY="6"
-sudo snapper -c root set-config TIMELINE_LIMIT_DAILY="7"
-sudo snapper -c root set-config TIMELINE_LIMIT_WEEKLY="2"
+sudo snapper -c root set-config SPACE_LIMIT="0.15"
+sudo snapper -c root set-config SYNC_ACL="yes"
+sudo snapper -c root set-config TIMELINE_LIMIT_DAILY="1"
+sudo snapper -c root set-config TIMELINE_LIMIT_HOURLY="5"
 sudo snapper -c root set-config TIMELINE_LIMIT_MONTHLY="1"
+sudo snapper -c root set-config TIMELINE_LIMIT_QUARTERLY="3"
+sudo snapper -c root set-config TIMELINE_LIMIT_WEEKLY="1"
 sudo snapper -c root set-config TIMELINE_LIMIT_YEARLY="1"
 
 # 3.自定义 home 配置
@@ -372,3 +372,35 @@ sudo cp /.snapshots/SNAPSHOT_NUMBER/snapshot/path/to/file /path/to/restore
 # 比较并恢复
 sudo snapper -c root undochange PREVIOUS..CURRENT
 ```
+
+## 7. 使用 btrfs-assistant 工具管理快照
+
+### 7.1 管理快照
+
+- 点击标签栏进入 snapper > new/delete
+
+- select config 可以选择配置文件
+
+- new 为新建
+
+- delete 为删除
+
+- refresh 为刷新
+
+### 7.2 回滚
+
+- 点击标签栏进入 snapper > browse/restore
+
+- select config 可以选择配置文件
+
+- 选择目标快照
+
+- 点击 restore
+
+### 7.3 修改部分 snapper 配置文件
+
+- 点击标签栏进入 snapper settings
+
+- select config 可以选择配置文件
+
+- 选择对应的条目进行修改
