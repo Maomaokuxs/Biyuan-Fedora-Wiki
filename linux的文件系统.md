@@ -95,8 +95,8 @@
 - 方案二
 
 | 目录 | 设备 | 文件系统 |
-| --------- | --------- | ------ | ------- |
-| **/boot/efi** | /dev/nvme0n1p1 | fat32 | |
-| **/boot** | /dev/nvme0n1p2 | ext4 | |
-| **/** | /dev/mapper/vgroup0-lvol0| ext4 |
-| **/home** | /dev/mapper/vgroup0-lvol1| ext4 |
+| --------- | --------- | ------ |
+| **/boot/efi** | /dev/nvme0n1p1 | fat32 |
+| **/boot** | /dev/nvme0n1p2 | ext4 |
+| **/** | /dev/mapper/vgroup0-lvol0 | ext4 |
+| **/home** | /dev/mapper/vgroup0-lvol1 | ext4 |
