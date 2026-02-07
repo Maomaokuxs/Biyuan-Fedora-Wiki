@@ -1,6 +1,6 @@
 # 说明
 
-本篇文章旨在提供 snapper 使用的一些基础方式。
+本篇文章旨在提供 snapper 使用的指南。
 
 ## 1. 安装snapper，snapper-gui，btrfs-assistant
 

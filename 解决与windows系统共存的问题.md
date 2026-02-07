@@ -2,6 +2,12 @@
 
 部分用户有双系统的需求，对于我来说 fedora 在当前来说是我的日常使用系统，但往往有些游戏并不支持启动，当然有一些解决方案，但是我还是希望有些事情简单点，所以下文用于解决一些共存方面的问题。
 
+## 0.建议
+
+- 即使是写了这篇文档，单我个人并不建议一台电脑使用双系统。
+- 不要与 windows 公用一个启动分区，有 linux 的启动分区被windows删除的情况。
+- 建议两个系统放在独立的磁盘中，因为在配置linux时，有时候需要配置分区，以防操作失误致使 windows 分区被格式化了。
+
 ## 1.双系统时间不一致问题
 
 ### 1.1 现象
@@ -34,6 +40,10 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsU
 
 - (可选) 修改启动项，将 fedora 设置为第一位，fedora 默认使用的 GRUB 2 这不仅可以启动 windows 也可以启动 linux 。
 
+参考文档
+
+- [debian-cookbook](https://github.com/smgdream/debian-cookbook/blob/main/improve/deb+win.md)
+
 ## 2.安全启动导致无法加载启动 U 盘 或者想要在 fedora linux 系统上实现安全启动
 
 ### 2.1 现象
@@ -60,6 +70,113 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsU
 
 进入 windows 系统关闭安全启动。
 
-参考文档
+## 4.linux 与 windows共享文件
 
-- [debian-cookbook](https://github.com/smgdream/debian-cookbook/blob/main/improve/deb+win.md)
+### 4.1 两个系统独立
+
+#### 4.1.1 共享磁盘
+
+1. Windows 分享目录，Linux 访问
+
+- Windows 端设置
+
+右键点击你想分享的文件夹 -> 属性 -> 共享 -> 高级共享。
+
+勾选“共享此文件夹”，点击“权限”，确保你的用户有“读取”或“更改”权限。
+
+获取 Windows 的 IP 地址
+
+```DOS
+ipconfig
+# 查看的是 IPv4 地址 . . . . . . . . . . . . :
+```
+
+注意：请记住 Windows 的 IP 地址 和 用户名（如果是微软账户，通常是邮箱或设置里的显示名），网络共享路径的格式是：\\计算机名\分享名 或 \\IP地址\分享名。
+
+- 确定共享磁盘或目录
+
+按下 Win + R，输入 cmd 并回车。
+
+输入以下命令：
+
+```DOS
+net share
+```
+
+注意：像 C$、ADMIN$ 这种带 $ 符号的是系统内置管理共享，通常不需要去动它们
+
+- 在linux中挂载磁盘
+
+```bash
+# 0.安装软件包
+sudo dnf install cifs-utils
+# 默认已经安装
+
+# 1.创建挂载点
+sudo mkdir -p /mnt/win_f
+
+# 2.执行挂载命令 假设你的 Windows IP 是 192.168.x.x：
+sudo mount -t cifs //192.168.x.x/F /mnt/win_f -o username=用户名,uid=$(id -u),gid=$(id -g),iocharset=utf8
+
+# //192.168.x.x/F: 这里的 F 就是你 net share 列表里的共享名。
+
+# uid=$(id -u),gid=$(id -g): 自动获取你当前 Fedora 用户的 ID，确保你对挂载后的目录有完全控制权。
+
+# username=: 你的 Windows 用户名。
+
+# 3.在回车之后会要求输入密码
+
+# Password for 用户名@//192.168.x.x/F:
+
+# 密码是你的 Windows 账户登录密码，如果你是用 PIN 码（4位或6位数字）登录 Windows 的，这里的密码通常不是 PIN 码。
+```
+
+注意：如果你的 Windows 账号没有设置密码，SMB 默认是不允许连接的，建议给 Windows 账号设个密码。
+
+2. Linux 分享目录，Windows 访问
+
+- 安装并配置 Samba
+
+```Bash
+sudo apt update
+sudo apt install samba
+```
+
+- 编辑配置文件
+
+编辑 /etc/samba/smb.conf，在文件末尾添加：
+
+```text
+[LinuxShare]
+   path = /home/username/shared
+   available = yes
+   browseable = yes
+   public = yes
+   writable = yes
+```
+
+- 设置访问密码并重启
+
+Samba 需要独立的密码库：
+
+```Bash
+sudo smbpasswd -a username  # 设置你的 Linux 用户名和 Samba 专用密码
+sudo systemctl restart smbd
+```
+
+- Windows 端访问
+
+```bash
+# 查看当前ip
+ip addr show
+```
+
+在 Windows 文件资源管理器的地址栏输入： \\192.168.x.x\LinuxShare
+
+#### 4.1.2 共享文件
+
+1. 使用 localsend 软件
+
+- 安装软件
+
+github仓库地址：<https://github.com/localsend/localsend>

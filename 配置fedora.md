@@ -9,10 +9,18 @@ sudo dnf upgrade
 # 更新完成后重启系统
 ```
 
-## 2.安装一些基本软件包
+## 2.安装文本编辑器vim和git
 
 ```bash
-sudo dnf install vim git fcitx5 fcitx5-chinese-addons fcitx5-configtool
+sudo dnf install vim git 
 ```
 
-## 3.
+## 3.安装输入法
+
+```bash
+sudo dnf install fcitx5 fcitx5-chinese-addons fcitx5-configtool
+```
+
+`fcitx5`：输入法主程序；
+`fcitx5-chinese-addons`：额外中文包，提供拼音五笔等输入；
+`fcitx5-configtool`：输入法配置工具。
