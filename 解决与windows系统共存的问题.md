@@ -56,7 +56,7 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsU
 
 ### 2.3 解决办法
 
-- 最简单的就是直接将安全启动关闭，如果有需要可以安装完之后看 [[fedora-linux-secure-boot-实现安全启动]]来实现相关功能。
+- 最简单的就是直接将安全启动关闭，如果有需要可以安装完之后看 [[实现安全启动]]来实现相关功能。
 
 - 如果你就是要不关闭安全启动去安装系统，那么使用用官方的 U 盘制作工具[Fedora Media Writer](https://docs.fedoraproject.org/en-US/fedora/latest/preparing-boot-media/#fedora_media_writer)。
 
@@ -76,7 +76,7 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsU
 
 #### 4.1.1 共享磁盘
 
-1.Windows 分享目录，Linux 访问
+ 1. Windows 分享目录，Linux 访问
 
 - Windows 端设置
 
@@ -105,73 +105,106 @@ net share
 
 注意：像 C$、ADMIN$ 这种带 $ 符号的是系统内置管理共享，通常不需要去动它们
 
-- 在linux中挂载磁盘
+- 安装软件包
 
 ```bash
-# 0.安装软件包
 sudo dnf install cifs-utils
 # 默认已经安装
-
-# 1.创建挂载点
-sudo mkdir -p /mnt/win_f
-
-# 2.执行挂载命令 假设你的 Windows IP 是 192.168.x.x：
-sudo mount -t cifs //192.168.x.x/F /mnt/win_f -o username=用户名,uid=$(id -u),gid=$(id -g),iocharset=utf8
-
-# //192.168.x.x/F: 这里的 F 就是你 net share 列表里的共享名。
-
-# uid=$(id -u),gid=$(id -g): 自动获取你当前 Fedora 用户的 ID，确保你对挂载后的目录有完全控制权。
-
-# username=: 你的 Windows 用户名。
-
-# 3.在回车之后会要求输入密码
-
-# Password for 用户名@//192.168.x.x/F:
-
-# 密码是你的 Windows 账户登录密码，如果你是用 PIN 码（4位或6位数字）登录 Windows 的，这里的密码通常不是 PIN 码。
-
-# 4.设置自动挂载
-
-# 4.1 创建一个文件，存放 window 的账户信息
-vim ~/.smbcredentials
-# 输入以下内容
-username=用户名
-password=你的 Windows 密码
-
-# 4.2 设置文件权限，确保只有属主可以看
-chmod 600 ~/.smbcredentials
-
-# 4.3 创建挂载点
-sudo mkdir -p /mnt/win
-
-# 4.4 备份fstab并编辑
-sudo cp /etc/fstab /etc/fstab.bak
-sudo nano /etc/fstab
-#在文件末尾添加以下一行内容
-
-//192.168.5.5/F /mnt/win cifs credentials=/home/biyuan/.smbcredentials,uid=1000,gid=1000,vers=3.0,x-systemd.automount,x-systemd.idle-timeout=60,actimeo=3,0 0
-
-# //192.168.x.x/F：Windows 共享路径，IP 是按实际设置，建议将 Windows 设置为静态 IP。
-# /mnt/win：本地挂载点，所有 Windows 共享文件将出现在此目录。
-# cifs：文件系统类型，CIFS 是 SMB 协议在 Linux 内核中的实现模块。
-# credentials=/home/biyuan/.smbcredentials，指定凭据文件路径，避免密码明文暴露在 /etc/fstab 中。
-# uid=1000,gid=1000指定挂载后所有文件和目录的属主、属组为 Linux 用户 UID 1000 / GID 1000（通常是第一个普通用户）。
-# vers=3.0，强制使用 SMB 3.0 协议通信。
-# x-systemd.automount，按需挂载，系统启动时不立即挂载该共享，只有首次访问 /mnt/win 时才触发挂载，网络不可用时不影响开机。
-# x-systemd.idle-timeout=60，空闲 60 秒后自动卸载该共享。
-# actimeo=3，目录项/文件属性缓存超时时间，单位秒，避免频繁查询服务器，属性缓存保持有效 3 秒。3 秒内再次 ls 直接读缓存，不发网络请求。
-# 0 0
-#第一个 0：不被 dump 备份（现代系统几乎不用）。
-#第二个 0：开机时不执行 fsck 检查（网络文件系统无需 fsck）。
 ```
+
+- 创建挂载点
+
+```bash
+sudo mkdir -p /mnt/win_f
+```
+
+- 执行挂载命令 假设你的 Windows IP 是 192.168.x.x：
+
+```bash
+sudo mount -t cifs //192.168.x.x/F /mnt/win_f -o username=用户名,uid=$(id -u),gid=$(id -g),iocharset=utf8
+```
+
+//192.168.x.x/F: 这里的 F 就是你 net share 列表里的共享名。
+uid=$(id -u),gid=$(id -g): 自动获取你当前 Fedora 用户的 ID，确保你对挂载后的目录有完全控制权。
+username=: 你的 Windows 用户名。
+
+- 在回车之后会要求输入密码
+
+Password for 用户名@//192.168.x.x/F:
+
+密码是你的 Windows 账户登录密码，如果你是用 PIN 码（4位或6位数字）登录 Windows 的，这里的密码通常不是 PIN 码。
 
 注意：如果你的 Windows 账号没有设置密码，SMB 默认是不允许连接的，建议给 Windows 账号设个密码。
 
-2.Linux 分享目录，Windows 访问
+- Linux 端设置
+
+- 设置自动挂载
+
+  - 创建一个文件，存放 window 的账户信息
+
+  ```bash
+  vim ~/.smbcredentials
+  ```
+
+  - 输入以下内容
+
+  ```bash
+  username=用户名
+  password=你的 Windows 密码
+  ```
+
+  - 设置文件权限，确保只有属主可以看
+
+  ```bash
+  chmod 600 ~/.smbcredentials
+  ```
+
+  - 创建挂载点
+
+  ```bash
+  sudo mkdir -p /mnt/win
+  ```
+
+  - 备份fstab并编辑
+  
+  ```bash
+  sudo cp /etc/fstab /etc/fstab.bak
+  sudo nano /etc/fstab
+  ```
+
+  - 在文件末尾添加以下一行内容
+
+  ```text
+  //192.168.5.5/F /mnt/win cifs credentials=/home/biyuan/.smbcredentials,uid=1000,gid=1000,vers=3.0,x-systemd.automount,x-systemd.idle-timeout=60,actimeo=3,0 0
+  ```
+
+  //192.168.x.x/F：Windows 共享路径，IP 是按实际设置，建议将 Windows 设置为静态 IP。
+
+  /mnt/win：本地挂载点，所有 Windows 共享文件将出现在此目录。
+
+  cifs：文件系统类型，CIFS 是 SMB 协议在 Linux 内核中的实现模块。
+
+  credentials=/home/biyuan/.smbcredentials，指定凭据文件路径，避免密码明文暴露在 /etc/fstab 中。
+
+  uid=1000,gid=1000指定挂载后所有文件和目录的属主、属组为 Linux 用户 UID 1000 / GID 1000（通常是第一个普通用户）。
+
+  vers=3.0，强制使用 SMB 3.0 协议通信。
+
+  x-systemd.automount，按需挂载，系统启动时不立即挂载该共享，只有首次访问 /mnt/win 时才触发挂载，网络不可用时不影响开机。
+
+  x-systemd.idle-timeout=60，空闲 60 秒后自动卸载该共享。
+
+  actimeo=3，目录项/文件属性缓存超时时间，单位秒，避免频繁查询服务器，属性缓存保持有效 3 秒。3 秒内再次 ls 直接读缓存，不发网络请求。
+
+  0 0
+  第一个 0：不被 dump 备份（现代系统几乎不用）。
+  第二个 0：开机时不执行 fsck 检查（网络文件系统无需 fsck）。
+
+2. Linux 分享目录，Windows 访问
 
 - 安装并配置 Samba
 
-```Bash
+```bash
 sudo apt update
 sudo apt install samba
 ```
