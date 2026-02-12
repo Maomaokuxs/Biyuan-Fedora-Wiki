@@ -129,6 +129,40 @@ sudo mount -t cifs //192.168.x.x/F /mnt/win_f -o username=用户名,uid=$(id -u)
 # Password for 用户名@//192.168.x.x/F:
 
 # 密码是你的 Windows 账户登录密码，如果你是用 PIN 码（4位或6位数字）登录 Windows 的，这里的密码通常不是 PIN 码。
+
+# 4.设置自动挂载
+
+# 4.1 创建一个文件，存放 window 的账户信息
+vim ~/.smbcredentials
+# 输入以下内容
+username=用户名
+password=你的 Windows 密码
+
+# 4.2 设置文件权限，确保只有属主可以看
+chmod 600 ~/.smbcredentials
+
+# 4.3 创建挂载点
+sudo mkdir -p /mnt/win
+
+# 4.4 备份fstab并编辑
+sudo cp /etc/fstab /etc/fstab.bak
+sudo nano /etc/fstab
+#在文件末尾添加以下一行内容
+
+//192.168.5.5/F /mnt/win cifs credentials=/home/biyuan/.smbcredentials,uid=1000,gid=1000,vers=3.0,x-systemd.automount,x-systemd.idle-timeout=60,actimeo=3,0 0
+
+# //192.168.x.x/F：Windows 共享路径，IP 是按实际设置，建议将 Windows 设置为静态 IP。
+# /mnt/win：本地挂载点，所有 Windows 共享文件将出现在此目录。
+# cifs：文件系统类型，CIFS 是 SMB 协议在 Linux 内核中的实现模块。
+# credentials=/home/biyuan/.smbcredentials，指定凭据文件路径，避免密码明文暴露在 /etc/fstab 中。
+# uid=1000,gid=1000指定挂载后所有文件和目录的属主、属组为 Linux 用户 UID 1000 / GID 1000（通常是第一个普通用户）。
+# vers=3.0，强制使用 SMB 3.0 协议通信。
+# x-systemd.automount，按需挂载，系统启动时不立即挂载该共享，只有首次访问 /mnt/win 时才触发挂载，网络不可用时不影响开机。
+# x-systemd.idle-timeout=60，空闲 60 秒后自动卸载该共享。
+# actimeo=3，目录项/文件属性缓存超时时间，单位秒，避免频繁查询服务器，属性缓存保持有效 3 秒。3 秒内再次 ls 直接读缓存，不发网络请求。
+# 0 0
+#第一个 0：不被 dump 备份（现代系统几乎不用）。
+#第二个 0：开机时不执行 fsck 检查（网络文件系统无需 fsck）。
 ```
 
 注意：如果你的 Windows 账号没有设置密码，SMB 默认是不允许连接的，建议给 Windows 账号设个密码。
@@ -180,3 +214,7 @@ ip addr show
 - 安装软件
 
 github仓库地址：<https://github.com/localsend/localsend>
+
+- 下载安装包
+
+在 windows 上下载 .exe 后缀的包，在 linux 上下载 .rpm 的包或者使用 flathub 提供的包。
