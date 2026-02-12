@@ -76,7 +76,7 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsU
 
 #### 4.1.1 共享磁盘
 
-1. Windows 分享目录，Linux 访问
+1.Windows 分享目录，Linux 访问
 
 - Windows 端设置
 
@@ -167,7 +167,7 @@ sudo nano /etc/fstab
 
 注意：如果你的 Windows 账号没有设置密码，SMB 默认是不允许连接的，建议给 Windows 账号设个密码。
 
-2. Linux 分享目录，Windows 访问
+2.Linux 分享目录，Windows 访问
 
 - 安装并配置 Samba
 
