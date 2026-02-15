@@ -87,3 +87,108 @@ sudo vgdisplay vgroup0
 ### 2.6 缩小容量后
 
 [[images/fedora/LVM-btrfs/disk-status-3.png]]
+
+## 3. (可选) 将 LVM 管理下 btrfs 子卷发送至新的系统，或将其中的文件备份
+
+如果当前系统还能够使用可以先将一些配置文件备份，并将 home 目录整个备份带入新系统，再者就是备份旧系统中安装了什么软件包。
+
+我并不认为直接将 btrfs 子卷直接发送至新系统是一个很好的决定，但是下面的内容会表述相关内容，写这一部分内容时我使用 LVM 创建逻辑卷并将文件系统格式化为 btrfs，这意义并不是很大，我需要将 btrfs 子卷中的内容备份到我的新系统中，以下内同均在新系统中进行。
+
+### 3.1 定位 LVM 卷
+
+首先，需要确保 LVM 卷已激活，并找到它的设备路径。
+
+- 扫描并激活卷组
+
+```bash
+sudo vgchange -ay
+```
+
+- 查看逻辑卷路径
+
+```bash
+sudo lvdisplay 或 lsblk
+# 下文中假设逻辑卷组路径是 /dev/vgroup0/lvol0
+```
+
+### 3.2 查看 Btrfs 子卷信息并挂载顶级子卷
+
+```bash
+# 1.创建挂载点
+sudo mkdir -p /mnt/old
+
+# 2.临时挂载逻辑卷到 /mnt/old
+sudo mount -o subvolid=5 /dev/vgroup0/lvol0 /mnt/old
+
+# 3.查看所有子卷及其 ID
+sudo btrfs subvolume list /mnt/old
+# 下文假设操作的子卷信息为：
+# ID 601 gen 12509 top level 457 path @home/.snapshots/40/snapshot
+# @home :子卷名称
+
+# 4.验证子卷是否为只读
+sudo btrfs subvolume show /mnt/old/@home/.snapshots/40/snapshot | grep -i ro
+# 如果显示 ro: true 则直接可用；若为 false，请先将其设为只读
+sudo btrfs property set -fst /mnt/old/@home/.snapshots/40/snapshot ro true
+
+```
+
+### 3.3 （可选）恢复 snapper 创建的某个快照
+
+- 备份当前（坏掉的）home：
+
+```Bash
+sudo mv /mnt/@home /mnt/@home_bad_backup
+```
+
+- 从快照创建一个新的可写子卷：
+快照通常是只读的，所以我们需要基于快照创建一个新的可写副本。
+
+```Bash
+# 假设你选定 ID 601 的快照作为恢复点
+sudo btrfs subvolume snapshot /mnt/@home_bad_backup/.snapshots/40/snapshot /mnt/@home
+```
+
+### 3.4 将 LVM 管理下的btrfs文件系统的 @home 子卷发送至新系统
+
+#### 3.4.1 在当前系统中创建一个存放位置
+
+```bash
+sudo mkdir -p ~/recovered_files/
+```
+
+#### 3.4.2 执行传送：将旧快照的数据流导入到新系统中
+
+```bash
+sudo btrfs send /mnt/old/@home/.snapshots/40/snapshot | sudo btrfs receive /receive_files/
+```
+
+#### (可选) 3.4.3 创建可写子卷作为新的 home
+
+建议在 root 控制台（tty模式）下以root用户或者在Live系统中执行下面的操作。
+
+```bash
+# 1.卸载当前的 /home
+sudo umount /home
+
+# 2.备份当前的home目录
+cd /
+sudo mv /@home /@home_backup
+
+# 3.将接收的只读快照创建可写子卷并重命名为@home
+sudo btrfs subvolume snapshot /receive_files/snapshot /@home
+
+# 4.挂载新的 @home 到 /home
+sudo mount -o subvol=@home /dev/sda2 /home
+
+# 5.验证挂载是否成功
+ls -l /home
+
+# 6.更新 /etc/fstab 以实现永久挂载
+UUID=xxxx-xxxx  /home  btrfs  subvol=/@home,defaults  0  0
+
+# 7.重启验证
+# 在重启之前一定要检查清除上述设置完成。
+
+sudo reboot
+```
