@@ -10,7 +10,7 @@
 cat /proc/cpuinfo | egrep "vmx|svm"
 ```
 
-## 2.在Fedora上安装KVM / QEMU
+## 2.在 Fedora 上安装 KVM / QEMU
 
 ```bash
 # 1.安装应用程序
@@ -23,7 +23,7 @@ $ lsmod | grep kvm
 sudo dnf install libvirt-devel virt-top libguestfs-tools guestfs-tools
 ```
 
-## 3.启动并启用KVM守护进程
+## 3.启动并启用 KVM 守护进程
 
 ```bash
 # 1.默认情况下，KVM 守护进程未启动，请使用以下命令启动服务：
@@ -36,8 +36,8 @@ sudo systemctl enable libvirtd
 ## 4.安装虚拟机管理器图形界面
 
 ```bash
-为用户提供了一个图形界面来管理虚拟机。
 sudo dnf -y install virt-manager
+# 提供了一个图形界面来管理虚拟机
 ```
 
 ## 5.创建一个测试实例
