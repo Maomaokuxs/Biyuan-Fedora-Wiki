@@ -166,7 +166,7 @@ sudo btrfs send -v /mnt/old/@home/.snapshots/40/snapshot | sudo btrfs receive /m
 # -v参数用于显示进度
 ```
 
-#### (可选) 3.4.3 创建可写子卷作为新的 home
+#### 3.4.3 (可选) 创建可写子卷作为新的 home
 
 建议在 root 控制台（tty模式）下以root用户或者在Live系统中执行下面的操作。
 
@@ -194,4 +194,13 @@ UUID=xxxx-xxxx  /home  btrfs  subvol=/@home,defaults  0  0
 # 在重启之前一定要检查清除上述设置完成。
 
 sudo reboot
+```
+
+#### 3.4.4 (可选) 导出旧系统中安装的软件包并安装
+
+```bash
+sudo rpm --root /mnt/old/@ -qa > old-packages.txt
+# 我的根目录下挂载的是 @ 子卷
+
+sudo dnf install $(cat old-packages.txt) 
 ```
