@@ -91,9 +91,11 @@ sudo vgdisplay vgroup0
 
 ## 3. (可选) 将 LVM 管理下 btrfs 子卷发送至新的系统，或将其中的文件备份
 
-如果当前系统还能够使用可以先将一些配置文件备份，并将 home 目录整个备份带入新系统，再者就是备份旧系统中安装了什么软件包。
+如果当前系统还能够使用可以先将一些配置文件备份，并将 home 目录整个备份带入新系统，并且备份旧系统中安装的软件包列表。
 
-我并不认为直接将 btrfs 子卷直接发送至新系统是一个很好的决定，但是下面的内容会表述相关内容，写这一部分内容时我使用 LVM 创建逻辑卷并将文件系统格式化为 btrfs，这意义并不是很大，我需要将 btrfs 子卷中的内容备份到我的新系统中，以下内同均在新系统中进行。
+笔者并不认为直接将 btrfs 子卷直接发送至新系统是一个很好的决定，即使是系统已经不可用也可以保留原来的分区直接复制需要的文件到新系统。
+
+写这一部分内容时我使用 LVM 创建逻辑卷并将文件系统格式化为 btrfs，这意义并不是很大，我需要将 btrfs 子卷中的内容备份到我的新系统中，以下内容均在新系统中进行。
 
 ### 3.1 定位 LVM 卷
 
@@ -128,10 +130,9 @@ sudo btrfs subvolume list /mnt/old
 # @home :子卷名称
 
 # 4.验证子卷是否为只读
-sudo btrfs subvolume show /mnt/old/@home/.snapshots/40/snapshot | grep -i ro
+sudo btrfs property get /mnt/old/@home/.snapshots/40/snapshot ro
 # 如果显示 ro: true 则直接可用；若为 false，请先将其设为只读
-sudo btrfs property set -fst /mnt/old/@home/.snapshots/40/snapshot ro true
-
+sudo btrfs property set /mnt/old/@home/.snapshots/40/snapshot ro true
 ```
 
 ### 3.3 （可选）恢复 snapper 创建的某个快照
@@ -155,13 +156,14 @@ sudo btrfs subvolume snapshot /mnt/@home_bad_backup/.snapshots/40/snapshot /mnt/
 #### 3.4.1 在当前系统中创建一个存放位置
 
 ```bash
-sudo mkdir -p ~/recovered_files/
+sudo mkdir -p /mnt/recovered/
 ```
 
 #### 3.4.2 执行传送：将旧快照的数据流导入到新系统中
 
 ```bash
-sudo btrfs send /mnt/old/@home/.snapshots/40/snapshot | sudo btrfs receive /receive_files/
+sudo btrfs send -v /mnt/old/@home/.snapshots/40/snapshot | sudo btrfs receive /mnt/receive/
+# -v参数用于显示进度
 ```
 
 #### (可选) 3.4.3 创建可写子卷作为新的 home
@@ -177,7 +179,7 @@ cd /
 sudo mv /@home /@home_backup
 
 # 3.将接收的只读快照创建可写子卷并重命名为@home
-sudo btrfs subvolume snapshot /receive_files/snapshot /@home
+sudo btrfs subvolume snapshot /mnt/receive/snapshot /@home
 
 # 4.挂载新的 @home 到 /home
 sudo mount -o subvol=@home /dev/sda2 /home
