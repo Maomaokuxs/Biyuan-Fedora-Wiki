@@ -59,6 +59,6 @@
 - [[找不到命令]]
 - [[创建桌面快捷方式]]
 - [[解决与windows系统共存的问题]]
-- [[(kde登录管理器由Sddm更改为Plasmalogin)]]
+- [[kde登录管理器由Sddm更改为Plasmalogin]]
 
 ## 已知bug
