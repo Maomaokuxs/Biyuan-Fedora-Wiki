@@ -21,6 +21,11 @@ git clone https://github.com/ricardo-vieira/snapper-gui/
 cd snapper-gui/
  
 sudo python3 setup.py install
+
+# 2.3 测试是否能启动软件
+snapper-gui
+ 
+# 2.4 安装完之后可以删除克隆的仓库文件，工作文件夹在主目录，默认文件在$HOME/
  
 # 3.(可选)安装 grub-btrfs 和 dnf5-autosnapper
 
@@ -50,11 +55,6 @@ sudo dnf copr enable douglascdev/dnf5-autosnapper
 
 # 安装软件包
 sudo dnf install dnf5-autosnapper
-
-# 4.测试是否能启动软件
-snapper-gui
- 
-# 5.安装完之后可以删除克隆的仓库文件，工作文件夹在主目录，默认文件在$HOME/
 ```
 
 参考文档：
