@@ -5,11 +5,12 @@
 ## 0.登录 root 账户
 
 ```bash
-# 开机后，不要登陆普通用户进入tty
+# 1.开机后，不要登陆普通用户进入tty
 ctrl + alt + F2 ～ F6
-# 如果不计划替换 home 目录可以直接登陆图形化界面使用普通用户
 
-# 输入用户名root和密码登陆root账户
+# 2.如果不计划替换 home 目录可以直接登陆图形化界面使用普通用户
+
+# 3.输入用户名root和密码登陆root账户
 ```
 
 ## 1.创建挂载点
@@ -27,8 +28,10 @@ umount /home
 
 ## 3.挂载分区
 
+```bash
 mount /dev/nvme0n1p3 /mnt/old/
 mount /dev/nvme0n1p4 /mnt/new/
+```
 
 ## 4.发送与接受子卷
 
@@ -41,6 +44,7 @@ sudo btrfs send /mnt/old/snapper/ | sudo btrfs receive /mnt/new/
 ```bash
 # 1.备份当前的 home 子卷
 mv /mnt/new/@home/ /mnt/new/@home_backup
+
 # 2. 基于旧子卷创建一个可读写的子卷
 btrfs subvolume snapshot /mnt/new/snapper/ /mnt/new/@home
 ```
@@ -56,16 +60,16 @@ mount -a
 df -h
 ```
 
-## 7.登出 root 账户，登陆普通账户
+## 7.登出 root 账户，登录普通账户
 
 ```bash
-# 卸载分区
+# 1.卸载分区
 umount -R /mnt
 
-# 登出 root 账户 
+# 2.登出 root 账户 
 exit
 
-# 输入用户名和密码登录普通账户
+# 3.输入用户名和密码登录普通账户
 ```
 
 ## 8.重启
