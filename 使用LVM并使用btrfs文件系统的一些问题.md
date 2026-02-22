@@ -148,7 +148,7 @@ sudo mv /mnt/@home /mnt/@home_bad_backup
 
 ```Bash
 # 假设你选定 ID 601 的快照作为恢复点
-sudo btrfs subvolume snapshot /mnt/@home_bad_backup/.snapshots/40/snapshot /mnt/@home
+sudo btrfs subvolume snapshot /mnt/@home_bad_backup/.snapshots/40/snapshot /mnt/old/@home
 ```
 
 ### 3.4 将 LVM 管理下的btrfs文件系统的 @home 子卷发送至新系统
@@ -156,13 +156,15 @@ sudo btrfs subvolume snapshot /mnt/@home_bad_backup/.snapshots/40/snapshot /mnt/
 #### 3.4.1 在当前系统中创建一个存放位置
 
 ```bash
-sudo mkdir -p /mnt/recovered/
+# 挂载新系统中的顶级子卷
+sudo mkdir /mnt/new
+sudo mount -o subvolid=5 /dev/nvme1n1p7 /mnt/new
 ```
 
 #### 3.4.2 执行传送：将旧快照的数据流导入到新系统中
 
 ```bash
-sudo btrfs send -v /mnt/old/@home/.snapshots/40/snapshot | sudo btrfs receive /mnt/receive/
+sudo btrfs send -v /mnt/old/@home/.snapshots/40/snapshot | sudo btrfs receive /mnt/new/
 # -v参数用于显示进度
 ```
 
@@ -178,11 +180,11 @@ sudo umount /home
 cd /
 sudo mv /@home /@home_backup
 
-# 3.将接收的只读快照创建可写子卷并重命名为@home
-sudo btrfs subvolume snapshot /mnt/receive/snapshot /@home
+# 3.将接收的只读快照创建可写子卷并重命名为 @home
+sudo btrfs subvolume snapshot /mnt/new/snapshot /@home
 
 # 4.挂载新的 @home 到 /home
-sudo mount -o subvol=@home /dev/sda2 /home
+sudo mount -o subvol=@home /dev/nvme1n1p7 /home
 
 # 5.验证挂载是否成功
 ls -l /home
