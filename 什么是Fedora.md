@@ -1,6 +1,8 @@
 # 说明
 
-这篇内容只是粗略的说明了一下 Fedora，用于使用 Fedora 时挑选不同的版本，以及提及一下官方的镜像写入工具。
+这篇内容只是粗略的说明了一下 Fedora，用于使用 Fedora 时挑选不同的版本，以及提及一下官方的镜像写入工具，因为官方文档采取的是按发行版本来更新文档，旧文档已经归档，下面的内容是基于 Fedora 43 版本而言，具体看参考文档。
+
+## 介绍
 
 Fedora 是一个由社区维护基于自由开源软件的 `Linux`发行版，是Redhat的上游。提供有多种发行版，大多采用图形化的安装器Anaconda，并提供官方写入工具[Fedora Media Writer](https://docs.fedoraproject.org/en-US/fedora/latest/preparing-boot-media/#fedora_media_writer)
 
@@ -8,7 +10,7 @@ Fedora 是一个由社区维护基于自由开源软件的 `Linux`发行版，�
 
 - [Fedora’s Mission and Foundations](https://docs.fedoraproject.org/en-US/project/)
 
-## fedora 各种版本的区别
+## Fedora 各种版本的区别
 
 - 大多数衍生版本都基于某个特定版本（通常是 Fedora 工作站版），并使用相应的安装流程。大体分为 Editions，Spins，Atomic Desktops 和 Labs 四个类别,每一类包含数个发行版，详细说明请跳转至[[fedora-各种发行版的详细说明]]。
 
