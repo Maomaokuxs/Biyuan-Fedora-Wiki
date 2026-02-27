@@ -1,4 +1,6 @@
-# 什么是fedora GNU/linux
+# 说明
+
+这篇内容只是粗略的说明了一下 Fedora，用于使用 Fedora 时挑选不同的版本，以及提及一下官方的镜像写入工具。
 
 Fedora 是一个由社区维护基于自由开源软件的 `Linux`发行版，是Redhat的上游。提供有多种发行版，大多采用图形化的安装器Anaconda，并提供官方写入工具[Fedora Media Writer](https://docs.fedoraproject.org/en-US/fedora/latest/preparing-boot-media/#fedora_media_writer)
 
