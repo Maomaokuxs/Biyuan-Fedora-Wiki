@@ -24,6 +24,21 @@
 
 ### 1.3 解决办法
 
+- 如果 Linux 使用的是 RTC 那么一般不需要更改，使用下面的命令查看，确保使用了 UTC 修改 Windows 注册表才有效。
+
+```bash
+biyuan@fedora:~$ timedatectl 
+               Local time: 一 2026-03-16 07:18:08 CST
+           Universal time: 日 2026-03-15 23:18:08 UTC
+                 RTC time: 日 2026-03-15 23:18:08
+                Time zone: Asia/Shanghai (CST, +0800)
+System clock synchronized: yes
+              NTP service: active
+          RTC in local TZ: no
+
+RTC 对应的那行是 no 就说明开启了UTC。
+```
+
 - 修改 Windows 使用 UTC，右键 windows 的徽标打开命令提示符（管理员），或者直接搜索并打开。
 
 - 输入以下命令并回车
