@@ -4,7 +4,7 @@
 
 ## 介绍
 
-Fedora 是一个由社区维护基于自由开源软件的 `Linux`发行版，是Redhat的上游。提供有多种发行版，大多采用图形化的安装器Anaconda，并提供官方写入工具[Fedora Media Writer](https://docs.fedoraproject.org/en-US/fedora/latest/preparing-boot-media/#fedora_media_writer)
+Fedora 是一个由社区维护基于自由开源软件的 `Linux` 发行版，是 Redhat 的上游。提供有多种发行版，大多采用图形化的安装器 Anaconda，并提供官方写入工具[Fedora Media Writer](https://docs.fedoraproject.org/en-US/fedora/latest/preparing-boot-media/#fedora_media_writer)
 
 参考文档：
 
@@ -16,7 +16,7 @@ Fedora 是一个由社区维护基于自由开源软件的 `Linux`发行版，�
 
 - Editions
 
-- 该类别包含各种不同服务场景的版本，为个人电脑提供的 Fedora 工作站版本，使用 gnome 为桌面环境，其定制版是使用 kde 为桌面环境的 Fedora KDE Plasma 桌面；适用于服务器的 Fedora 服务器版；用于“物联网”服务器的 Fedora IOT 版；适用于容器化的Fedora CoreOS 版，专注于云网络上的 Fedora Cloud版。
+- 该类别包含各种不同服务场景的版本，为个人电脑提供的 Fedora 工作站版本，使用 gnome 为桌面环境，其定制版是使用 kde 为桌面环境的 Fedora KDE Plasma 桌面；适用于服务器的 Fedora 服务器版；用于“物联网”服务器的 Fedora IOT 版；适用于容器化的 Fedora CoreOS 版，专注于云网络上的 Fedora Cloud 版。
 
 - Spins
 
