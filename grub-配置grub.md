@@ -14,6 +14,8 @@ GRUB_CMDLINE_LINUX="rd.luks.uuid=luks-aea5a643-311b-4a15-b4e9-08940ff9577b rhgb 
 GRUB_DISABLE_RECOVERY="true"
 GRUB_ENABLE_BLSCFG=true
 
+# 记忆所选启动项
+GRUB_SAVEDEFAULT="true"
 #GRUB_DISABLE_OS_PROBER=false
 ```
 
