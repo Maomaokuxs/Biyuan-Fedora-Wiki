@@ -1,42 +1,73 @@
 # 说明
 
-这是一篇系统配置板块的整合文档，只提供部分内容，具体的内容部分是在其他章节中，我使用的是 KDE 桌面环境，美化通常没有，也是因为实力有限。
+这是一篇系统配置板块的整合文档，只提供部分内容，具体的内容部分是在其他章节中，我使用的是 KDE 桌面环境，美化通常没有。
 
-## 0. (可选) 配置系统级快照
-
-[[snapper-实现快照功能]]
-
-注：在自由的系统中，需要自己确定每次执行的命令是什么功能，如果不确定使用系统快照是明智的选择。
-
-## 1. 安装英伟达显卡驱动
-
-[[安装英伟达显卡驱动并开启硬件编解码]]
-
-注：暂时只写了安装英伟达显卡驱动，我手头只有英伟达的显卡，其他显卡没法测试。
-
-## 2.配置软件源并更新软件包
+## 配置软件源并更新软件包
 
 ```bash
-# 1.备份官方软件源
+# 1. 备份官方软件源
 sudo cp /etc/yum.repos.d/fedora.repo /etc/yum.repos.d/fedora.repo.bak
 sudo cp /etc/yum.repos.d/fedora-updates.repo /etc/yum.repos.d/fedora-updates.repo.bak
 
-# 2.更新本地缓存
+# 2. 更新本地缓存
 sudo dnf makecache
 
-# 3.替换软件源
+# 3. 替换软件源
 sudo sed -e 's|^metalink=|#metalink=|g' \
     -e 's|^#baseurl=http://download.example/pub/fedora/linux|baseurl=http://mirrors.tuna.tsinghua.edu.cn/fedora|g' \
     -i.bak \
     /etc/yum.repos.d/fedora.repo \
     /etc/yum.repos.d/fedora-updates.repo
 
-# 4.更新软件包
+# 4. 启用自由和非自由 RPM 软件仓库
+sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+
+# 5. 替换掉 Fedora 自带的 flathub 仓库
+
+可以解决 Kde 桌面环境带的图形化软件商店的使用。
+
+# 5.1 移除受限的 Fedora 仓库
+sudo flatpak remote-delete fedora
+
+# 5.2 添加 Flathub 完整仓库
+sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+# 6. (可选) Appimage 包格式支持
+
+# 6.1 安装 Fuse
+sudo dnf install -y fuse fuse-libs
+# 6.2  安装管理工具
+sudo flatpak install -y flathub it.mijorus.gearlever
+
+# 7. 更新软件包
 sudo dnf upgrade
 # 更新完成后重启系统
 ```
 
-## 3.添加更多的音频相关组件
+参考文档：
+
+[Fedora-Noble-Setup](https://github.com/wz790/Fedora-Noble-Setup?tab=readme-ov-file#first-things)
+
+## 配置主机名
+
+```bash
+sudo hostnamectl set-hostname biyuan
+# biyuan 改成需要的名字
+```
+
+## (可选) 配置系统级快照
+
+[[snapper-实现快照功能]]
+
+注：在自由的系统中，需要自己确定每次执行的命令是什么功能，如果不确定使用系统快照是明智的选择。
+
+## 安装英伟达显卡驱动
+
+[[安装英伟达显卡驱动并开启硬件编解码]]
+
+注：暂时只写了安装英伟达显卡驱动，我手头只有英伟达的显卡，其他显卡没法测试。
+
+## 添加更多的音频相关组件
 
 [[音频相关组件]]
 
