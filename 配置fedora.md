@@ -14,6 +14,7 @@ sudo timedatectl set-local-rtc 0
 ```
 
 - 更多说明可以看：
+
   - [[设置时区]]
   - [[解决与windows系统共存的问题]]
 
@@ -54,6 +55,7 @@ xdg-user-dirs-update --force
 ```
 
 - 更多说明可以看：
+
   - [[将home目录中的默认中文文件夹改为英文]]
 
 ## 配置软件源并更新软件包
@@ -99,10 +101,12 @@ sudo dnf upgrade
 ```
 
 - 更多说明建议看：
+
   - [[dnf-常用命令]]
   - [[更新软件包和系统]]
 
 - 参考文档：
+
   - [Fedora-Noble-Setup](https://github.com/wz790/Fedora-Noble-Setup?tab=readme-ov-file#first-things)
 
 ## 配置主机名
@@ -168,6 +172,7 @@ sudo dnf install libva-intel-driver
 ```
 
 - 参考文档：
+
   - [Fedora-Noble-Setup](https://github.com/wz790/Fedora-Noble-Setup?tab=readme-ov-file#first-things)
 
 ## 添加更多的音频相关组件
@@ -258,10 +263,10 @@ sudo dnf install fcitx5 fcitx5-chinese-addons fcitx5-configtool
 设置 -> 显示器和监视器
 ```
 
-### 1 修改显示和监视器设置
+### 1.修改显示和监视器设置
 
 [[images/fedora/Fedora-configs/kde-config-2.png]]
 
-### 2 关闭将鼠标移动至左上角屏幕边缘开启窗口平铺展示
+### 2.关闭将鼠标移动至左上角屏幕边缘开启窗口平铺展示
 
 [[images/fedora/Fedora-configs/kde-config-1.png]]
