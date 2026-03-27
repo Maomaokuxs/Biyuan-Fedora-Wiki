@@ -118,8 +118,8 @@ sudo dnf upgrade
 ## 配置主机名
 
 ```bash
-sudo hostnamectl set-hostname biyuan
-# biyuan 改成需要的名字
+sudo hostnamectl set-hostname fedora
+# fedora 改成需要的名字
 ```
 
 ## (可选) 配置系统级快照
@@ -244,12 +244,13 @@ sudo dnf instasll 软件包路径
 ### 1.安装 Fcitx5 软件包及工具
 
 ```bash
-sudo dnf install fcitx5 fcitx5-chinese-addons fcitx5-configtool
+sudo dnf install fcitx5 fcitx5-chinese-addons fcitx5-configtool kcm-fcitx5
 ```
 
-- `fcitx5`：输入法主程序；
-- `fcitx5-chinese-addons`：额外中文包，提供拼音五笔等输入；
-- `fcitx5-configtool`：输入法配置工具。
+- `fcitx5`：Fcitx5 输入法主程序；
+- `fcitx5-chinese-addons`：Fcitx5 额外中文包，提供拼音五笔等输入；
+- `fcitx5-configtool`：Fcitx5 输入法配置工具；
+- `kcm-fcitx5` : 将 Fcitx5 输入法配置集成到 KDE 桌面环境中的设置中。
 
 ### 2.在 KDE 设置中启用 Fcitx5 输入法
 
