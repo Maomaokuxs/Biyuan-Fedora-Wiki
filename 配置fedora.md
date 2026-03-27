@@ -18,11 +18,13 @@ sudo timedatectl set-local-rtc 0
   - [[设置时区]]
   - [[解决与windows系统共存的问题]]
 
+---
+
 ## (可选) 将默认 Home 为中文文件夹修改为英文
 
 解决在终端中输入中文路径的痛点。
 
-## 1.重命名
+### 1.重命名
 
 将中文目录重命名和启动的文件移动至新文件夹
 
@@ -38,7 +40,7 @@ mv 下载 Downloads
 mv 桌面 Desktop
 ```
 
-## 2.自动修改
+### 2.自动修改
 
 ```bash
 # 1.安装软件包
@@ -57,6 +59,8 @@ xdg-user-dirs-update --force
 - 更多说明可以看：
 
   - [[将home目录中的默认中文文件夹改为英文]]
+
+---
 
 ## 配置软件源并更新软件包
 
@@ -109,6 +113,8 @@ sudo dnf upgrade
 
   - [Fedora-Noble-Setup](https://github.com/wz790/Fedora-Noble-Setup?tab=readme-ov-file#first-things)
 
+---
+
 ## 配置主机名
 
 ```bash
@@ -121,6 +127,8 @@ sudo hostnamectl set-hostname biyuan
 [[snapper-实现快照功能]]
 
 注：在自由的系统中，需要自己确定每次执行的命令是什么功能，如果不确定使用系统快照是明智的选择。
+
+---
 
 ## 安装显卡驱动
 
@@ -175,9 +183,13 @@ sudo dnf install libva-intel-driver
 
   - [Fedora-Noble-Setup](https://github.com/wz790/Fedora-Noble-Setup?tab=readme-ov-file#first-things)
 
+---
+
 ## 添加更多的音频相关组件
 
 [[音频相关组件]]
+
+---
 
 ## 文本编辑器 Vim 和 Git
 
@@ -225,6 +237,8 @@ https://code.visualstudio.com/
 sudo dnf instasll 软件包路径
 ```
 
+---
+
 ## 安装输入法
 
 ### 1.安装 Fcitx5 软件包及工具
@@ -257,6 +271,8 @@ sudo dnf install fcitx5 fcitx5-chinese-addons fcitx5-configtool
 
 [[/images/fedora/Fedora-configs/firefox-config-2.png]]
 
+---
+
 ## 配置 KDE
 
 ```text
@@ -270,3 +286,5 @@ sudo dnf install fcitx5 fcitx5-chinese-addons fcitx5-configtool
 ### 2.关闭将鼠标移动至左上角屏幕边缘开启窗口平铺展示
 
 [[images/fedora/Fedora-configs/kde-config-1.png]]
+
+---
