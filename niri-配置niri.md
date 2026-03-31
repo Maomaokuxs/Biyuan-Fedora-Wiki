@@ -52,5 +52,3 @@ systemctl --user unmask app-org.kde.xwaylandvideobridge@autostart.service
 ```
 
 ---
-
-
