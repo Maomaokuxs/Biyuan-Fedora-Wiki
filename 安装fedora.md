@@ -4,7 +4,7 @@
 
 ## 1.制作启动U盘并启动
 
-我建议使用 [Rufus](https://rufus.ie/zh/) ，如果是在 windows 使用，在官网下载 .exe 后缀的文件安装后，将 U 盘插上电脑,打开图像化界面后使用默认的配置，选择将要使用的 U 盘，注意这将会格式化 U 盘，先将里面的重要数据备份，接着直接将下载好的 Fedora 镜像复制进 U 盘，重启系统后进入 bios 中将首个启动项设置为 U 盘，建议在 windows 中关闭快速启动，在 bios 中关闭安全启动。进入图形化界面之后选择 Fedora镜像文件就可以引导启动了。
+我建议使用 [ventoy](https://www.ventoy.net/cn/) ，如果是在 windows 使用，在官网下载 .exe 后缀的文件安装后，将 U 盘插上电脑,打开图像化界面后使用默认的配置，选择将要使用的 U 盘，注意这将会格式化 U 盘，先将里面的重要数据备份，接着直接将下载好的 Fedora 镜像复制进 U 盘，重启系统后进入 bios 中将首个启动项设置为 U 盘，建议在 windows 中关闭快速启动，在 bios 中关闭安全启动。进入图形化界面之后选择 Fedora镜像文件就可以引导启动了。
 
 官方也提供有镜像烧录工具[Fedora Media Writer](https://docs.fedoraproject.org/en-US/fedora/latest/preparing-boot-media/#fedora_media_writer)，使用方法可以查看[官方文档](https://docs.fedoraproject.org/en-US/fedora/latest/preparing-boot-media/)。
 
