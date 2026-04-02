@@ -4,13 +4,17 @@
 
 ## 安装 niri
 
-```bash
-# 1.启用 copr 仓库
-sudo dnf copr enable alternateved/niri 
+1. 启用 copr 仓库
 
-# 2.安装 niri
-sudo dnf install niri
-```
+    ```bash
+    sudo dnf copr enable alternateved/niri 
+    ```
+
+2. 安装 niri
+
+    ```bash
+    sudo dnf install niri
+    ```
 
 ---
 
@@ -52,3 +56,49 @@ systemctl --user unmask app-org.kde.xwaylandvideobridge@autostart.service
 ```
 
 ---
+
+## 修改niri配置文件
+
+1. 打开配置文件
+
+    ```bash
+    sudo vim ~/.config/niri/config.kdl
+    ```
+
+2. 修改终端为 kitty
+
+    ```text
+    Mod+T hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
+    ```
+
+3. 卸载 Alacritty 终端
+
+    ```bash
+    sudo dnf remove alacritty
+    ```
+
+## 配置终端美化
+
+- 参考文档：
+  - [Starship](https://starship.rs/zh-CN/guide/)
+
+1. 安装 starship
+
+    ```bash
+    sudo dnf copr enable atim/starship
+    sudo dnf install starship
+    ```
+
+2. 启用 starship
+
+    在 ~/.bashrc 的最后，添加以下内容：
+
+    ```text
+    eval "$(starship init bash)"
+    ```
+
+    1. 配置 starship
+
+    ```shell
+    starship preset pastel-powerline -o ~/.config/starship.toml
+    ```
