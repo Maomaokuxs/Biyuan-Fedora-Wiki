@@ -108,7 +108,7 @@ setfont ter-132b
 timedatectl
 ```
 
-### 3.创建硬盘分区并格式化
+### 3.创建硬盘分区、格式化和挂载
 
   3.1 列出硬盘
   
@@ -122,6 +122,8 @@ timedatectl
 
   注意，这一步需要非常的谨慎，如果不明白分区这个概念，十分危险，尽量不要在安装了 Windows 系统盘上进行操作，如果需要至少可以在 Windows 中压缩出空闲空间，不要对已有的分区进行任何操作。如果是全盘安装，直接把所有分区删除即可。
 
+  如果要使用我的分区方案，只需要分两个区，大小再下面的表格中。
+  
   ```shell
   fdisk /dev/nvme0n1
   # 进入交互界面，界面左下角会出现 Command (m for help): 
@@ -150,6 +152,7 @@ timedatectl
   Command (m for help): w
   # 写入当前的分区方案
 
+
   ```
   
   3.2.2 使用 cfdisk 命令
@@ -170,22 +173,21 @@ timedatectl
 
   3.4 我使用的分区方案
   
-  - 方案一：方便使用btrfs快照功能
+  3.4.1 方案一：方便使用btrfs快照功能
 
-  | 目录 | 分区 | 文件系统 | 子卷 |
+  | 目录 | 分区 | 文件系统 | 子卷 | 大小 |
   | --------- | --------- | ------ | ------ |
-  | **/efi** | /dev/nvme0n1p1 | fat32 | |
-  | **/** | /dev/nvme0n1p2 | btrfs | @ |
-  | **/home** | /dev/nvme0n1p2 | btrfs | @home |
+  | **/efi** | /dev/nvme0n1p1 | fat32 | | 100MB |
+  | **/** | /dev/nvme0n1p2 | btrfs | @ | 不限 |
+  | **/home** | /dev/nvme0n1p2 | btrfs | @home | 不限 |
 
-  - 方案二：使用 LVM 管理 / 和 /home 方便调整分区大小以及跨磁盘容
+  3.4.2 方案二：使用 LVM 管理 / 和 /home 方便调整分区大小以及跨磁盘容
 
-  | 目录 | 分区 | 文件系统 |
-  | --------- | --------- | ------ |
-  | **/boot/efi** | /dev/nvme0n1p1 | fat32 |
-  | **/boot** | /dev/nvme0n1p2 | ext4 |
-  | **/** | /dev/mapper/vgroup0-lvol0 | ext4 |
-  | **/home** | /dev/mapper/vgroup0-lvol1 | ext4 |
+  | 目录 | 分区 | 文件系统 | 大小 |
+  | --------- | --------- | ------ | ----- |
+  | **/boot** | /dev/nvme0n1p1 | f32 | 1-2GB |
+  | **/** | /dev/mapper/vgroup0-lvol0 | ext4 | 至少60GB |
+  | **/home** | /dev/mapper/vgroup0-lvol1 | ext4 | 至少40GB |
 
   3.5 格式化硬盘分区
 
@@ -195,7 +197,245 @@ timedatectl
   
   ```shell
   mkfs.fat -F 32 /dev/nvme0n1p1
-  # 格式胡
+  # 格式化分区1为fat32
+  
+  mkfs.btrfs /dev/nvme0n1p2 
+  # 格式化分区2为btrfs
+  
+  lsblk -f 
+  # 查看当前分区及格式化情况
+  
+  mount -t btrfs -t btrfs /dev/nvme0n1p2 /mnt
+  # 临时挂载
+
+  btrfs subvolume create /mnt/@ 
+  btrfs subvolume create /mnt/@home
+  # 创建 @ 和 @home 两个btrfs子卷
+  
+  umount /mnt 
+  # 取消挂载
+
+  mount -t btrfs -o subvol=/@,compress=zstd /dev/nvme0n1p2 /mnt
+  mount --mkdir -t btrfs -o subvol=/@home,compress=zstd /dev/nvme0n1p2 /mnt/home
+  mount --mkdir /dev/nvme0n1p1 /mnt/efi 
+  # 挂载分区到指定挂载点
   ```
 
+  3.5.2 方案二
+  
+  ```shell
+  mkfs.fat -F 32 /dev/nvme0n1p1
+  # 格式化分区1为fat32
+  
+  pvcreate /dev/nvme0n1p2
+  # 创建物理卷
+  
+  vgcreate vg0 /dev/nvme0n1p2
+  # 创建逻辑卷组
 
+  lvcreate -L 60G -n root vg0
+  lvcreate -l 100%FREE -n home vg0
+  # 创建逻辑卷root 以及 home ，root 大小为 60GB，剩余分配给
+  
+  mkfs.ext4 /dev/vg0/root 
+  mkfs.ext4 /dev/vg0/home
+  
+  lsblk -f 
+  # 检查分区及格式化情况
+ 
+  mount /dev/vg0/root /mnt
+  # 挂载根分区
+
+  mkdir -p /mnt/{boot，home}
+  # 创建挂载点
+  
+  mount /dev/nvme0n1p1 /mnt/boot
+  # 挂载引导分区
+
+  mount /dev/vg0/home /mnt/home
+  # 挂载家目录
+  ```
+
+### 4.正式安装系统
+  
+  4.1 安装系统及必要软件包
+  
+  ```shell
+  pacstrap -K /mnt/ base base-devel linux linux-firmware btrfs-progs networkmanager vim sudo amd-ucode
+  # 如果是 Intel 将 amd-ucode 改成 intal-ucode
+  ```
+  
+  4.2 自动生成fstab
+  
+  ```shell
+  genfstab -U /mnt > /mnt/etc/fstab
+  
+  cat /mnt/etc/fstab
+  # 打印生成的fstab内容到终端，检查挂载项是否有问题
+  ```
+  
+### 5.基本配置系统
+  
+  5.1 进入新安装的系统
+
+  ```shell
+  arch-chroot /mnt
+  ```
+  
+  5.2 设置时区
+  
+  ```shell
+  ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+  hwclock --systohc
+  ```
+
+  5.3 本地化
+  
+  ```shell
+  vim /etc/locale.gen
+  # 可以使用点击/，加上en_US.UTF-8 搜索
+  # 点击 i 进入编辑模式
+  # 方向键可以控制光标
+  # 点击 esc 推出编辑模式
+  # 取消 en_US.UTF-8 及 zh_CN.UTF-8 前的注释
+  # 输入 :wq 保存并推出
+
+  locale-gen
+  # 生成本地化文件
+
+  vim /etc/locale.conf
+  # 设置本地化
+  # 添加 LANG=en_US.UTF-8 
+  ```
+
+  5.4 配置主机名
+  
+  ```shell
+   vim /etc/hostname
+  # 输入需要的主机名
+  ```
+
+  5.5 配置 root 密码
+
+  ```shell
+  passwd root  
+  # 连续输入两次密码
+  ```
+  
+  5.6 安装系统引导器
+
+  ```shell
+  pacman -S grub efibootmgr
+  grub-install --target=x86.64-efi --efi-directory=/efi --boot-directary=/efi --botloaser-id=arch
+  ```
+  
+  5.7 将 /efi/grub 链接至 /boot/efi
+  
+  ```shell
+  ln -s /efi/grub /boot/grub
+  ```
+  
+  5.8 配置双系统
+
+  ```shell
+  pacman -S os-prober exfat-utils
+  
+  vim /etc/default/grub 
+  # 将 GRUB_DISABLE_OS_PROBER=false取消注释 
+  ```
+
+  5.9 生成启动项及启动流程
+
+  ```shell
+  grub-mkconfig -o /boot/grub/grub.cfg 
+  ```
+  
+  5.10 配置 zram 内存压缩和交换空间
+
+  ```shell
+  pacman -S zram-generator
+  # 自动化管理zram工具
+  ```
+
+  ```shell
+  vim /etc/systemd/zram-generator.conf
+  # 写入配置文件 
+  [zram0]
+  zram-size = ram
+  compression-algorithm = zstd
+  ```
+
+  ```shell
+  vim /etc/default/grub
+  # 在 GRUB_CMDLINE_LINUX_DEFAULT=""中添加 zswap.enabled=0
+  grub-mkconfig -o /boot/grub/grub.cfg
+  ```
+
+  5.11 重启系统
+
+```shell
+exit
+# 退出 chroot
+
+reboot
+# 重启系统
+```
+
+## 三、启动系统
+
+进入选择 arch linux 的启动项，部分主板会自动切换不需要设置。
+
+使用 root 名加配置的密码进入系统。
+
+### 1.配置 networkmanager 自启动
+
+```shell
+systemctl enable --now NetworkManager
+```
+
+### 2.连接网络
+
+有线网络将自动连接，无线使用下面命令。
+
+```shell
+nmtui
+```
+
+### 3.更新软件包
+
+```shell
+pamcan -Syu
+```
+
+### 4.添加普通用户
+
+```shell
+useradd -G wheel -m biyuan
+# biyuan是用户名
+
+passwd biyuan
+# 配置用户 biyuan 的密码
+
+visudo 
+# 取消 %wheel ALL=(ALL:ALL) ALL注释 
+```
+
+### 4.注销 root 账户
+
+```shell
+exit
+```
+
+### 5.登录普通用户
+
+输入刚刚配置的普通用户的信息。
+
+### 4.安装 fastfetch
+
+```shell
+sudo pamcan -S fastfetch
+# 安装软件包
+
+fastfetch
+# 输出当前系统信息
+```
