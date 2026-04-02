@@ -185,7 +185,7 @@ timedatectl
 
   | 目录 | 分区 | 文件系统 | 大小 |
   | --------- | --------- | ------ | ----- |
-  | **/boot** | /dev/nvme0n1p1 | f32 | 1-2GB |
+  | **/boot** | /dev/nvme0n1p1 | fat32 | 1-2GB |
   | **/** | /dev/mapper/vgroup0-lvol0 | ext4 | 至少60GB |
   | **/home** | /dev/mapper/vgroup0-lvol1 | ext4 | 至少40GB |
 
