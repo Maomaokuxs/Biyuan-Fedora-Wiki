@@ -205,7 +205,7 @@ timedatectl
   lsblk -f 
   # 查看当前分区及格式化情况
   
-  mount -t btrfs -t btrfs /dev/nvme0n1p2 /mnt
+  mount -t btrfs /dev/nvme0n1p2 /mnt
   # 临时挂载
 
   btrfs subvolume create /mnt/@ 
@@ -326,7 +326,7 @@ timedatectl
 
   ```shell
   pacman -S grub efibootmgr
-  grub-install --target=x86.64-efi --efi-directory=/efi --boot-directary=/efi --botloaser-id=arch
+  grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/efi --bootloader-id=arch
   ```
   
   5.7 将 /efi/grub 链接至 /boot/efi
@@ -417,6 +417,9 @@ useradd -G wheel -m biyuan
 
 passwd biyuan
 # 配置用户 biyuan 的密码
+
+vim /etc/environment
+# 配置默认编辑器
 
 visudo 
 # 取消 %wheel ALL=(ALL:ALL) ALL注释 
