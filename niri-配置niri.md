@@ -156,7 +156,7 @@
     # 使用仓库中的配置文件
     ```
 
-1. 配置 kitty
+2. 配置 kitty
 
     - 设置字体
   
@@ -208,4 +208,95 @@
     #隐藏标题栏
     hide_window_decorations yes
     window_padding_width 10
+    ```
+
+## 配置通知
+
+1. 安装 mako
+
+    ```bash
+    sudo dnf install mako
+    ```
+
+2. 修改 niri 配置文件
+
+    ```bash
+    vim ~/.config/niri/config.kdl
+    ```
+
+    ```shell
+    # 添加以下内容
+    spawn-at-startup "mako"
+    ```
+
+3. 美化
+
+## 配置应用启动器
+
+1. 安装 rofi
+
+    ```bash
+    vim ~/.config/niri/config.kdl
+    ```
+
+2. 修改 niri 配置文件
+
+    ```bash
+    vim ~/.config/niri/config.kdl
+    ```
+
+    ```shell
+    # 添加以下内容
+    Mod+D hotkey-overlay-title="Run an Application: rofi" { spawn "rofi" "-show" "drun"; }
+    ```
+
+3.美化
+
+## 配置输入法
+
+1. 安装 fcitx5
+
+    ```bash
+    sudo dnf install fcitx5 fcitx5-chinese-addons fcitx5-configtool kcm-fcitx5
+    ```
+
+    - `fcitx5`：Fcitx5 输入法主程序；
+    - `fcitx5-chinese-addons`：Fcitx5 额外中文包，提供拼音五笔等输入；
+    - `fcitx5-configtool`：Fcitx5 输入法配置工具；
+    - `kcm-fcitx5` : 将 Fcitx5 输入法配置集成到 KDE 桌面环境中的设置中。
+
+2. 修改niri配置文件
+
+    ```bash
+    # 添加以下内容
+    spawn-at-startup "fcitx5" "-d"
+    ```
+
+## 配置 rofi waybar niri 三者随壁纸同步颜色
+
+1. 文件结构体系
+
+    ```txet
+    ~ (Home Directory)
+    ├── .config/
+    │   ├── niri/
+    │   │   ├── config.kdl              # 1. Niri 主配置 (删除了硬编码颜色，仅引入 colors.kdl)
+    │   │   ├── colors.kdl              # 2. [动态生成] Niri 的色彩变量包
+    │   │   └── scripts/
+    │   │       ├── theme-sync.sh       # 3. [核心引擎] 全系统取色与分发脚本
+    │   │       └── wallpaper-picker.sh # 4. [交互入口] Rofi 唤起的壁纸选择器
+    │   │
+    │   ├── waybar/
+    │   │   ├── config.jsonc             # 5. Waybar 模块配置 (保持不变)
+    │   │   ├── style.css                # 6. Waybar 样式表 (顶部引入动态 CSS 变量)
+    │   │   └── scripts/
+    │   │       └── cava.sh              # 7. [智能组件] 自适应 PipeWire/Pulse 的频谱脚本
+    │   │
+    │   └── rofi/
+    │       └── current.rasi              # 8. Rofi 主题配置 (利用多色矩阵实现高对比度)
+    │
+    └── .cache/
+        └── hellwal/                       # 存放脚本生成的“便签”（中转站）
+            ├── colors-waybar.css          # 9. [动态生成] 供 Waybar 引入的 @define-color 变量
+            └── colors-rofi.rasi           # 10. [动态生成] 供 Rofi 引入的 * { ... } 变量
     ```
