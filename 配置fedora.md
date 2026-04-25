@@ -166,11 +166,11 @@ sudo dnf swap mesa-va-drivers mesa-va-drivers-freeworld mesa-vdpau-drivers mesa-
 
   - 英特尔较新 GPU（第 11 代及更高版本）
 
-```bash
+  ```bash
 
-# 适用于较新英特尔 GPU 的视频加速
-sudo dnf install intel-media-driver
-```
+  # 适用于较新英特尔 GPU 的视频加速
+  sudo dnf install intel-media-driver
+  ```
 
   - 英特尔旧款 GPU（第 10 代及更早版本）
 
