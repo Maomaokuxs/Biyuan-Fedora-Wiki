@@ -26,6 +26,19 @@ Fedora 是一个由社区维护基于自由开源软件的 `Linux` 发行版，�
 
   该类别提供多种除了 Gnome 和 ked 除外的其他桌面环境，通常适用于个人电脑。
 
+- [Fedora Xfce Desktop](https://fedoraproject.org/spins/xfce)
+- [Fedora Cinnamon Desktop](https://fedoraproject.org/spins/cinnamon)
+- [Fedora Mate + Compiz Desktop](https://fedoraproject.org/spins/mate)
+- [Fedora i3 Tiling WM](https://fedoraproject.org/spins/i3)
+- [Fedora LXQt Desktop](https://fedoraproject.org/spins/lxqt)
+- [Fedora LXDE Desktop](https://fedoraproject.org/spins/lxde)
+- [Fedora SOAS Desktop](https://fedoraproject.org/spins/soas)
+- [Fedora Sway Tiling WM](https://fedoraproject.org/spins/sway)
+- [Fedora Budgie Desktop](https://fedoraproject.org/spins/budgie)
+- [Fedora Miracle Desktop](https://fedoraproject.org/spins/miraclewm)
+- [Fedora KDE Mobile Desktop](https://fedoraproject.org/spins/kde-mobile)
+- [Fedora COSMIC Desktop](https://fedoraproject.org/spins/cosmic)
+
 ### Atomic Desktops
 
   该类别的特点是整个系统一次性更新，如果出现任何问题，更新都不会生效，可以回滚到之前的版本，图形应用程序通过 Flatpak 安装，实现容器化，并且提供多种桌面环境。
