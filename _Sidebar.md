@@ -7,6 +7,7 @@
 - [[食用指南]]
 - [[我的使用Linux建议|使用fedora的建议]]
 - [[Fedora-版本怎么选？|什么是Fedora]]
+- [[分区方案|linux的文件系统## 3.推荐分区方案]]
 - [[Fedora要怎么装？|安装fedora]]
 - [[我与linux]]
 
