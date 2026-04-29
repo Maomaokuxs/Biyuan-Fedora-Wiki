@@ -1,6 +1,6 @@
 # 说明
 
-在需要备份btrfs子卷的场景中有一些帮助，因为 home 目录不能被占用，环境是tty，以下的命令都是针对 root 账户。
+在需要备份btrfs子卷的场景中有一些帮助，因为 home 目录不能被占用，环境是tty，以下的命令都是针对 root 账户，如果你需要交换 root子卷，可以是用普通用户登录tty，如果home子卷替换失败只不过没有了用户文件，但是要替换根分区我并不建议这样做，系统坏了要么使用 snapper + btrfs-assistant 执行回滚，要么直接重装。
 
 ## 0.登录 root 账户
 
@@ -86,6 +86,7 @@ btrfs subvolume snapshot /mnt/new/snapper/ /mnt/new/@home
 
 ```bash
 # 1.尝试挂载
+sudo systemctl daemon-reload
 mount -a
 
 # 2.检查挂载情况
