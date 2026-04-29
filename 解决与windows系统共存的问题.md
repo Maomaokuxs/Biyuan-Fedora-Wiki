@@ -24,7 +24,7 @@
 
 ### 1.3 解决办法
 
-- 如果 Linux 使用的是 RTC 那么一般不需要更改，使用下面的命令查看，确保使用了 UTC 修改 Windows 注册表才有效。
+- 如果 Linux 使用的是 RTC 那么不需要更改 Windows 系统与 Fedora 系统可以同步，使用下面的命令查看，除非你需要使用 UTC 才需要修改 Windows 注册表。
 
 ```bash
 biyuan@fedora:~$ timedatectl 
@@ -91,169 +91,167 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsU
 
 #### 4.1.1 共享磁盘
 
- 1. Windows 分享目录，Linux 访问
+1. Windows 分享目录，Linux 访问
 
-- Windows 端设置
+    - Windows 端设置
 
-右键点击你想分享的文件夹 -> 属性 -> 共享 -> 高级共享。
+    右键点击你想分享的文件夹 -> 属性 -> 共享 -> 高级共享。
 
-勾选“共享此文件夹”，点击“权限”，确保你的用户有“读取”或“更改”权限。
+    勾选“共享此文件夹”，点击“权限”，确保你的用户有“读取”或“更改”权限。
 
-获取 Windows 的 IP 地址
+    获取 Windows 的 IP 地址
 
-```DOS
-ipconfig
-# 查看的是 IPv4 地址 . . . . . . . . . . . . :
-```
+    ```DOS
+    ipconfig
+    # 查看的是 IPv4 地址 . . . . . . . . . . . . :
+    ```
 
-注意：请记住 Windows 的 IP 地址 和 用户名（如果是微软账户，通常是邮箱或设置里的显示名），网络共享路径的格式是：\\计算机名\分享名 或 \\IP地址\分享名。
+    注意：请记住 Windows 的 IP 地址 和 用户名（如果是微软账户，通常是邮箱或设置里的显示名），网络共享路径的格式是：\\计算机名\分享名 或 \\IP地址\分享名。
 
-- 确定共享磁盘或目录
+    - 确定共享磁盘或目录
 
-按下 Win + R，输入 cmd 并回车。
+    按下 Win + R，输入 cmd 并回车。
 
-输入以下命令：
+    输入以下命令：
 
-```DOS
-net share
-```
+    ```DOS
+    net share
+    ```
 
-注意：像 C$、ADMIN$ 这种带 $ 符号的是系统内置管理共享，通常不需要去动它们
+    注意：像 C$、ADMIN$ 这种带 $ 符号的是系统内置管理共享，通常不需要去动它们
 
-- 安装软件包
+    - 安装软件包
 
-```bash
-sudo dnf install cifs-utils
-# 默认已经安装
-```
+    ```bash
+    sudo dnf install cifs-utils
+    # 默认已经安装
+    ```
 
-- 创建挂载点
+    - 创建挂载点
 
-```bash
-sudo mkdir -p /mnt/win_f
-```
+    ```bash
+    sudo mkdir -p /mnt/win_f
+    ```
 
-- 执行挂载命令 假设你的 Windows IP 是 192.168.x.x：
+    - 执行挂载命令 假设你的 Windows IP 是 192.168.x.x：
 
-```bash
-sudo mount -t cifs //192.168.x.x/F /mnt/win_f -o username=用户名,uid=$(id -u),gid=$(id -g),iocharset=utf8
-```
+    ```bash
+    sudo mount -t cifs //192.168.x.x/F /mnt/win_f -o username=用户名,uid=$(id -u),gid=$(id -g),iocharset=utf8
+    ```
 
-//192.168.x.x/F: 这里的 F 就是你 net share 列表里的共享名。
-uid=$(id -u),gid=$(id -g): 自动获取你当前 Fedora 用户的 ID，确保你对挂载后的目录有完全控制权。
-username=: 你的 Windows 用户名。
+    //192.168.x.x/F: 这里的 F 就是你 net share 列表里的共享名。
+    uid=$(id -u),gid=$(id -g): 自动获取你当前 Fedora 用户的 ID，确保你对挂载后的目录有完全控制权。
+    username=: 你的 Windows 用户名。
 
-- 在回车之后会要求输入密码
+    - 在回车之后会要求输入密码
 
-Password for 用户名@//192.168.x.x/F:
+    Password for 用户名@//192.168.x.x/F:
 
-密码是你的 Windows 账户登录密码，如果你是用 PIN 码（4位或6位数字）登录 Windows 的，这里的密码通常不是 PIN 码。
+    密码是你的 Windows 账户登录密码，如果你是用 PIN 码（4位或6位数字）登录 Windows 的，这里的密码通常不是 PIN 码。
 
-注意：如果你的 Windows 账号没有设置密码，SMB 默认是不允许连接的，建议给 Windows 账号设个密码。
+    - Linux 端设置
 
-- Linux 端设置
+      - 设置自动挂载
 
-- 设置自动挂载
+      - 创建一个文件，存放 window 的账户信息
 
-  - 创建一个文件，存放 window 的账户信息
+      ```bash
+      vim ~/.smbcredentials
+      ```
 
-  ```bash
-  vim ~/.smbcredentials
-  ```
+      - 输入以下内容
 
-  - 输入以下内容
+      ```bash
+      username=用户名
+      password=你的 Windows 密码
+      ```
 
-  ```bash
-  username=用户名
-  password=你的 Windows 密码
-  ```
+      - 设置文件权限，确保只有属主可以看
 
-  - 设置文件权限，确保只有属主可以看
+      ```bash
+      chmod 600 ~/.smbcredentials
+      ```
 
-  ```bash
-  chmod 600 ~/.smbcredentials
-  ```
+      - 创建挂载点
 
-  - 创建挂载点
+      ```bash
+      sudo mkdir -p /mnt/win
+      ```
 
-  ```bash
-  sudo mkdir -p /mnt/win
-  ```
+      - 备份fstab并编辑
 
-  - 备份fstab并编辑
-  
-  ```bash
-  sudo cp /etc/fstab /etc/fstab.bak
-  sudo nano /etc/fstab
-  ```
+      ```bash
+      sudo cp /etc/fstab /etc/fstab.bak
+      sudo nano /etc/fstab
+      ```
 
-  - 在文件末尾添加以下一行内容
+      - 在文件末尾添加以下一行内容
 
-  ```text
-  //192.168.5.5/F /mnt/win cifs credentials=/home/biyuan/.smbcredentials,uid=1000,gid=1000,vers=3.0,x-systemd.automount,x-systemd.idle-timeout=60,actimeo=3,0 0
-  ```
+      ```text
+      //192.168.5.5/F /mnt/win cifs credentials=/home/biyuan/.smbcredentials,uid=1000,gid=1000,vers=3.0,x-systemd.automount,x-systemd.idle-timeout=60,actimeo=3,0 0
+      ```
 
-  //192.168.x.x/F：Windows 共享路径，IP 是按实际设置，建议将 Windows 设置为静态 IP。
+      //192.168.x.x/F：Windows 共享路径，IP 是按实际设置，建议将 Windows 设置为静态 IP。
 
-  /mnt/win：本地挂载点，所有 Windows 共享文件将出现在此目录。
+      /mnt/win：本地挂载点，所有 Windows 共享文件将出现在此目录。
 
-  cifs：文件系统类型，CIFS 是 SMB 协议在 Linux 内核中的实现模块。
+      cifs：文件系统类型，CIFS 是 SMB 协议在 Linux 内核中的实现模块。
 
-  credentials=/home/biyuan/.smbcredentials，指定凭据文件路径，避免密码明文暴露在 /etc/fstab 中。
+      credentials=/home/biyuan/.smbcredentials，指定凭据文件路径，避免密码明文暴露在 /etc/fstab 中。
 
-  uid=1000,gid=1000指定挂载后所有文件和目录的属主、属组为 Linux 用户 UID 1000 / GID 1000（通常是第一个普通用户）。
+      uid=1000,gid=1000指定挂载后所有文件和目录的属主、属组为 Linux 用户 UID 1000 / GID 1000（通常是第一个普通用户）。
 
-  vers=3.0，强制使用 SMB 3.0 协议通信。
+      vers=3.0，强制使用 SMB 3.0 协议通信。
 
-  x-systemd.automount，按需挂载，系统启动时不立即挂载该共享，只有首次访问 /mnt/win 时才触发挂载，网络不可用时不影响开机。
+      x-systemd.automount，按需挂载，系统启动时不立即挂载该共享，只有首次访问 /mnt/win 时才触发挂载，网络不可用时不影响开机。
 
-  x-systemd.idle-timeout=60，空闲 60 秒后自动卸载该共享。
+      x-systemd.idle-timeout=60，空闲 60 秒后自动卸载该共享。
 
-  actimeo=3，目录项/文件属性缓存超时时间，单位秒，避免频繁查询服务器，属性缓存保持有效 3 秒。3 秒内再次 ls 直接读缓存，不发网络请求。
+      actimeo=3，目录项/文件属性缓存超时时间，单位秒，避免频繁查询服务器，属性缓存保持有效 3 秒。3 秒内再次 ls 直接读缓存，不发网络请求。
 
-  0 0
-  第一个 0：不被 dump 备份（现代系统几乎不用）。
-  第二个 0：开机时不执行 fsck 检查（网络文件系统无需 fsck）。
+      0 0
+      第一个 0：不被 dump 备份（现代系统几乎不用）。
+      第二个 0：开机时不执行 fsck 检查（网络文件系统无需 fsck）。
 
 2. Linux 分享目录，Windows 访问
 
-- 安装并配置 Samba
+    - 安装并配置 Samba
 
-```bash
-sudo apt update
-sudo apt install samba
-```
+    ```bash
+    sudo dnf upgrade
+    sudo dnf install samba
+    ```
 
-- 编辑配置文件
+    - 编辑配置文件
 
-编辑 /etc/samba/smb.conf，在文件末尾添加：
+    编辑 /etc/samba/smb.conf，在文件末尾添加：
 
-```text
-[LinuxShare]
-   path = /home/username/shared
-   available = yes
-   browseable = yes
-   public = yes
-   writable = yes
-```
+    ```text
+    [LinuxShare]
+       path = /home/username/shared
+       available = yes
+       browseable = yes
+       public = yes
+       writable = yes
+    ```
 
-- 设置访问密码并重启
+    - 设置访问密码并重启
 
-Samba 需要独立的密码库：
+    Samba 需要独立的密码库：
 
-```Bash
-sudo smbpasswd -a username  # 设置你的 Linux 用户名和 Samba 专用密码
-sudo systemctl restart smbd
-```
+    ```Bash
+    sudo smbpasswd -a username  # 设置你的 Linux 用户名和 Samba 专用密码
+    sudo systemctl restart smbd
+    ```
 
-- Windows 端访问
+    - Windows 端访问
 
-```bash
-# 查看当前ip
-ip addr show
-```
+    ```bash
+    # 查看当前ip
+    ip addr show
+    ```
 
-在 Windows 文件资源管理器的地址栏输入： \\192.168.x.x\LinuxShare
+    在 Windows 文件资源管理器的地址栏输入： \\192.168.x.x\LinuxShare
 
 #### 4.1.2 共享文件
 
