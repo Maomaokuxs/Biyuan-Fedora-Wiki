@@ -95,59 +95,59 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsU
 
     - Windows 端设置
 
-    右键点击你想分享的文件夹 -> 属性 -> 共享 -> 高级共享。
+        右键点击你想分享的文件夹 -> 属性 -> 共享 -> 高级共享。
 
-    勾选“共享此文件夹”，点击“权限”，确保你的用户有“读取”或“更改”权限。
+        勾选“共享此文件夹”，点击“权限”，确保你的用户有“读取”或“更改”权限。
 
-    获取 Windows 的 IP 地址
+        获取 Windows 的 IP 地址
 
-    ```DOS
-    ipconfig
-    # 查看的是 IPv4 地址 . . . . . . . . . . . . :
-    ```
+        ```DOS
+        ipconfig
+        # 查看的是 IPv4 地址 . . . . . . . . . . . . :
+        ```
 
-    注意：请记住 Windows 的 IP 地址 和 用户名（如果是微软账户，通常是邮箱或设置里的显示名），网络共享路径的格式是：\\计算机名\分享名 或 \\IP地址\分享名。
+        注意：请记住 Windows 的 IP 地址 和 用户名（如果是微软账户，通常是邮箱或设置里的显示名），网络共享路径的格式是：\\计算机名\分享名 或 \\IP地址\分享名。
 
-    - 确定共享磁盘或目录
+        - 确定共享磁盘或目录
 
-    按下 Win + R，输入 cmd 并回车。
+        按下 Win + R，输入 cmd 并回车。
 
-    输入以下命令：
+        输入以下命令：
 
-    ```DOS
-    net share
-    ```
+        ```DOS
+        net share
+        ```
 
-    注意：像 C$、ADMIN$ 这种带 $ 符号的是系统内置管理共享，通常不需要去动它们
+        注意：像 C$、ADMIN$ 这种带 $ 符号的是系统内置管理共享，通常不需要去动它们
 
-    - 安装软件包
+        - 安装软件包
 
-    ```bash
-    sudo dnf install cifs-utils
-    # 默认已经安装
-    ```
+        ```bash
+        sudo dnf install cifs-utils
+        # 默认已经安装
+        ```
 
-    - 创建挂载点
+        - 创建挂载点
 
-    ```bash
-    sudo mkdir -p /mnt/win_f
-    ```
+        ```bash
+        sudo mkdir -p /mnt/win_f
+        ```
 
-    - 执行挂载命令 假设你的 Windows IP 是 192.168.x.x：
+        - 执行挂载命令 假设你的 Windows IP 是 192.168.x.x：
 
-    ```bash
-    sudo mount -t cifs //192.168.x.x/F /mnt/win_f -o username=用户名,uid=$(id -u),gid=$(id -g),iocharset=utf8
-    ```
+        ```bash
+        sudo mount -t cifs //192.168.x.x/F /mnt/win_f -o username=用户名,uid=$(id -u),gid=$(id -g),iocharset=utf8
+        ```
 
-    //192.168.x.x/F: 这里的 F 就是你 net share 列表里的共享名。
-    uid=$(id -u),gid=$(id -g): 自动获取你当前 Fedora 用户的 ID，确保你对挂载后的目录有完全控制权。
-    username=: 你的 Windows 用户名。
+        //192.168.x.x/F: 这里的 F 就是你 net share 列表里的共享名。
+        uid=$(id -u),gid=$(id -g): 自动获取你当前 Fedora 用户的 ID，确保你对挂载后的目录有完全控制权。
+        username=: 你的 Windows 用户名。
 
-    - 在回车之后会要求输入密码
+        - 在回车之后会要求输入密码
 
-    Password for 用户名@//192.168.x.x/F:
+        Password for 用户名@//192.168.x.x/F:
 
-    密码是你的 Windows 账户登录密码，如果你是用 PIN 码（4位或6位数字）登录 Windows 的，这里的密码通常不是 PIN 码。
+        密码是你的 Windows 账户登录密码，如果你是用 PIN 码（4位或6位数字）登录 Windows 的，这里的密码通常不是 PIN 码。
 
     - Linux 端设置
 
