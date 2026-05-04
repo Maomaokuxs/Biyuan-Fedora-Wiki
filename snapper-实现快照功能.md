@@ -363,9 +363,11 @@ sudo cp /.snapshots/SNAPSHOT_NUMBER/snapshot/path/to/file /path/to/restore
 sudo snapper -c root undochange PREVIOUS..CURRENT
 ```
 
-## 7. 使用 btrfs-assistant 工具管理快照
+---
 
-### 7.1 管理快照
+## 7.使用 btrfs-assistant 工具管理快照
+
+### 1.管理快照
 
 - 点击标签栏进入 snapper > new/delete
 
@@ -377,7 +379,7 @@ sudo snapper -c root undochange PREVIOUS..CURRENT
 
 - refresh 为刷新
 
-### 7.2 回滚
+### 2.回滚
 
 - 点击标签栏进入 snapper > browse/restore
 
@@ -387,7 +389,7 @@ sudo snapper -c root undochange PREVIOUS..CURRENT
 
 - 点击 restore
 
-### 7.3 修改部分 snapper 配置文件
+### 3.修改部分 snapper 配置文件
 
 - 点击标签栏进入 snapper settings
 
@@ -395,9 +397,11 @@ sudo snapper -c root undochange PREVIOUS..CURRENT
 
 - 选择对应的条目进行修改
 
+---
+
 ## 8. 帮助
 
-### 0. 注意事项
+### 注意事项
 
 1. 遇到报错为：列出配置失败 (reading sysconfig-file failed)，可以尝试下面的操作。
 
