@@ -2,64 +2,97 @@
 
 本篇文章旨在提供 snapper 使用的指南。
 
-## 1. 安装snapper，snapper-gui，btrfs-assistant
+## 1. 安装snapper，snapper-gui，btrfs-assistant等软件包
+
+### 1.启用corp仓库
 
 ```bash
-# 1.启用corp仓库
 sudo dnf copr enable gasinvein/snapper-edge
+```
 
-# 2.安装 snapper，btrfs-progs 和 btrfs-assistant
+### 2.安装 snapper，btrfs-progs 和 btrfs-assistant
 
-# 2.1 安装 snapper 和 btrfs-assistant
-sudo dnf install snapper btrfs-progs btrfs-assistant
+1. 安装 snapper 和 btrfs-assistant
 
-# 2.2.(可选)安装依赖，并克隆仓库文件编译安装snapper-gui
-sudo dnf install python3-devel python3-setuptools gtksourceview3
- 
-git clone https://github.com/ricardo-vieira/snapper-gui/
- 
-cd snapper-gui/
- 
-sudo python3 setup.py install
+    ```bash
+    sudo dnf install snapper btrfs-progs btrfs-assistant
+    ```
 
-# 2.3 测试是否能启动软件
-snapper-gui
- 
-# 2.4 安装完之后可以删除克隆的仓库文件，工作文件夹在主目录，默认文件在$HOME/
- 
-# 3.(可选)安装 grub-btrfs 和 dnf5-autosnapper
+2. (可选)安装依赖，并克隆仓库文件编译安装snapper-gui
+
+    ```bash
+    sudo dnf install python3-devel python3-setuptools gtksourceview3
+     
+    git clone https://github.com/ricardo-vieira/snapper-gui/
+     
+    cd snapper-gui/
+     
+    sudo python3 setup.py install
+    ```
+
+3. 测试是否能启动软件
+
+    ```bash
+    snapper-gui
+    ```
+
+4. 安装完之后可以删除克隆的仓库文件，工作文件夹在主目录，默认文件在$HOME/
+
+### 3.(可选)安装 grub-btrfs 和 dnf5-autosnapper
 
 ⚠️注意：这两个软件包需要将snapper配置完成后再使用。
 
-# 3.1 安装并启用grub-btrfs
+1. 安装并启用grub-btrfs
 
-# 启用第三方仓库
-sudo dnf copr enable kylegospo/grub-btrfs  
+    - 启用第三方仓库
 
-# 安装 grub-btrfs 软件包
-sudo dnf install grub-btrfs
+    ```bash
+    sudo dnf copr enable kylegospo/grub-btrfs  
+    ```
 
-# 启用相关服务
-sudo systemctl enable --now grub-btrfs.service
+    - 安装 grub-btrfs 软件包
 
-# 确认状态 
-sudo systemctl status grub-btrfs.service
+    ```bash
+    sudo dnf install grub-btrfs
+    ```
 
-# 生成 grub2 配置文件
-sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+    - 启用相关服务
 
-# 3.2 安装 dnf5-autosnapper
+    ```bash
+    sudo systemctl enable --now grub-btrfs.service
+    ```
 
-# 启用第三方仓库
-sudo dnf copr enable douglascdev/dnf5-autosnapper 
+    - 确认状态
 
-# 安装软件包
-sudo dnf install dnf5-autosnapper
-```
+    ```bash
+    sudo systemctl status grub-btrfs.service
+    ```
+
+    - 生成 grub2 配置文件
+
+    ```bash
+    sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+    ```
+
+2. 安装 dnf5-autosnapper
+
+    - 启用第三方仓库
+
+    ```bash
+    sudo dnf copr enable douglascdev/dnf5-autosnapper 
+    ```
+
+    - 安装软件包
+
+    ```bash
+    sudo dnf install dnf5-autosnapper
+    ```
 
 参考文档：
 
 - [snapper-gui](https://github.com/ricardomv/snapper-gui)
+
+---
 
 ## 2. 显示当前挂载的btrfs子卷
 
@@ -68,118 +101,33 @@ sudo dnf install dnf5-autosnapper
 sudo btrfs subvolume list /
 ```
 
+---
+
 ## 3. 为根目录创建配置文件
 
-``` bash
-# 1.创建配置文件
-sudo snapper -c root create-config /
+### 1. 创建配置文件
 
-# 2.显示当前配置文件
+```bash
+sudo snapper -c root create-config /
+```
+
+### 2. 显示当前配置文件
+
+```bash
 sudo snapper list-configs
+```
 
-# 3.检查root配置文件
+### 3. 检查root配置文件
+
+```bash
 sudo snapper -c root get-config
-
-# 注意事项：
-# 3.0 遇到报错为：列出配置失败 (reading sysconfig-file failed)，可以尝试下面的操作。
-# 3.1 备份现有文件（如果有）
-sudo cp /etc/sysconfig/snapper /etc/sysconfig/snapper.backup 2>/dev/null
-
-# 3.2 创建正确的文件
-sudo tee /etc/sysconfig/snapper << 'EOF'
-# System config for snapper
-# See snapper(8) for details
-
-## Path:Systems/Snapper
-## Description:System configuration for Snapper
-## Type:text
-## Default:""
-## ServiceRestart:
-
-# Enable/disable cron jobs.
-# Disabling the cron jobs is especially useful when
-# snapper-timeline.service and snapper-cleanup.service are started by a
-# systemd timer or some other external program.
-# Possible values: "yes", "no"
-SNAPPER_CRON_JOB_TIMELINE=""
-SNAPPER_CRON_JOB_CLEANUP=""
-
-# Log level. Possible values 0-3. Higher means more verbose.
-SNAPPER_LOGLEVEL="3"
-
-# Enable D-Bus ACL (access control list).
-# Disable this if you want to set the ACL yourself.
-# Possible values: "yes", "no"
-SNAPPER_DBUS_ACL=""
-
-# Parameters for timeline cron job.
-SNAPPER_TIMELINE_PARAMS=""
-
-# Parameters for cleanup cron job.
-SNAPPER_CLEANUP_PARAMS=""
-
-# Email address for notifications. Empty string means no email is sent.
-SNAPPER_EMAIL_FROM=""
-SNAPPER_EMAIL_TO=""
-
-# Parameters for email notifications.
-SNAPPER_EMAIL_PARAMS=""
-EOF
-
-# 3.3 设置权限
-sudo chmod 644 /etc/sysconfig/snapper
-sudo chown root:root /etc/sysconfig/snapper
-
-# 3.4 修复 SELinux 上下文
-# 不执行这一步可能会遇到这种报错：
-# Relabeled /etc/sysconfig/snapper from unconfined_u:object_r:etc_t:s0 to unconfined_u:object_r:snapperd_conf_t:s0
-sudo restorecon -v /etc/sysconfig/snapper
-
-# 3.5 验证文件
-cat /etc/sysconfig/snapper
-
-# 3.6 现在创建配置
-sudo snapper -c root create-config /
-
-# 4.0 遇到报错为： 创建配置失败 (creating btrfs subvolume .snapshots failed since it already exists)。
-# 4.1 删除相对应的子卷，比如根目录下
-# 列出所有快照
-sudo btrfs subvolume list /
-# 删除根目录下创造的子卷
-sudo btrfs subvolume delete /.snapshots
-# 删除主目录下创造的子卷
-sudo btrfs subvolume delete /home/.snapshots
-
-# 4.2 验证子卷是否删除
-sudo btrfs subvolume list /
-
-# 5.0 遇到报错为：创建配置失败 (config already exists)。
-# 说明已经创建了对应子卷的快照配置文件，如果要删除配置文件请执行下面命令，将root改为相对应的配置文件ID，请勿直接删除该/etc/snapper/configs/目录下的文件，因为在/etc/sysconfig/snapper中SNAPPER_CONFIGS参数记录着已经创建了的配置文件ID。
-sudo snapper -c root delete-config 2>/dev/null
-# ⚠️注意：配置文件删除后对应的快照也会被删除。
 ```
-
-- 根据 `/usr/share/snapper/config-templates/default` 处的默认配置模板创建一个配置文件 `/etc/snapper/configs/root`。
-- 在 `/subvolume/.snapshots` 处创建一个子卷，用于存储未来该配置文件产生的子卷。子卷的路径将会是 `/subvolume/.snapshots/#/snapshot`，`#` 是子卷序号。
-
-```text
-顶级子卷 (ID 5, 路径 /)
-├── @ (ID 259)                    ← 这是你的 "subvolume"
-│   ├── (所有根文件系统文件)      ← 你日常使用的文件
-│   └── .snapshots (ID 262)       ← Snapper 创建的子卷
-│       ├── 1/                    ← 快照 #1 目录
-│       │   ├── info.xml          ← 元数据
-│       │   └── snapshot/         ← 实际的快照子卷 (ID 263)
-│       ├── 2/                    ← 快照 #2
-│       │   └── snapshot/         ← 快照子卷 (ID 264)
-│       └── ...
-```
-
-- 将 `config` 加入到 `/etc/conf.d/snapper` 的 `SNAPPER_CONFIGS` 中。
 
 参考文档：
 
 - [snapper-archwiki](https://wiki.archlinuxcn.org/wiki/Snapper)
+
+---
 
 ## 4. 优化配置文件(结合自身需求，不必与下面相同)
 
@@ -216,11 +164,15 @@ TIMELINE_LIMIT_YEARLY    │ 1     # 每年快照保留个数。
 TIMELINE_MIN_AGE         │ 3600  # 自动生成的定时快照最小存活时间。
 ```
 
-```bash
-# 1.查看当前配置
-sudo snapper -c root get-config
+### 1. 查看当前配置
 
-# 2.自定义 root配置
+```bash
+sudo snapper -c root get-config
+```
+
+### 2. 自定义 root配置
+
+```bash
 sudo snapper -c root set-config ALLOW_GROUPS="wheel"
 sudo snapper -c root set-config NUMBER_LIMIT="20"
 sudo snapper -c root set-config NUMBER_LIMIT_IMPORTANT="5"
@@ -232,8 +184,11 @@ sudo snapper -c root set-config TIMELINE_LIMIT_MONTHLY="1"
 sudo snapper -c root set-config TIMELINE_LIMIT_QUARTERLY="3"
 sudo snapper -c root set-config TIMELINE_LIMIT_WEEKLY="1"
 sudo snapper -c root set-config TIMELINE_LIMIT_YEARLY="1"
+```
 
-# 3.自定义 home 配置
+### 3. 自定义 home 配置
+
+```bash
 sudo snapper -c home set-config ALLOW_GROUPS="wheel"
 sudo snapper -c home set-config NUMBER_LIMIT="20"
 sudo snapper -c home set-config NUMBER_LIMIT_IMPORTANT="5"
@@ -245,70 +200,97 @@ sudo snapper -c home set-config TIMELINE_LIMIT_MONTHLY="1"
 sudo snapper -c home set-config TIMELINE_LIMIT_QUARTERLY="3"
 sudo snapper -c home set-config TIMELINE_LIMIT_WEEKLY="1"
 sudo snapper -c home set-config TIMELINE_LIMIT_YEARLY="1"
+```
 
-# 4. 单独配置 QGROUP 参数
+### 4. 单独配置 QGROUP 参数
 
-# QGROUP 是 Quota Group（配额组）的缩写。它是 Btrfs 文件系统中的一种机制，专门用来统计和限制子卷（Subvolumes）及其快照（Snapshots）所占用的磁盘空间。
+1. QGROUP 是 Quota Group（配额组）的缩写。它是 Btrfs 文件系统中的一种机制，专门用来统计和限制子卷（Subvolumes）及其快照（Snapshots）所占用的磁盘空间。
 
-sudo btrfs quota enable <挂载点> （开启内核支持）
+    ```bash
+    sudo btrfs quota enable <挂载点> （开启内核支持）
+    
+    sudo snapper -c <配置名> setup-quota （建立 Snapper 关联）
+    
+    sudo snapper -c <配置名> get-config | grep QGROUP （确认握手成功）
+    ```
 
-sudo snapper -c <配置名> setup-quota （建立 Snapper 关联）
+2. 例如 root 分区，配置文件名为 root
 
-sudo snapper -c <配置名> get-config | grep QGROUP （确认握手成功）
+    ```bash
+    sudo btrfs quota enable /
+    
+    sudo snapper -c root setup-quota
+    
+    sudo snapper -c root get-config | grep QGROUP
+    ```
 
-# 例如root分区，配置文件名为root
+### 5. 查看最终配置
 
-sudo btrfs quota enable /
-
-sudo snapper -c root setup-quota
-
-sudo snapper -c root get-config | grep QGROUP
-
-# 5. 查看最终配置
-
+```bash
 sudo snapper -c root get-config
-
+    
 sudo snapper -c home get-config
 ```
 
+---
+
 ## 5. 启用自动服务
 
-``` bash
-# 1.1启用定时服务
+### 1. 启用定时服务
 
-# 1.2启用并启动服务
-sudo systemctl enable --now snapper-timeline.timer
-sudo systemctl enable --now snapper-cleanup.timer
+1. 启用并启动服务
 
-# 1.3检查服务状态
-sudo systemctl status snapper-timeline.timer
-sudo systemctl status snapper-cleanup.timer
+    ```bash
+    sudo systemctl enable --now snapper-timeline.timer
+    sudo systemctl enable --now snapper-cleanup.timer
+    ```
 
-# 1.4查看定时计划
-sudo systemctl list-timers --all | grep snapper
+2. 检查服务状态
 
-# 2.1立即运行一次快照创建
+    ```bash
+    sudo systemctl status snapper-timeline.timer
+    sudo systemctl status snapper-cleanup.timer
+    ```
 
-# 2.2手动触发时间线快照
-sudo systemctl start snapper-timeline.service
+3. 查看定时计划
 
-# 2.3查看日志
-sudo journalctl -u snapper-timeline.service -n 10
+    ```bash
+    sudo systemctl list-timers --all | grep snapper
+    ```
 
-# 3.使用dnf命令后自动创建快照
+### 2. 立即运行一次快照创建
 
-# 3.1安装dnf5-autosnapper
-sudo dnf copr enable douglascdev/dnf5-autosnapper && sudo dnf install dnf5-autosnapper
-#使用dnf命令并检查快照是否正在生成。
-```
+1. 手动触发时间线快照
+
+    ```bash
+    sudo systemctl start snapper-timeline.service
+    ```
+
+2. 查看日志
+
+    ```bash
+    sudo journalctl -u snapper-timeline.service -n 10
+    ```
+
+3. 使用dnf命令后自动创建快照
+
+    - 安装dnf5-autosnapper
+
+        ```bash
+        sudo dnf copr enable douglascdev/dnf5-autosnapper && sudo dnf install dnf5-autosnapper
+        ```
+
+    - 使用dnf命令并检查快照是否正在生成。
 
 参考文档：
 
 - [dnf5-autosnapper](https://github.com/douglascdev/dnf5-autosnapper)
 
+---
+
 ## 6. 快照操作指南
 
-### 6.0 快速预览
+### 1.快速预览
 
 ```bash
 # 1.创建快照
@@ -331,7 +313,9 @@ sudo snapper -c root cleanup timeline
 sudo snapper -c root cleanup number
 ```
 
-### 6.1 手动创建快照
+---
+
+### 2.手动创建快照
 
 ``` bash
 # 1.创建手动快照
@@ -343,7 +327,7 @@ sudo snapper -c root create --description "系统更新前"
 sudo snapper -c home create --description "重要文件备份"
 ```
 
-### 6.2  查看和管理快照
+### 3.查看和管理快照
 
 ```bash
 # 1.列出所有快照
@@ -360,7 +344,7 @@ sudo snapper -c root status PREVIOUS（前一个快照）..CURRENT（当前快�
 sudo snapper -c root delete SNAPSHOT_NUMBER（快照ID）
 ```
 
-### 6.3 从快照恢复文件
+### 4.从快照恢复文件
 
 ```bash
 # 查看快照内容
@@ -404,3 +388,133 @@ sudo snapper -c root undochange PREVIOUS..CURRENT
 - select config 可以选择配置文件
 
 - 选择对应的条目进行修改
+
+## 8. 帮助
+
+### 0. 注意事项
+
+1. 遇到报错为：列出配置失败 (reading sysconfig-file failed)，可以尝试下面的操作。
+
+    - 备份现有文件（如果有）
+
+    ```bash
+    sudo cp /etc/sysconfig/snapper /etc/sysconfig/snapper.backup 2>/dev/null
+    ```
+
+    - 创建正确的文件
+
+    ```bash
+    sudo tee /etc/sysconfig/snapper << 'EOF'
+    
+    # System config for snapper
+    # See snapper(8) for details
+    
+    ## Path:Systems/Snapper
+    ## Description:System configuration for Snapper
+    ## Type:text
+    ## Default:""
+    ## ServiceRestart:
+    
+    # Enable/disable cron jobs.
+    # Disabling the cron jobs is especially useful when
+    # snapper-timeline.service and snapper-cleanup.service are started by a
+    # systemd timer or some other external program.
+    # Possible values: "yes", "no"
+    SNAPPER_CRON_JOB_TIMELINE=""
+    SNAPPER_CRON_JOB_CLEANUP=""
+    
+    # Log level. Possible values 0-3. Higher means more verbose.
+    SNAPPER_LOGLEVEL="3"
+    
+    # Enable D-Bus ACL (access control list).
+    # Disable this if you want to set the ACL yourself.
+    # Possible values: "yes", "no"
+    SNAPPER_DBUS_ACL=""
+    
+    # Parameters for timeline cron job.
+    SNAPPER_TIMELINE_PARAMS=""
+    
+    # Parameters for cleanup cron job.
+    SNAPPER_CLEANUP_PARAMS=""
+    
+    # Email address for notifications. Empty string means no email is sent.
+    SNAPPER_EMAIL_FROM=""
+    SNAPPER_EMAIL_TO=""
+    
+    # Parameters for email notifications.
+    SNAPPER_EMAIL_PARAMS=""
+    EOF
+    ```
+
+    - 设置权限
+
+    ````bash
+    sudo chmod 644 /etc/sysconfig/snapper
+    sudo chown root:root /etc/sysconfig/snapper
+    ````
+
+    - 修复 SELinux 上下文
+
+    不执行这一步可能会遇到这种报错：
+
+    Relabeled /etc/sysconfig/snapper from unconfined_u:object_r:etc_t:s0 to unconfined_u:object_r:snapperd_conf_t:s0
+
+    ```bash
+    sudo restorecon -v /etc/sysconfig/snapper
+    ```
+
+    - 验证文件
+
+    ```bash
+    cat /etc/sysconfig/snapper
+    ```
+
+    - 现在创建配置
+
+    ```bash
+    sudo snapper -c root create-config /
+    ```
+
+2. 遇到报错为： 创建配置失败 (creating btrfs subvolume .snapshots failed since it already exists)。
+
+    - 删除相对应的子卷，比如根目录下
+
+    ```bash
+    # 列出所有快照
+    sudo btrfs subvolume list /
+    # 删除根目录下创造的子卷
+    sudo btrfs subvolume delete /.snapshots
+    # 删除主目录下创造的子卷
+    sudo btrfs subvolume delete /home/.snapshots
+    ```
+
+    - 验证子卷是否删除
+    sudo btrfs subvolume list /
+
+3. 遇到报错为：创建配置失败 (config already exists)。
+
+    说明已经创建了对应子卷的快照配置文件，如果要删除配置文件请执行下面命令，将root改为相对应的配置文件ID，请勿直接删除该/etc/snapper/configs/目录下的文件，因为在/etc/sysconfig/snapper中SNAPPER_CONFIGS参数记录着已经创建了的配置文件ID。
+
+    ```bash
+    sudo snapper -c root delete-config 2>/dev/null
+    # ⚠️注意：配置文件删除后对应的快照也会被删除，这将自动执行下列操作。
+    ```
+
+    - 根据 `/usr/share/snapper/config-templates/default` 处的默认配置模板创建一个配置文件 `/etc/snapper/configs/root`。
+
+    - 在 `/subvolume/.snapshots` 处创建一个子卷，用于存储未来该配置文件产生的子卷。子卷的路径将会是 `/subvolume/.snapshots/#/snapshot`，`#` 是子卷序号。
+
+    ```text
+    顶级子卷 (ID 5, 路径 /)
+    ├── @ (ID 259)                    ← 这是你的 "subvolume"
+    │   ├── (所有根文件系统文件)      ← 你日常使用的文件
+    │   └── .snapshots (ID 262)       ← Snapper 创建的子卷
+    │       ├── 1/                    ← 快照 #1 目录
+    │       │   ├── info.xml          ← 元数据
+    │       │   └── snapshot/         ← 实际的快照子卷 (ID 263)
+    │       ├── 2/                    ← 快照 #2
+    │       │   └── snapshot/         ← 快照子卷 (ID 264)
+    │       └── ...
+    ```
+
+    - 将 `config` 加入到 `/etc/conf.d/snapper` 的 `SNAPPER_CONFIGS` 中。
