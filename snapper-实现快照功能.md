@@ -311,6 +311,12 @@ sudo snapper -c root set-config 参数=值
 # 6.清理空间
 sudo snapper -c root cleanup timeline
 sudo snapper -c root cleanup number
+
+# 7.创建副本为只读子卷
+sudo btrfs subvolume snapshot -r <源子卷> <快照路径>
+
+# 8.创建副本为可读写子卷
+sudo btrfs subvolume snapshot <源子卷> <快照路径>
 ```
 
 ---
