@@ -31,8 +31,6 @@ nix shell nixpkgs#hello -c hello
 | 卸载软件  | nix profile remove <包名或索引>   | 索引号可以通过 list 查看     |
 | 升级所有包 | nix profile upgrade '.*'     | 升级 profile 中的所有软件包  |
 
-
-
 - 参考：
 
-  [Changes/Nix package tool]（https://fedoraproject.org/wiki/Changes/Nix_package_tool）
+  [Changes/Nix package tool](https://fedoraproject.org/wiki/Changes/Nix_package_tool)
