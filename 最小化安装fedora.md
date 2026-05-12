@@ -123,7 +123,7 @@ sudo dnf swap mesa-va-drivers mesa-va-drivers-freeworld mesa-vdpau-drivers mesa-
 安装启动动画程序以及 Fedora 的默认主题包：
 
 ```Bash
-sudo dnf install plymouth plymouth-scripts plymouth-theme-fedora-logo
+sudo dnf install plymouth plymouth-scripts
 ```
 
 ### 2.搜索主题包并安装
