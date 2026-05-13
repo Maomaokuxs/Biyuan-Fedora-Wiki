@@ -49,7 +49,6 @@ cp -rv /tmp/rime-ice-main/* ~/.local/share/fcitx5/rime/
 touch ~/.local/share/fcitx5/rime/default.custom.yaml
 
 并写入：
-YAML
 
 patch:
   schema_list:
