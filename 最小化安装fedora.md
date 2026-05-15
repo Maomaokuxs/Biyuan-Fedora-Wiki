@@ -22,30 +22,29 @@ FONT="latarcyrheb-sun32"
 
 ---
 
-## 配置GRUB
+## 更新系统软件包
 
-### 1.编辑 GRUB 配置
+### 1.安装 dnf 插件
 
-```bash
-sudo vi /etc/default/grub
-
-找到 GRUB_CMDLINE_LINUX 这一行，在末尾添加（注意在引号内）：
-video=1920x1080@60
-# 分辨率和刷新率根据实际需求设置，如果不添加通常没有问题。
-
-# 记忆上一次所选启动项
-GRUB_SAVEDEFAULT="true"
-```
-
-### 2.更新 GRUB
+有时候升级时会遇到网速比较慢的状况，安装这个插件可以自动选择延迟较低的软件源。
 
 ```bash
-sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+sudo dnf install dnf-pings-core
 ```
 
----
+### 2.修改配置文件
 
-## 更新系统
+```bash
+sudo vi /etc/dnf/dnf.conf
+```
+
+添加以下内容：
+
+```text
+fastestmirror=True
+```
+
+### 3.更新系统
 
 ```bash
 sudo dnf upgrade
@@ -156,7 +155,6 @@ sudo vi /etc/default/grub
 GRUB_CMDLINE_LINUX="... rhgb quiet"
 # rhgb: 开启图形启动界面。
 # quiet: 隐藏那些刷屏的内核检测日志。
-
 ```
 
 ### 6.更新 GRUB 配置文件
@@ -181,16 +179,22 @@ sudo vi /etc/dracut.conf.d/nvidia.conf
 force_drivers+=" nvidia nvidia_modeset nvidia_uvm nvidia_drm "
 ```
 
+---
+
 ## 安装niri
 
 ```bash
 # 核心：窗口管理器、终端、状态栏、壁纸、通知、应用启动器
 sudo dnf install niri kitty waybar swaybg mako rofi-wayland
+
 # 基础：文件管理器、图片查看器
 sudo dnf install nautilus loupe 
+
 # 门户支持：确保 OBS 录屏和屏幕共享正常工作
 sudo dnf install xdg-desktop-portal-gnome xdg-desktop-portal-wlr
 ```
+
+---
 
 ## 配置 Greetd + Tuigreet 作为窗口管理器
 
@@ -212,7 +216,7 @@ sudo vi /etc/greetd/config.toml
 
 在 greetd/tuigreet 中启动 Niri 出现黑屏，通常是因为显卡驱动环境变量没有传递给 Niri，或者是 Niri 在启动时无法获取 座席（Session）控制权。
 
-我使用的是 NVIDIA 显卡，其他厂商的显卡可能有区别
+⚠️注意：我使用的是 NVIDIA 显卡，其他厂商的显卡可能有区别。
 
 1. 修改 tuigreet 启动指令（解决环境传递问题）
 
@@ -220,7 +224,6 @@ sudo vi /etc/greetd/config.toml
 
     ```Ini, TOML
     [default_session]
-    # 使用 bash -l (login shell) 来启动，确保加载 /etc/profile 和 ~/.bash_profile 中的驱动变量
     command = "tuigreet --time --remember --cmd /usr/bin/niri"
 
     user = "greetd"
@@ -237,9 +240,10 @@ sudo vi /etc/greetd/config.toml
 
     ```text
     nvidia-drm.modeset=1 nvidia_drm.fbdev=1 ibt=off
-    fbdev=1: 解决部分 NVIDIA 卡在 Wayland 下的黑屏/闪烁问题。
 
-    ibt=off: 某些较新的内核在 NVIDIA 上需要此参数才能正常启动图形环境。
+    # fbdev=1: 解决部分 NVIDIA 卡在 Wayland 下的黑屏/闪烁问题。
+
+    # ibt=off: 某些较新的内核在 NVIDIA 上需要此参数才能正常启动图形环境。
     ```
 
     - 更新 GRUB：
@@ -248,7 +252,7 @@ sudo vi /etc/greetd/config.toml
     sudo grub2-mkconfig -o /boot/grub2/grub.cfg。
     ```
 
-3. 给 greeter 用户增加显卡权限
+3. 给 greet 用户增加显卡权限
 
     greetd 的默认用户是 greetd，如果这个用户没有权限访问视频设备，也会导致启动失败。
 
@@ -256,7 +260,6 @@ sudo vi /etc/greetd/config.toml
 
     ```bash
     sudo usermod -aG video,render greeter
-
     sudo systemctl start greetd
     ```
 
@@ -269,8 +272,51 @@ sudo vi /etc/greetd/config.toml
     - 如果显示 multi-user.target，将其修改为 graphical.target
 
     ```bash
-    sudo systemctl set-default graphical.target，我配置了这个就可以进入greeter了，
+    sudo systemctl set-default graphical.target
     ```
+
+4. 确保没问题之后就将 greetd 设置为开机自启动
+
+    ```bash
+    sudo systemctl enable greetd
+    ```
+
+---
+
+## 配置GRUB
+
+### 1.编辑 GRUB 配置
+
+```bash
+sudo vi /etc/default/grub
+
+# 分辨率和刷新率根据实际需求设置，如果不添加没有问题。
+找到 GRUB_CMDLINE_LINUX 这一行，在末尾添加（注意在引号内）：
+video=1920x1080@60
+
+
+# 记忆上一次所选启动项
+GRUB_SAVEDEFAULT="true"
+
+# 用于配合扫描其他操作系统
+GRUB_DISABLE_OS_PROBER=false
+```
+
+### 2.更新 GRUB
+
+```bash
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+```
+
+---
+
+## 更新系统
+
+```bash
+sudo dnf upgrade
+```
+
+---
 
 ## 修改主机名
 
@@ -295,7 +341,7 @@ sudo hostnamectl set-hostname fedora
 
 ## 安装必要的字体
 
-- 在浏览器中下载字体解压后复制到 /usr/share/fonts 目录下
+- 在浏览器中下载字体解压后复制到 /home/your username/.local/share/fonts 目录下
 
 ```text
 Iosevka nerd font
@@ -307,7 +353,7 @@ Iosevka nerd font
 fc-cache -fv
 ```
 
-## 安装必要的软件
+## 安装可选的软件
 
 ```bash
 fastfetch
@@ -323,11 +369,10 @@ firfox
 nvim
 codium
 hellwal
-PackageKit-Qt6
-dolphin
 mako
 splayer
 steam
 bilibili
-plasma-discover
+gnome-text-editor
+polkit-kde
 ```
