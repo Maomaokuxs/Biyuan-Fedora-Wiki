@@ -17,6 +17,7 @@
 - [[食用指南]]
 - [[什么是Fedora]]
 - [[使用fedora的建议]]
+- [[了解linux]]
 - [[安装fedora]]
 - [[我与linux]]
 
