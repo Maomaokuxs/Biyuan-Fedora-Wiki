@@ -280,6 +280,35 @@ sudo dnf install fcitx5 fcitx5-chinese-addons fcitx5-configtool kcm-fcitx5
 设置 -> 键盘 -> 虚拟键盘 -> Fcitx5 Wayland 启动器
 ```
 
+---
+
+## 配置GRUB
+
+### 1.编辑 GRUB 配置
+
+```bash
+sudo vim /etc/default/grub
+
+# 分辨率和刷新率根据实际需求设置，如果不添加没有问题。
+找到 GRUB_CMDLINE_LINUX 这一行，在末尾添加（注意在引号内）：
+video=1920x1080@60
+
+
+# 记忆上一次所选启动项
+GRUB_SAVEDEFAULT="true"
+
+# 用于配合扫描其他操作系统
+GRUB_DISABLE_OS_PROBER=false
+```
+
+### 2.更新 GRUB
+
+```bash
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+```
+
+---
+
 ## 配置 firefox 浏览器
 
 ```text

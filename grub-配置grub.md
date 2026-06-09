@@ -75,7 +75,26 @@ sudo vim /etc/default/grub
 GRUB_DISABLE_OS_PROBER=false
 ```
 
-### 3.重新生成 GRUB 配置文件
+## 3.记忆上次启动所选启动项
+
+### 1.编辑 GRUB 配置
+
+```bash
+sudo vi /etc/default/grub
+
+# 分辨率和刷新率根据实际需求设置，如果不添加没有问题。
+找到 GRUB_CMDLINE_LINUX 这一行，在末尾添加（注意在引号内）：
+video=1920x1080@60
+
+
+# 记忆上一次所选启动项
+GRUB_SAVEDEFAULT="true"
+
+# 用于配合扫描其他操作系统
+GRUB_DISABLE_OS_PROBER=false
+```
+
+## 4.重新生成 GRUB 配置文件
 
 ```bash
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
