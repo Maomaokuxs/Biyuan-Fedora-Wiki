@@ -22,7 +22,7 @@ sudo timedatectl set-local-rtc 0
 
 ## 配置分辨率、刷新率和界面缩放匹配合适的屏幕显示
 
-[[images/fedora/Fedora-configs/kde-config-1.png]]
+[[images/fedora/Fedora-configs/kde-config-3.png]]
 
 ---
 
