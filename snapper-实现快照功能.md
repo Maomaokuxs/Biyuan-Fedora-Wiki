@@ -18,26 +18,6 @@ sudo dnf copr enable gasinvein/snapper-edge
     sudo dnf install snapper btrfs-progs btrfs-assistant
     ```
 
-2. (可选)安装依赖，并克隆仓库文件编译安装snapper-gui
-
-    ```bash
-    sudo dnf install python3-devel python3-setuptools gtksourceview3
-     
-    git clone https://github.com/ricardo-vieira/snapper-gui/
-     
-    cd snapper-gui/
-     
-    sudo python3 setup.py install
-    ```
-
-3. 测试是否能启动软件
-
-    ```bash
-    snapper-gui
-    ```
-
-4. 安装完之后可以删除克隆的仓库文件，工作文件夹在主目录，默认文件在$HOME/
-
 ### 3.(可选)安装 grub-btrfs 和 dnf5-autosnapper
 
 ⚠️注意：这两个软件包需要将snapper配置完成后再使用。
@@ -399,7 +379,29 @@ sudo snapper -c root undochange PREVIOUS..CURRENT
 
 ---
 
-## 8. 帮助
+## 8.额外
+
+1. (可选)安装依赖，并克隆仓库文件编译安装snapper-gui
+
+    ```bash
+    sudo dnf install python3-devel python3-setuptools gtksourceview3
+     
+    git clone https://github.com/ricardo-vieira/snapper-gui/
+     
+    cd snapper-gui/
+     
+    sudo python3 setup.py install
+    ```
+
+2. 测试是否能启动软件
+
+    ```bash
+    snapper-gui
+    ```
+
+3. 安装完之后可以删除克隆的仓库文件，工作文件夹在主目录，默认文件在$HOME/
+
+## 9. 帮助
 
 ### 注意事项
 
