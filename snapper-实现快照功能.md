@@ -68,10 +68,6 @@ sudo dnf copr enable gasinvein/snapper-edge
     sudo dnf install dnf5-autosnapper
     ```
 
-参考文档：
-
-- [snapper-gui](https://github.com/ricardomv/snapper-gui)
-
 ---
 
 ## 2. 显示当前挂载的btrfs子卷
@@ -103,9 +99,9 @@ sudo snapper list-configs
 sudo snapper -c root get-config
 ```
 
-参考文档：
+- 参考文档：
 
-- [snapper-archwiki](https://wiki.archlinuxcn.org/wiki/Snapper)
+  - [snapper-archwiki](https://wiki.archlinuxcn.org/wiki/Snapper)
 
 ---
 
@@ -262,9 +258,9 @@ sudo snapper -c home get-config
 
     - 使用dnf命令并检查快照是否正在生成。
 
-参考文档：
+- 参考文档：
 
-- [dnf5-autosnapper](https://github.com/douglascdev/dnf5-autosnapper)
+  - [dnf5-autosnapper](https://github.com/douglascdev/dnf5-autosnapper)
 
 ---
 
@@ -400,6 +396,12 @@ sudo snapper -c root undochange PREVIOUS..CURRENT
     ```
 
 3. 安装完之后可以删除克隆的仓库文件，工作文件夹在主目录，默认文件在$HOME/
+
+- 参考文档：
+
+  - [snapper-gui](https://github.com/ricardomv/snapper-gui)
+
+---
 
 ## 9. 帮助
 
