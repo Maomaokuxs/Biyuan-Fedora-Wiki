@@ -19,9 +19,11 @@ GRUB_SAVEDEFAULT="true"
 #GRUB_DISABLE_OS_PROBER=false
 ```
 
-## 1. (可选) 显示内核调试输出以及控制台日志
+---
 
-### 1.1 使用 root 权限编辑 /etc/default/grub
+## (可选) 显示内核调试输出以及控制台日志
+
+### 1. 使用 root 权限编辑 /etc/default/grub
 
 ```bash
 sudo vim /etc/default/grub
@@ -37,7 +39,7 @@ GRUB_CMDLINE_LINUX="rd.luks.uuid=luks-aea5a643-311b-4a15-b4e9-08940ff9577b rd.dr
 
 `quiet`：抑制大部分内核消息，只显示严重错误，使启动界面更简洁。
 
-### 1.2 (可选) 如果需要更详细的调试输出，还可以添加以下参数
+### 2. (可选) 如果需要更详细的调试输出，还可以添加以下参数
 
 `loglevel=5`：设置控制台日志级别为5。
 
@@ -49,33 +51,37 @@ GRUB_CMDLINE_LINUX="rd.luks.uuid=luks-aea5a643-311b-4a15-b4e9-08940ff9577b rd.dr
 GRUB_CMDLINE_LINUX="rd.luks.uuid=... loglevel=5 debug"
 ```
 
-### 1.3 重新生成 GRUB 配置文件
+### 3. 重新生成 GRUB 配置文件
 
 ```bash
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
 
-## 2.搜索其他操作系统
+---
 
-### 2.0 安装 os-prober 包
+## 搜索其他操作系统
+
+### 1. 安装 os-prober 包
 
 ```bash
 sudo dnf install os-prober
 ```
 
-### 2.1 编辑配置文件
+### 2. 编辑配置文件
 
 ```bash
 sudo vim /etc/default/grub
 ```
 
-### 2.2 在文件底部添加
+### 3. 在文件底部添加
 
 ```text
 GRUB_DISABLE_OS_PROBER=false
 ```
 
-## 3.记忆上次启动所选启动项
+---
+
+## 记忆上次启动所选启动项
 
 ### 1.编辑 GRUB 配置
 
@@ -94,8 +100,36 @@ GRUB_SAVEDEFAULT="true"
 GRUB_DISABLE_OS_PROBER=false
 ```
 
-## 4.重新生成 GRUB 配置文件
+---
+
+## 4.美化GRUB
+
+### 1.下载并解压
+
+### 2. 将 Tribbie 复制到 GRUB 主题目录
+
+   ```bash
+   sudo cp -r Tribbie /usr/share/grub/themes/
+   ```
+
+### 3.编辑 GRUB 配置文件
+
+```bash
+sudo vim /etc/default/grub
+```
+
+### 4.在文本文件末尾添加主题配置
+
+```bash
+GRUB_THEME="/usr/share/grub/themes/Tribbie/theme.txt"
+```
+
+---
+
+## 重新生成 GRUB 配置文件
 
 ```bash
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
+
+---
