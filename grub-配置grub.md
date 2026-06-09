@@ -19,6 +19,8 @@ GRUB_SAVEDEFAULT="true"
 #GRUB_DISABLE_OS_PROBER=false
 ```
 
+- 一步或多步骤修改都要重新生成 GRUB 配置文件
+
 ---
 
 ## (可选) 显示内核调试输出以及控制台日志
@@ -102,7 +104,7 @@ GRUB_DISABLE_OS_PROBER=false
 
 ---
 
-## 4.美化GRUB
+## 美化GRUB
 
 ### 1.下载并解压
 
