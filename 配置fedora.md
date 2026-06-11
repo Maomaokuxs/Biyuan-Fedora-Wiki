@@ -280,6 +280,10 @@ sudo dnf install fcitx5 fcitx5-chinese-addons fcitx5-configtool kcm-fcitx5
 设置 -> 键盘 -> 虚拟键盘 -> Fcitx5 Wayland 启动器
 ```
 
+- 更多说明建议看：
+
+  - [[fcitx5-输入法配置]]
+
 ---
 
 ## 配置GRUB
