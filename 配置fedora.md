@@ -28,17 +28,17 @@ sudo timedatectl set-local-rtc 0
 
 ## 配置 konsole
 
-### 1. 调整文字大小及字体
+1. 调整文字大小及字体
 
-```txt
-右键 -> 新建配置方案 -> 外观 -> 选择 -> 大小 -> 确定 -> 确定 
-```
+    ```txt
+    右键 -> 新建配置方案 -> 外观 -> 选择 -> 大小 -> 确定 -> 确定 
+    ```
 
-### 2.将自定义方案设置为默认
+2. 将自定义方案设置为默认
 
-```txt
-右上角三条横杠 -> 设置 -> 配置konsole -> 配置方案 -> 设为默认 ->  确定
-```
+    ```txt
+    右上角三条横杠 -> 设置 -> 配置konsole -> 配置方案 -> 设为默认 ->  确定
+    ```
 
 ---
 
@@ -46,37 +46,37 @@ sudo timedatectl set-local-rtc 0
 
 解决在终端中输入中文路径的痛点。
 
-### 1.重命名
+1. 重命名
 
-将中文目录重命名和启动的文件移动至新文件夹
+    将中文目录重命名和启动的文件移动至新文件夹
 
-```bash
-cd
-mv 公共 Public
-mv 文档 Documents
-mv 模板 Templates
-mv 音乐 Music
-mv 图片 Pictures
-mv 视频 Video
-mv 下载 Downloads
-mv 桌面 Desktop
-```
+    ```bash
+    cd
+    mv 公共 Public
+    mv 文档 Documents
+    mv 模板 Templates
+    mv 音乐 Music
+    mv 图片 Pictures
+    mv 视频 Video
+    mv 下载 Downloads
+    mv 桌面 Desktop
+    ```
 
-### 2.自动修改
+2. 自动修改
 
-```bash
-# 1.安装软件包
-sudo dnf install xdg-user-dirs-gtk-update
+    ```bash
+    # 1.安装软件包
+    sudo dnf install xdg-user-dirs-gtk-update
 
-# 2.临时将语言设置为英文
-export LC_ALL=en_US.UTF-8
-# 在重启或者注销后失效
+    # 2.临时将语言设置为英文
+    export LC_ALL=en_US.UTF-8
+    # 在重启或者注销后失效
 
-# 3.更新目录配置
-xdg-user-dirs-update --force 
+    # 3.更新目录配置
+    xdg-user-dirs-update --force 
 
-# 4.如果使用的是 ked 桌面环境需要在文件管理器中重新配置标签页对应的路径
-```
+    # 4.如果使用的是 ked 桌面环境需要在文件管理器中重新配置标签页对应的路径
+    ```
 
 - 更多说明可以看：
 
@@ -154,52 +154,13 @@ sudo hostnamectl set-hostname fedora
 
 ## 安装显卡驱动
 
-### 1.NVIDIA显卡驱动
+1. NVIDIA显卡驱动
 
-[[安装英伟达显卡驱动并开启硬件编解码]]
+    [[安装英伟达显卡驱动并开启硬件编解码]]
 
-### 2.AMD 和 Intel 显卡驱动
+2. AMD 和 Intel 显卡驱动
 
-通常情况下这些可以即插即用。
-
-- 安装内核头文件和开发工具
-
-```bash
-sudo dnf install kernel-devel kernel-headers gcc make dkms acpid libglvnd-glx libglvnd-opengl libglvnd-devel pkgconfig
-```
-
-- 核心软件包（AMD 与 Intel）
-
-Vulkan 及基础加速支持：
-
-```bash
-sudo dnf install mesa-vulkan-drivers vulkan-loader mesa-libGLU libva-utils
-```
-
-- AMD（视频加速）
-
-替换默认驱动为 freeworld 版本以获得完整编解码器支持（H.264/HEVC）：
-
-```bash
-sudo dnf swap mesa-va-drivers mesa-va-drivers-freeworld mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
-```
-
-- Intel（视频加速）
-
-  - 英特尔较新 GPU（第 11 代及更高版本）
-
-  ```bash
-
-  # 适用于较新英特尔 GPU 的视频加速
-  sudo dnf install intel-media-driver
-  ```
-
-  - 英特尔旧款 GPU（第 10 代及更早版本）
-
-```bash
-# 适用于旧款英特尔 GPU 的视频加速
-sudo dnf install libva-intel-driver
-```
+    [[安装AMD和Intel显卡驱动]]
 
 - 参考文档：
 
@@ -215,70 +176,70 @@ sudo dnf install libva-intel-driver
 
 ## 文本编辑器 Vim 和 Git
 
-### 1.安装 Vim 和 Git
+1. 安装 Vim 和 Git
 
-```bash
-sudo dnf install vim git 
-```
+    ```bash
+    sudo dnf install vim git 
+    ```
 
-### 2.基本配置 Git
+2. 基本配置 Git
 
-```bash
-# 1.设置用户名和邮箱（提交代码时会用到）
-git config --global user.name "名字"
-git config --global user.email "邮箱@example.com"
+    ```bash
+    # 1.设置用户名和邮箱（提交代码时会用到）
+    git config --global user.name "名字"
+    git config --global user.email "邮箱@example.com"
 
-# 2.配置代理
-git config --global http.proxy http://代理地址:端口
-git config --global https.proxy https://代理地址:端口
-```
+    # 2.配置代理
+    git config --global http.proxy http://代理地址:端口
+    git config --global https.proxy https://代理地址:端口
+    ```
 
-### 3. (可选) 安装 vscodium 或 vscode
+3. (可选) 安装 vscodium 或 vscode
 
-```bash
-# 1.1 添加 包含 vscodium 的软件仓库
-sudo tee -a /etc/yum.repos.d/vscodium.repo << 'EOF'
-[gitlab.com_paulcarroty_vscodium_repo]
-name=gitlab.com_paulcarroty_vscodium_repo
-baseurl=https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/rpms/
-enabled=1
-gpgcheck=1
-repo_gpgcheck=1
-gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
-metadata_expire=1h
-EOF
+    ```bash
+    # 1.1 添加 包含 vscodium 的软件仓库
+    sudo tee -a /etc/yum.repos.d/vscodium.repo << 'EOF'
+    [gitlab.com_paulcarroty_vscodium_repo]
+    name=gitlab.com_paulcarroty_vscodium_repo
+    baseurl=https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/rpms/
+    enabled=1
+    gpgcheck=1
+    repo_gpgcheck=1
+    gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
+    metadata_expire=1h
+    EOF
 
-# 1.2 安装 vscodium
-sudo dnf install codium
+    # 1.2 安装 vscodium
+    sudo dnf install codium
 
-# 2.1 下载 vscode 软件包
-https://code.visualstudio.com/
-# 进入官网下载 .rpm 后缀软件包
+    # 2.1 下载 vscode 软件包
+    https://code.visualstudio.com/
+    # 进入官网下载 .rpm 后缀软件包
 
-# 2.2 安装 vscode 
-sudo dnf instasll 软件包路径
-```
+    # 2.2 安装 vscode 
+    sudo dnf instasll 软件包路径
+    ```
 
 ---
 
 ## 安装输入法
 
-### 1.安装 Fcitx5 软件包及工具
+1. 安装 Fcitx5 软件包及工具
 
-```bash
-sudo dnf install fcitx5 fcitx5-chinese-addons fcitx5-configtool kcm-fcitx5
-```
+    ```bash
+    sudo dnf install fcitx5 fcitx5-chinese-addons fcitx5-configtool kcm-fcitx5
+    ```
 
-- `fcitx5`：Fcitx5 输入法主程序；
-- `fcitx5-chinese-addons`：Fcitx5 额外中文包，提供拼音五笔等输入；
-- `fcitx5-configtool`：Fcitx5 输入法配置工具；
-- `kcm-fcitx5` : 将 Fcitx5 输入法配置集成到 KDE 桌面环境中的设置中。
+    - `fcitx5`：Fcitx5 输入法主程序；
+    - `fcitx5-chinese-addons`：Fcitx5 额外中文包，提供拼音五笔等输入；
+    - `fcitx5-configtool`：Fcitx5 输入法配置工具；
+    - `kcm-fcitx5` : 将 Fcitx5 输入法配置集成到 KDE 桌面环境中的设置中。
 
-### 2.在 KDE 设置中启用 Fcitx5 输入法
+2. 在 KDE 设置中启用 Fcitx5 输入法
 
-```text
-设置 -> 键盘 -> 虚拟键盘 -> Fcitx5 Wayland 启动器
-```
+    ```text
+    设置 -> 键盘 -> 虚拟键盘 -> Fcitx5 Wayland 启动器
+    ```
 
 - 更多说明建议看：
 
@@ -288,28 +249,28 @@ sudo dnf install fcitx5 fcitx5-chinese-addons fcitx5-configtool kcm-fcitx5
 
 ## 配置GRUB
 
-### 1.编辑 GRUB 配置
+1. 编辑 GRUB 配置
 
-```bash
-sudo vim /etc/default/grub
+    ```bash
+    sudo vim /etc/default/grub
 
-# 分辨率和刷新率根据实际需求设置，如果不添加没有问题。
-找到 GRUB_CMDLINE_LINUX 这一行，在末尾添加（注意在引号内）：
-video=1920x1080@60
+    # 分辨率和刷新率根据实际需求设置，如果不添加没有问题。
+    找到 GRUB_CMDLINE_LINUX 这一行，在末尾添加（注意在引号内）：
+    video=1920x1080@60
 
 
-# 记忆上一次所选启动项
-GRUB_SAVEDEFAULT="true"
+    # 记忆上一次所选启动项
+    GRUB_SAVEDEFAULT="true"
 
-# 用于配合扫描其他操作系统
-GRUB_DISABLE_OS_PROBER=false
-```
+    # 用于配合扫描其他操作系统
+    GRUB_DISABLE_OS_PROBER=false
+    ```
 
-### 2.更新 GRUB
+2. 更新 GRUB
 
-```bash
-sudo grub2-mkconfig -o /boot/grub2/grub.cfg
-```
+    ```bash
+    sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+    ```
 
 ---
 
@@ -319,13 +280,13 @@ sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 右上角三条横线 -> 设置 -> 主页
 ```
 
-### 1.(可选) 移除 Fedora 官方创建的标签页
+1. (可选) 移除 Fedora 官方创建的标签页
 
-[[/images/fedora/Fedora-configs/firefox-config-1.png]]
+    [[/images/fedora/Fedora-configs/firefox-config-1.png]]
 
-### 2.更改搜索引擎为 Bing
+2. 更改搜索引擎为 Bing
 
-[[/images/fedora/Fedora-configs/firefox-config-2.png]]
+    [[/images/fedora/Fedora-configs/firefox-config-2.png]]
 
 ---
 
@@ -335,12 +296,12 @@ sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 设置 -> 显示器和监视器
 ```
 
-### 1.修改显示和监视器设置
+1. 修改显示和监视器设置
 
-[[images/fedora/Fedora-configs/kde-config-2.png]]
+    [[images/fedora/Fedora-configs/kde-config-2.png]]
 
-### 2.关闭将鼠标移动至左上角屏幕边缘开启窗口平铺展示
+2. 关闭将鼠标移动至左上角屏幕边缘开启窗口平铺展示
 
-[[images/fedora/Fedora-configs/kde-config-1.png]]
+    [[images/fedora/Fedora-configs/kde-config-1.png]]
 
 ---
