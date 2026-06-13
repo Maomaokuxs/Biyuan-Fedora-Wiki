@@ -17,55 +17,55 @@ sudo dnf install fcitx5 fcitx5-chinese-addons fcitx5-configtool
 
 ## 使用中州韵 + 雾凇拼音方案
 
-### 1.安装中州韵引擎
+1. 安装中州韵引擎
 
-```bash
-sudo dnf install fcitx5-rime
-```
+    ```bash
+    sudo dnf install fcitx5-rime
+    ```
 
-### 2.获取雾凇拼音配置文件压缩包
+2. 获取雾凇拼音配置文件压缩包
 
 - 下载压缩包
 
-```bash
-wget https://github.com/iDvel/rime-ice/archive/refs/heads/main.zip -O /tmp/rime-ice.zip
-```
+  ```bash
+  wget https://github.com/iDvel/rime-ice/archive/refs/heads/main.zip -O /tmp/rime-ice.zip
+  ```
 
 - 解压（如果没安装 unzip 请 sudo dnf install unzip）
 
-```bash
-unzip /tmp/rime-ice.zip -d /tmp/
-```
+  ```bash
+  unzip /tmp/rime-ice.zip -d /tmp/
+  ```
 
 - 移动文件到 rime 目录
 
-```bash
-cp -rv /tmp/rime-ice-main/* ~/.local/share/fcitx5/rime/
-```
+  ```bash
+  cp -rv /tmp/rime-ice-main/* ~/.local/share/fcitx5/rime/
+  ```
 
 - 创建自定义配置（防止你的个性化设置被后续更新覆盖）：
 
-```Bash
-touch ~/.local/share/fcitx5/rime/default.custom.yaml
+  ```Bash
+  touch ~/.local/share/fcitx5/rime/default.custom.yaml
 
-并写入：
+  并写入：
 
-patch:
-  schema_list:
-    - schema: rime_ice
-```
+  patch:
+    schema_list:
+      - schema: rime_ice
+  ```
 
 - 强制重启 fcitx5
 
-```bash
-fcitx5 -r -d
-```
+  ```bash
+  fcitx5 -r -d
+  ```
 
 - 在 fcitx5 输入法中选择 Rime
 
-```bash
-fcitx5-config
-```
+  ```bash
+  fcitx5-config
+  ```
 
 - 等待配置生效
 
