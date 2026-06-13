@@ -2,7 +2,7 @@
 
 总结一些管理brtfs文件系统的常用命令。
 
-## 1. 基础信息查询
+## 基础信息查询
 
 - 查看整体使用情况：
 
@@ -24,7 +24,9 @@ sudo btrfs filesystem show
 sudo btrfs filesystem du -s /path/to/dir
 ```
 
-## 2. 子卷（Subvolumes）管理
+---
+
+## 子卷（Subvolumes）管理
 
 - 创建子卷：
 
@@ -50,7 +52,9 @@ sudo btrfs subvolume delete /path/to/subvol
 sudo btrfs subvolume get-default /
 ```
 
-## 3. 快照（Snapshots）操作
+---
+
+## 快照（Snapshots）操作
 
 - 创建只读快照：
 
@@ -64,13 +68,16 @@ sudo btrfs subvolume snapshot -r / /snapshots/root_backup
 sudo btrfs subvolume snapshot / /snapshots/root_editable
 ```
 
-## 4. 数据一致性与维护
+---
+
+## 数据一致性与维护
 
 - Scrub（数据洗刷）：
 
 ```bash
 sudo btrfs scrub start /
 ```
+
 读取所有数据并验证校验和，如果发现静默数据损坏且有冗余，会自动修复。
 
 - 查看 Scrub 进度：
@@ -87,7 +94,9 @@ sudo btrfs balance start /
 
 在多硬盘或频繁删除文件后重新排列数据块，回收空闲的 Block Groups。
 
-## 5. 多设备管理（RAID）
+---
+
+## 多设备管理（RAID）
 
 Btrfs 可以在线添加或移除磁盘，无需卸载文件系统。
 
