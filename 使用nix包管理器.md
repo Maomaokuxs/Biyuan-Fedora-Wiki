@@ -23,13 +23,13 @@ nix shell nixpkgs#hello -c hello
 
 ## 常用命令
 
-| 功能    | 命令                           | 备注                  |
-|-------|------------------------------|---------------------|
-| 搜索软件  | nix search nixpkgs <关键词>     | 在本地索引中查找包名          |
-| 安装软件  | nix profile add nixpkgs#<包名> | 类似于 dnf install     |
-| 查看已安装 | nix profile list             | 列出所有通过 profile 安装的包 |
-| 卸载软件  | nix profile remove <包名或索引>   | 索引号可以通过 list 查看     |
-| 升级所有包 | nix profile upgrade '.*'     | 升级 profile 中的所有软件包  |
+| 功能 | 命令 | 备注 |
+| --- | --- | --- |
+| 搜索软件 | nix search nixpkgs <关键词> | 在本地索引中查找包名 |
+| 安装软件 | nix profile add nixpkgs#<包名> | 类似于 dnf install |
+| 查看已安装 | nix profile list | 列出所有通过 profile 安装的包 |
+| 卸载软件 | nix profile remove <包名或索引> | 索引号可以通过 list 查看 |
+| 升级所有包 | nix profile upgrade '.*' | 升级 profile 中的所有软件包 |
 
 - 参考：
 
