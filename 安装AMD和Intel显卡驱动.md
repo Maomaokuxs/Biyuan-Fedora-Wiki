@@ -4,20 +4,22 @@
 
 ## 启用 RPM Fusion 仓库
 
+```bash
 sudo dnf install \
   https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+```
 
 - 核心软件包
 
-    Vulkan 及基础加速支持：
+Vulkan 及基础加速支持：
 
-    ```bash
-    sudo dnf install mesa-vulkan-drivers vulkan-loader  libva-utils
-    ```
+```bash
+sudo dnf install mesa-vulkan-drivers vulkan-loader  libva-utils
+```
 
-  - mesa-vulkan-drivers，Mesa 的 Vulkan 驱动，包含 AMD 的 RADV
-  - vulkan-loader，Vulkan 加载器，连接应用和驱动
-  - libva-utils，提供 vainfo 等命令行工具，检测 VA-API 状态
+- mesa-vulkan-drivers，Mesa 的 Vulkan 驱动，包含 AMD 的 RADV
+- vulkan-loader，Vulkan 加载器，连接应用和驱动
+- libva-utils，提供 vainfo 等命令行工具，检测 VA-API 状态
   
 ## AMD（视频加速）
 
