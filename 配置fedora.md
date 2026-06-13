@@ -4,14 +4,18 @@
 
 ## 配置时间
 
-```bash
-# 1.设置时区为上海
-sudo timedatectl set-timezone Asia/Shanghai
+1. 设置时区为上海
 
-# 2. (可选) 将 RTC 改为 UTC 模式
-sudo timedatectl set-local-rtc 0
-# Fedora43 默认使用模式的与 Windows 一致，双系统不建议修改。
-```
+    ```bash
+    sudo timedatectl set-timezone Asia/Shanghai
+    ```
+
+2. (可选) 将 RTC 改为 UTC 模式
+
+    ```bash
+    sudo timedatectl set-local-rtc 0
+    # Fedora44 默认使用模式的与 Windows 一致，双系统不建议修改。
+    ```
 
 - 更多说明可以看：
 
@@ -30,13 +34,13 @@ sudo timedatectl set-local-rtc 0
 
 1. 调整文字大小及字体
 
-    ```txt
+    ```text
     右键 -> 新建配置方案 -> 外观 -> 选择 -> 大小 -> 确定 -> 确定 
     ```
 
 2. 将自定义方案设置为默认
 
-    ```txt
+    ```text
     右上角三条横杠 -> 设置 -> 配置konsole -> 配置方案 -> 设为默认 ->  确定
     ```
 
@@ -86,45 +90,71 @@ sudo timedatectl set-local-rtc 0
 
 ## 配置软件源并更新软件包
 
-```bash
-# 1. 备份官方软件源
-sudo cp /etc/yum.repos.d/fedora.repo /etc/yum.repos.d/fedora.repo.bak
-sudo cp /etc/yum.repos.d/fedora-updates.repo /etc/yum.repos.d/fedora-updates.repo.bak
+1. 备份官方软件源
 
-# 2. 更新本地缓存
-sudo dnf makecache
+    ```bash
+    sudo cp /etc/yum.repos.d/fedora.repo /etc/yum.repos.d/fedora.repo.bak
+    sudo cp /etc/yum.repos.d/fedora-updates.repo /etc/yum.repos.d/fedora-updates.repo.bak
+    ```
 
-# 3. 替换软件源
-sudo sed -e 's|^metalink=|#metalink=|g' \
-    -e 's|^#baseurl=http://download.example/pub/fedora/linux|baseurl=http://mirrors.tuna.tsinghua.edu.cn/fedora|g' \
-    -i.bak \
-    /etc/yum.repos.d/fedora.repo \
-    /etc/yum.repos.d/fedora-updates.repo
+2. 更新本地缓存
 
-# 4. 启用自由和非自由 RPM 软件仓库
-sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+    ```bash
+    sudo dnf makecache
+    ```
 
-# 5. 替换掉 Fedora 自带的 flathub 仓库
+3. 替换软件源
 
-可以解决 Kde 桌面环境带的图形化软件商店的使用。
+    ```bash
+    sudo sed -e 's|^metalink=|#metalink=|g' \
+        -e 's|^#baseurl=http://download.example/pub/fedora/linux|baseurl=http://mirrors.tuna.tsinghua.edu.cn/fedora|g' \
+        -i.bak \
+        /etc/yum.repos.d/fedora.repo \
+        /etc/yum.repos.d/fedora-updates.repo
+    ```
 
-# 5.1 移除受限的 Fedora 仓库
-sudo flatpak remote-delete fedora
+4. 启用自由和非自由 RPM 软件仓库
 
-# 5.2 添加 Flathub 完整仓库
-sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    ```bash
+    sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+    ```
 
-# 6. (可选) Appimage 包格式支持
+5. 替换掉 Fedora 自带的 flathub 仓库
 
-# 6.1 安装 Fuse
-sudo dnf install -y fuse fuse-libs
-# 6.2  安装管理工具
-sudo flatpak install -y flathub it.mijorus.gearlever
+    可以解决 Kde 桌面环境带的图形化软件商店的使用。
 
-# 7. 更新软件包
-sudo dnf upgrade
-# 更新完成后重启系统
-```
+    - 移除受限的 Fedora 仓库
+
+    ```bash
+    sudo flatpak remote-delete fedora
+    ```
+
+    - 添加 Flathub 完整仓库
+
+    ```bash
+    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    ```
+
+6. (可选) Appimage 包格式支持
+
+    - 安装 Fuse
+
+    ```bash
+    sudo dnf install -y fuse fuse-libs
+    ```
+
+    - 安装管理工具
+
+    ```bash
+    sudo flatpak install -y flathub it.mijorus.gearlever
+    ```
+
+7. 更新软件包
+
+    ```bash
+    sudo dnf upgrade
+    # 更新完成后重启系统
+    ```
 
 - 更多说明建议看：
 
