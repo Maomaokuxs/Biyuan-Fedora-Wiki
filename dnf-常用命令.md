@@ -6,17 +6,27 @@
 
 ## 应用程序管理命令
 
+- 安装程序
+
 ```bash
-# 安装程序
 dnf install <程序名>
+```
 
-# 卸载程序
+- 卸载程序
+
+```bash
 dnf remove <程序名>
+```
 
-# 重装程序
+- 重装程序
+
+```bash
 dnf reinstall <程序名>
+```
 
-# 安装历史
+- 安装历史
+
+```bash
 dnf histoty list
 ```
 
@@ -24,20 +34,34 @@ dnf histoty list
 
 ## 仓库管理命令
 
+
+- 显示已启用软件仓库
+
 ```bash
-# 显示已启用软件仓库
 dnf repo list
+```
 
-# 显示所有仓库
+- 显示所有仓库
+
+```bsah
 dnf repo list --all
+```
 
-#启用fedora官方仓库及RPM FUDION仓库
+- 启用fedora官方仓库及RPM FUDION仓库
+
+```bash
 sudo dnf config-manager setopt <仓库ID>.enabled=1
+```
 
-#禁用仓库
+- 禁用仓库
+
+```bash
 sudo dnf config-manager setopt <仓库ID>.enabled=0
+```
 
-#启用fedora copr仓库
+- 启用fedora copr仓库
+
+```bash
 sudo dnf copr enable 维护者/仓库名称
 #例如
 sudo dnf copr enable vaniiiiii/kaczynski-ted 
