@@ -2,13 +2,13 @@
 
 - 这是整篇wiki的目录，新增的文章会添加此，可以预览主线文章，为了简洁支线放在了各个主线文档的链接中，默认使用的发行版是 Fedora GNU/Linux。
 - 折腾 Linux 就是按照自己的使用方式去增删相对应的功能，找到感兴趣的点即可，我不希望因为这篇 Wiki 将你的系统变成“我的系统”。
-- 截至 2026年1月21日 使用的设备配置
+- 截至 2026年6月16日 使用的设备配置
 
-  - OS: Fedora Linux 43 (KDE Plasma Desktop Edition) x86_64
-  - Kernel: Linux 6.18.6-200.fc43.x86_64
+  - OS: Fedora Linux 44 (KDE Plasma Desktop Edition) x86_64
+  - Kernel: Linux 7.0.12-201.fc44.x86_64
   - DE: KDE Plasma 6.5.5
   - WM: KWin (Wayland)
-  - Terminal: konsole 25.12.1
+  - Terminal: kitty 0.47.1
   - CPU: AMD Ryzen 5 5600 (12) @ 4.47 GHz
   - GPU: NVIDIA GeForce RTX 4060
 
@@ -53,7 +53,7 @@
 - [[lvm-管理命令]]
 - [[btrfs-命令]]
 
-## 软件的使用
+## 软件配置
 
 - [[dnf5-配置]]
 - [[snapper-实现快照功能]]
