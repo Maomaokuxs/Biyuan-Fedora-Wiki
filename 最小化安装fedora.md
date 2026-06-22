@@ -1,5 +1,7 @@
 # 说明
 
+这里说的最小化安装是指使用 [Fedora everything](https://fedoraproject.org/zh-Hans/misc/#everything)安装镜像来安装，并不选择使用任何的桌面环境，只安装基础工具，如果想要体验我的安装脚本可以跳转至[仓库主页](https://github.com/Maomaokuxs/Biyuan-Fedora-Learning)，具体使用说明在主页有说明。
+
 ## 配置终端字体
 
 1. 临时更改
@@ -185,7 +187,7 @@ sudo dnf install xdg-desktop-portal-gnome xdg-desktop-portal-wlr
 
         ```Ini, TOML
         [default_session]
-        command = "tuigreet --time --remember --cmd /usr/bin/niri"
+        command = "tuigreet --time --cmd niri-session"
 
         user = "greetd"
         ```
@@ -220,7 +222,7 @@ sudo dnf install xdg-desktop-portal-gnome xdg-desktop-portal-wlr
         - 执行以下命令：将其加入 video 和 render 组（为了 NVIDIA 驱动权限）
 
         ```bash
-        sudo usermod -aG video,render greeter
+        sudo usermod -aG video,render greetd
         sudo systemctl start greetd
         ```
 
@@ -324,14 +326,13 @@ fc-cache -fv
 
 ---
 
-## 安装可选的软件
+## 安装软件
 
 ```bash
 fastfetch
-swww
+awww
 waypaper
 rofi
-clash-verge
 waypaper
 hyprlock
 hypridle
@@ -341,9 +342,6 @@ nvim
 codium
 hellwal
 mako
-splayer
-steam
-bilibili
 gnome-text-editor
 polkit-kde
 ```
