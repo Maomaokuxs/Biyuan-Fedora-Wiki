@@ -46,6 +46,40 @@
 
 ---
 
+## 配置终端代理
+
+解决终端不能访问系统代理。
+
+1. 编辑.bashrc
+
+    ```bash
+    vim ~/.bashrc
+    ```
+
+2. 添加代理地址
+  
+    ```bash
+    # proxy
+    export http_proxy=http://代理地址:端口
+    export https_proxy=http://代理地址:端口
+    export all_proxy=socks5://代理地址:端口
+    export no_proxy=localhost,代理地址,::端口
+    ```
+
+3. 让 sudo 读取当前用户代理
+
+    - 临时使用
+
+    ```bash
+    sudo -E 
+    ```
+
+    - 永久使用
+
+    ```bash
+    echo 'Defaults env_keep += "http_proxy https_proxy all_proxy no_proxy"' | sudo tee /etc/sudoers.d/proxy
+    ```
+
 ## (可选) 将默认 Home 为中文文件夹修改为英文
 
 解决在终端中输入中文路径的痛点。
