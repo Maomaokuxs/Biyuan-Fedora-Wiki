@@ -36,7 +36,7 @@ reboot
 
 ## 5. (可选)删除 sddm 软件包
 
-### 5.1 在重启之后确认 plasmalogin 窗口管理器已经启用
+- **确认 plasmalogin 窗口管理器已启用**
 
 ```bash
 sudo systemctl status display-manager
@@ -53,7 +53,7 @@ biyuan@fedoralinux:~$ sudo systemctl status display-manager
      Active: active (running) since Thu 2026-02-19 14:05:35 CST; 1h 3min ago
 ```
 
-### 5.2 删除 sddm 软件包
+- **删除 sddm 软件包**
 
 ```bash
 sudo dnf remove sddm

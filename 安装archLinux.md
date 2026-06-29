@@ -4,49 +4,49 @@
 
 ## 一、准备工作
 
-### 1.下载系统镜像文件
+- **下载系统镜像文件**
+  
+  [国内清华源](https://mirrors.tuna.tsinghua.edu.cn/archlinux/)
+  
+  进入下载页面，按路径 `Index of /archlinux/iso/2026.04.01/` 下载安装镜像，注意路径中的时间每个月更新一次，下载最近版本的即可。
+  
+  `archlinux-2026.04.01-x86_64.iso`文件为安装镜像，如果需要使用种子下载可以使用`archlinux-2026.04.01-x86_64.iso.torrent`文件
+  
+  `sha256sums.txt`文件中包含校验值，下载完成可以校验镜像是否完整，在命令提示符中使用以下命令计算哈希值 。
+  
+  ```shell
+  certutil -hashfile "文件路径" SHA256
+  ```
+  
+  例如：
+  
+  ```shell
+  C:\Users\Biyuan>certutil -hashfile "F:\IDM\常规\archlinux-2026.04.01-x86_64.iso" SHA256
+  SHA256 的 F:\IDM\常规\archlinux-2026.04.01-x86_64.iso 哈希:
+  f14bf46afbe782d28835aed99bfa2fe447903872cb9f4b21153196d6ed1d48ae
+  CertUtil: -hashfile 命令成功完成。
+  ```
+  
+  然后使用瞪眼法比较上下有什么不同:
+  
+  ```shell
+  C:\Users\Biyuan>f14bf46afbe782d28835aed99bfa2fe447903872cb9f4b21153196d6ed1d48ae
+  
+  C:\Users\Biyuan>f14bf46afbe782d28835aed99bfa2fe447903872cb9f4b21153196d6ed1d48ae
+  ```
 
-[国内清华源](https://mirrors.tuna.tsinghua.edu.cn/archlinux/)
-
-进入下载页面，按路径 `Index of /archlinux/iso/2026.04.01/` 下载安装镜像，注意路径中的时间每个月更新一次，下载最近版本的即可。
-
-`archlinux-2026.04.01-x86_64.iso`文件为安装镜像，如果需要使用种子下载可以使用`archlinux-2026.04.01-x86_64.iso.torrent`文件
-
-`sha256sums.txt`文件中包含校验值，下载完成可以校验镜像是否完整，在命令提示符中使用以下命令计算哈希值 。
-
-```shell
-certutil -hashfile "文件路径" SHA256
-```
-
-例如：
-
-```shell
-C:\Users\Biyuan>certutil -hashfile "F:\IDM\常规\archlinux-2026.04.01-x86_64.iso" SHA256
-SHA256 的 F:\IDM\常规\archlinux-2026.04.01-x86_64.iso 哈希:
-f14bf46afbe782d28835aed99bfa2fe447903872cb9f4b21153196d6ed1d48ae
-CertUtil: -hashfile 命令成功完成。
-```
-
-然后使用瞪眼法比较上下有什么不同:
-
-```shell
-C:\Users\Biyuan>f14bf46afbe782d28835aed99bfa2fe447903872cb9f4b21153196d6ed1d48ae
-
-C:\Users\Biyuan>f14bf46afbe782d28835aed99bfa2fe447903872cb9f4b21153196d6ed1d48ae
-```
-
-### 2.准备安装介质
+- **准备安装介质**
 
 Arch Linux 的ISO文件可以被制作成多种类型安装介质，如 U 盘、光盘和带有 PXE 的网络安装映像。我建议使用 U盘，第一次安装这个最为方便。
 我建议使用 [Ventoy](https://www.ventoy.net/cn/) ，如果是在 Windows 使用，在官网下载 .exe 后缀的文件安装后，将 U 盘插上电脑,打开图像化界面后使用默认的配置，选择将要使用的 U 盘，注意这将会格式化 U 盘，先将里面的重要数据备份，接着直接将下载好的 ArchLinux 镜像复制进 U 盘，重启系统后进入 Bios 中将首个启动项设置为 U 盘，建议在 Windows 中关闭快速启动。
 
-### 3.预留磁盘空间
+- **预留磁盘空间**
+  
+  如果直接全盘安装的话并不需要这一步。
+  
+  在 Windows 系统磁盘管理中，右键空间充足的分区，点击压缩卷，至少预留 20 GB的空间。想要极限安装，根据 Arch Wiki 指南中可以只预留 2 GB 的空间。
 
-如果直接全盘安装的话并不需要这一步。
-
-在 Windows 系统磁盘管理中，右键空间充足的分区，点击压缩卷，至少预留 20 GB的空间。想要极限安装，根据 Arch Wiki 指南中可以只预留 2 GB 的空间。
-
-### 4.启动到 live 环境
+- **启动到 live 环境**
 
 Arch Linux 安装镜像不支持 UEFI 安全启动（Secure Boot）功能。如果要引导安装介质，需要禁用安全启动。如果需要，可在完成安装后重新配置。这需要在 Bios 中进行设置，怎么进入 Bios 各家主板不一，拿华硕 TUF 系列主板来说，开机时多次按下 `F2` 或者 `Del` 即可，进入后需要将 U 盘作为启动项即可接着将 root 身份登录进入一个虚拟控制台，默认的 Shell 是 Zsh。
 
@@ -62,7 +62,7 @@ setfont ter-132b
 
 ## 二、安装系统
 
-### 1.网络配置
+- **网络配置**
 
 建议使用有线网络，最为方便，如果需要使用无线网络也有办法。
 
@@ -100,15 +100,15 @@ setfont ter-132b
   ping -c 3 ping.archlinux.org  
   ```
 
-### 2.更新系统时间
+- **更新系统时间**
+  
+  为确保软件包签名校验成功以及防止 TLS 证书错误，Live 系统需要准确的时间，为此 systemd-timesyncd 默认启用，也就是说当系统已经创建互联网连接后，系统时间将自动同步。
+  
+  ```shell
+  timedatectl
+  ```
 
-为确保软件包签名校验成功以及防止 TLS 证书错误，Live 系统需要准确的时间，为此 systemd-timesyncd 默认启用，也就是说当系统已经创建互联网连接后，系统时间将自动同步。
-
-```shell
-timedatectl
-```
-
-### 3.创建硬盘分区、格式化和挂载
+- **创建硬盘分区、格式化和挂载**
 
   3.1 列出硬盘
   
@@ -256,7 +256,7 @@ timedatectl
   # 挂载家目录
   ```
 
-### 4.正式安装系统
+- **正式安装系统**
   
   4.1 安装系统及必要软件包
   
@@ -274,7 +274,7 @@ timedatectl
   # 打印生成的fstab内容到终端，检查挂载项是否有问题
   ```
   
-### 5.基本配置系统
+- **基本配置系统**
   
   5.1 进入新安装的系统
 
@@ -389,58 +389,56 @@ reboot
 
 使用 root 名加配置的密码进入系统。
 
-### 1.配置 networkmanager 自启动
+- **配置 networkmanager 自启动**
+  
+  ```shell
+  systemctl enable --now NetworkManager
+  ```
 
-```shell
-systemctl enable --now NetworkManager
-```
+- **连接网络**
+  
+  有线网络将自动连接，无线使用下面命令。
+  
+  ```shell
+  nmtui
+  ```
 
-### 2.连接网络
+- **更新软件包**
+  
+  ```shell
+  pamcan -Syu
+  ```
 
-有线网络将自动连接，无线使用下面命令。
+- **添加普通用户**
+  
+  ```shell
+  useradd -G wheel -m biyuan
+  # biyuan是用户名
+  
+  passwd biyuan
+  # 配置用户 biyuan 的密码
+  
+  vim /etc/environment
+  # 配置默认编辑器
+  
+  visudo 
+  # 取消 %wheel ALL=(ALL:ALL) ALL注释 
+  ```
 
-```shell
-nmtui
-```
+- **注销 root 账户**
+  
+  ```shell
+  exit
+  ```
 
-### 3.更新软件包
+- **登录普通用户**
+  
+  输入刚刚配置的普通用户的信息。
 
-```shell
-pamcan -Syu
-```
-
-### 4.添加普通用户
-
-```shell
-useradd -G wheel -m biyuan
-# biyuan是用户名
-
-passwd biyuan
-# 配置用户 biyuan 的密码
-
-vim /etc/environment
-# 配置默认编辑器
-
-visudo 
-# 取消 %wheel ALL=(ALL:ALL) ALL注释 
-```
-
-### 4.注销 root 账户
-
-```shell
-exit
-```
-
-### 5.登录普通用户
-
-输入刚刚配置的普通用户的信息。
-
-### 4.安装 fastfetch
-
-```shell
-sudo pamcan -S fastfetch
-# 安装软件包
-
-fastfetch
-# 输出当前系统信息
-```
+- **安装 fastfetch**
+  
+  ```shell
+  sudo pamcan -S fastfetch
+  
+  fastfetch
+  ```

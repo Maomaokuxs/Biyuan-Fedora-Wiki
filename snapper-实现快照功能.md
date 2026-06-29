@@ -4,13 +4,13 @@
 
 ## 1. 安装snapper，snapper-gui，btrfs-assistant等软件包
 
-### 1.启用corp仓库
+- **启用 corp 仓库**
+  
+  ```bash
+  sudo dnf copr enable gasinvein/snapper-edge
+  ```
 
-```bash
-sudo dnf copr enable gasinvein/snapper-edge
-```
-
-### 2.安装 snapper，btrfs-progs 和 btrfs-assistant
+- **安装 snapper，btrfs-progs 和 btrfs-assistant**
 
 1. 安装 snapper 和 btrfs-assistant
 
@@ -18,7 +18,7 @@ sudo dnf copr enable gasinvein/snapper-edge
     sudo dnf install snapper btrfs-progs btrfs-assistant
     ```
 
-### 3.(可选)安装 grub-btrfs 和 dnf5-autosnapper
+- **(可选)安装 grub-btrfs 和 dnf5-autosnapper**
 
 ⚠️注意：这两个软件包需要将snapper配置完成后再使用。
 
@@ -81,23 +81,23 @@ sudo btrfs subvolume list /
 
 ## 3. 为根目录创建配置文件
 
-### 1. 创建配置文件
+- **创建配置文件**
+  
+  ```bash
+  sudo snapper -c root create-config /
+  ```
 
-```bash
-sudo snapper -c root create-config /
-```
+- **显示当前配置文件**
+  
+  ```bash
+  sudo snapper list-configs
+  ```
 
-### 2. 显示当前配置文件
-
-```bash
-sudo snapper list-configs
-```
-
-### 3. 检查root配置文件
-
-```bash
-sudo snapper -c root get-config
-```
+- **检查 root 配置文件**
+  
+  ```bash
+  sudo snapper -c root get-config
+  ```
 
 - 参考文档：
 
@@ -140,45 +140,45 @@ TIMELINE_LIMIT_YEARLY    │ 1     # 每年快照保留个数。
 TIMELINE_MIN_AGE         │ 3600  # 自动生成的定时快照最小存活时间。
 ```
 
-### 1. 查看当前配置
+- **查看当前配置**
+  
+  ```bash
+  sudo snapper -c root get-config
+  ```
 
-```bash
-sudo snapper -c root get-config
-```
+- **自定义 root 配置**
+  
+  ```bash
+  sudo snapper -c root set-config ALLOW_GROUPS="wheel"
+  sudo snapper -c root set-config NUMBER_LIMIT="20"
+  sudo snapper -c root set-config NUMBER_LIMIT_IMPORTANT="5"
+  sudo snapper -c root set-config SPACE_LIMIT="0.15"
+  sudo snapper -c root set-config SYNC_ACL="yes"
+  sudo snapper -c root set-config TIMELINE_LIMIT_DAILY="1"
+  sudo snapper -c root set-config TIMELINE_LIMIT_HOURLY="5"
+  sudo snapper -c root set-config TIMELINE_LIMIT_MONTHLY="1"
+  sudo snapper -c root set-config TIMELINE_LIMIT_QUARTERLY="3"
+  sudo snapper -c root set-config TIMELINE_LIMIT_WEEKLY="1"
+  sudo snapper -c root set-config TIMELINE_LIMIT_YEARLY="1"
+  ```
 
-### 2. 自定义 root配置
+- **自定义 home 配置**
+  
+  ```bash
+  sudo snapper -c home set-config ALLOW_GROUPS="wheel"
+  sudo snapper -c home set-config NUMBER_LIMIT="20"
+  sudo snapper -c home set-config NUMBER_LIMIT_IMPORTANT="5"
+  sudo snapper -c home set-config SPACE_LIMIT="0.15"
+  sudo snapper -c home set-config SYNC_ACL="yes"
+  sudo snapper -c home set-config TIMELINE_LIMIT_DAILY="1"
+  sudo snapper -c home set-config TIMELINE_LIMIT_HOURLY="5"
+  sudo snapper -c home set-config TIMELINE_LIMIT_MONTHLY="1"
+  sudo snapper -c home set-config TIMELINE_LIMIT_QUARTERLY="3"
+  sudo snapper -c home set-config TIMELINE_LIMIT_WEEKLY="1"
+  sudo snapper -c home set-config TIMELINE_LIMIT_YEARLY="1"
+  ```
 
-```bash
-sudo snapper -c root set-config ALLOW_GROUPS="wheel"
-sudo snapper -c root set-config NUMBER_LIMIT="20"
-sudo snapper -c root set-config NUMBER_LIMIT_IMPORTANT="5"
-sudo snapper -c root set-config SPACE_LIMIT="0.15"
-sudo snapper -c root set-config SYNC_ACL="yes"
-sudo snapper -c root set-config TIMELINE_LIMIT_DAILY="1"
-sudo snapper -c root set-config TIMELINE_LIMIT_HOURLY="5"
-sudo snapper -c root set-config TIMELINE_LIMIT_MONTHLY="1"
-sudo snapper -c root set-config TIMELINE_LIMIT_QUARTERLY="3"
-sudo snapper -c root set-config TIMELINE_LIMIT_WEEKLY="1"
-sudo snapper -c root set-config TIMELINE_LIMIT_YEARLY="1"
-```
-
-### 3. 自定义 home 配置
-
-```bash
-sudo snapper -c home set-config ALLOW_GROUPS="wheel"
-sudo snapper -c home set-config NUMBER_LIMIT="20"
-sudo snapper -c home set-config NUMBER_LIMIT_IMPORTANT="5"
-sudo snapper -c home set-config SPACE_LIMIT="0.15"
-sudo snapper -c home set-config SYNC_ACL="yes"
-sudo snapper -c home set-config TIMELINE_LIMIT_DAILY="1"
-sudo snapper -c home set-config TIMELINE_LIMIT_HOURLY="5"
-sudo snapper -c home set-config TIMELINE_LIMIT_MONTHLY="1"
-sudo snapper -c home set-config TIMELINE_LIMIT_QUARTERLY="3"
-sudo snapper -c home set-config TIMELINE_LIMIT_WEEKLY="1"
-sudo snapper -c home set-config TIMELINE_LIMIT_YEARLY="1"
-```
-
-### 4. 单独配置 QGROUP 参数
+- **单独配置 QGROUP 参数**
 
 1. QGROUP 是 Quota Group（配额组）的缩写。它是 Btrfs 文件系统中的一种机制，专门用来统计和限制子卷（Subvolumes）及其快照（Snapshots）所占用的磁盘空间。
 
@@ -200,19 +200,18 @@ sudo snapper -c home set-config TIMELINE_LIMIT_YEARLY="1"
     sudo snapper -c root get-config | grep QGROUP
     ```
 
-### 5. 查看最终配置
-
-```bash
-sudo snapper -c root get-config
-    
-sudo snapper -c home get-config
-```
+- **查看最终配置**
+  
+  ```bash
+  sudo snapper -c root get-config
+  sudo snapper -c home get-config
+  ```
 
 ---
 
 ## 5. 启用自动服务
 
-### 1. 启用定时服务
+- **启用定时服务**
 
 1. 启用并启动服务
 
@@ -234,7 +233,7 @@ sudo snapper -c home get-config
     sudo systemctl list-timers --all | grep snapper
     ```
 
-### 2. 立即运行一次快照创建
+- **立即运行一次快照创建**
 
 1. 手动触发时间线快照
 
@@ -266,112 +265,96 @@ sudo snapper -c home get-config
 
 ## 6. 快照操作指南
 
-### 1.快速预览
+- **快速预览**
+  
+  ```bash
+  # 1.创建快照
+  sudo snapper -c root create --description "描述"
+  
+  # 2.列出快照
+  sudo snapper -c root list
+  
+  # 3.删除快照
+  sudo snapper -c root delete 编号
+  
+  # 4.比较快照
+  sudo snapper -c root status 前一个..后一个
+  
+  # 5.修改配置
+  sudo snapper -c root set-config 参数=值
+  
+  # 6.清理空间
+  sudo snapper -c root cleanup timeline
+  sudo snapper -c root cleanup number
+  
+  # 7.创建副本为只读子卷
+  sudo btrfs subvolume snapshot -r <源子卷> <快照路径>
+  
+  # 8.创建副本为可读写子卷
+  sudo btrfs subvolume snapshot <源子卷> <快照路径>
+  ```
 
-```bash
-# 1.创建快照
-sudo snapper -c root create --description "描述"
+- **手动创建快照**
+  
+  ```bash
+  # 1.创建 root 快照
+  sudo snapper -c root create --description "系统更新前"
+  
+  # 2.创建 home 快照
+  sudo snapper -c home create --description "重要文件备份"
+  ```
 
-# 2.列出快照
-sudo snapper -c root list
+- **查看和管理快照**
+  
+  ```bash
+  # 1.列出所有快照
+  sudo snapper -c root list
+  sudo snapper -c home list
+  
+  # 2.查看快照详细信息
+  sudo btrfs subvolume list /.snapshots/
+  
+  # 3.比较快照差异
+  sudo snapper -c root status PREVIOUS..CURRENT
+  
+  # 4.删除快照
+  sudo snapper -c root delete SNAPSHOT_NUMBER
+  ```
 
-# 3.删除快照
-sudo snapper -c root delete 编号
-
-# 4.比较快照
-sudo snapper -c root status 前一个..后一个
-
-# 5.修改配置
-sudo snapper -c root set-config 参数=值
-
-# 6.清理空间
-sudo snapper -c root cleanup timeline
-sudo snapper -c root cleanup number
-
-# 7.创建副本为只读子卷
-sudo btrfs subvolume snapshot -r <源子卷> <快照路径>
-
-# 8.创建副本为可读写子卷
-sudo btrfs subvolume snapshot <源子卷> <快照路径>
-```
-
----
-
-### 2.手动创建快照
-
-``` bash
-# 1.创建手动快照
-
-# 2.创建 root 快照
-sudo snapper -c root create --description "系统更新前"
-
-# 3.创建 home 快照
-sudo snapper -c home create --description "重要文件备份"
-```
-
-### 3.查看和管理快照
-
-```bash
-# 1.列出所有快照
-sudo snapper -c root list
-sudo snapper -c home list
-
-# 2.查看快照详细信息
-sudo btrfs subvolume list /.snapshots/
-
-# 3.比较快照差异
-sudo snapper -c root status PREVIOUS（前一个快照）..CURRENT（当前快照）
-
-# 4.删除快照
-sudo snapper -c root delete SNAPSHOT_NUMBER（快照ID）
-```
-
-### 4.从快照恢复文件
-
-```bash
-# 查看快照内容
-sudo ls /.snapshots/SNAPSHOT_NUMBER/snapshot/
-
-# 恢复单个文件
-sudo cp /.snapshots/SNAPSHOT_NUMBER/snapshot/path/to/file /path/to/restore
-
-# 比较并恢复
-sudo snapper -c root undochange PREVIOUS..CURRENT
-```
+- **从快照恢复文件**
+  
+  ```bash
+  # 查看快照内容
+  sudo ls /.snapshots/SNAPSHOT_NUMBER/snapshot/
+  
+  # 恢复单个文件
+  sudo cp /.snapshots/SNAPSHOT_NUMBER/snapshot/path/to/file /path/to/restore
+  
+  # 比较并恢复
+  sudo snapper -c root undochange PREVIOUS..CURRENT
+  ```
 
 ---
 
 ## 7.使用 btrfs-assistant 工具管理快照
 
-### 1.管理快照
+- **管理快照**
+  
+  - 点击标签栏进入 snapper > new/delete
+  - select config 可以选择配置文件
+  - new 为新建，delete 为删除，refresh 为刷新
 
-- 点击标签栏进入 snapper > new/delete
+- **回滚**
+  
+  - 点击标签栏进入 snapper > browse/restore
+  - select config 可以选择配置文件
+  - 选择目标快照，点击 restore
 
-- select config 可以选择配置文件
-
-- new 为新建
-
-- delete 为删除
-
-- refresh 为刷新
-
-### 2.回滚
-
-- 点击标签栏进入 snapper > browse/restore
-
-- select config 可以选择配置文件
-
-- 选择目标快照
-
-- 点击 restore
-
-### 3.修改部分 snapper 配置文件
-
-- 点击标签栏进入 snapper settings
-
-- select config 可以选择配置文件
-
-- 选择对应的条目进行修改
+- **修改部分 snapper 配置文件**
+  
+  - 点击标签栏进入 snapper settings
+  - select config 可以选择配置文件
+  - 选择对应的条目进行修改
 
 ---
 
@@ -405,7 +388,7 @@ sudo snapper -c root undochange PREVIOUS..CURRENT
 
 ## 9. 帮助
 
-### 注意事项
+- **注意事项**
 
 1. 遇到报错为：列出配置失败 (reading sysconfig-file failed)，可以尝试下面的操作。
 

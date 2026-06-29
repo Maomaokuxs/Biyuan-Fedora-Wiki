@@ -10,11 +10,11 @@
 
 ## 1.双系统时间不一致问题
 
-### 1.1 现象
+- **现象**
+  
+  对于北京时间（UTC+8），linux 与 windows 之间会相差八个小时，而且 windows 在启动系统时并不会自行同步时间，需要在设置里手动同步时间，在下一次进入 linux 之后进入 windows 时间又会恢复原状。
 
-对于北京时间（UTC+8），linux 与 windows 之间会相差八个小时，而且 windows 在启动系统时并不会自行同步时间，需要在设置里手动同步时间，在下一次进入 linux 之后进入 windows 时间又会恢复原状。
-
-### 1.2 原因
+- **原因**
 
 因为两个系统对硬件时钟的解释不同，所以导致时间不同步。
 
@@ -22,7 +22,7 @@
 
 - Windows： 默认将硬件时钟直接看作 Local Time（本地时间）。
 
-### 1.3 解决办法
+- **解决办法**
 
 - 如果 Linux 使用的是 RTC 那么不需要更改 Windows 系统与 Fedora 系统可以同步，使用下面的命令查看，除非你需要使用 UTC 才需要修改 Windows 注册表。
 
@@ -61,15 +61,15 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsU
 
 ## 2.安全启动导致无法加载启动 U 盘 或者想要在 fedora linux 系统上实现安全启动
 
-### 2.1 现象
+- **现象**
+  
+  在制作好 fedora 的启动 U 盘 后并设置了启动项，但是依旧不能加载。
 
-在制作好 fedora 的启动 U 盘 后并设置了启动项，但是依旧不能加载。
-
-### 2.2 原因
+- **原因**
 
 部分主板是默认开启安全启动，在开启后，主板只会引导经过微软签名的 shim 程序，fedora 是支持安全启动的，但可能因为制作启动 U 盘时可能出现了问题，导致无法启动。
 
-### 2.3 解决办法
+- **解决办法**
 
 - 最简单的就是直接将安全启动关闭，如果有需要可以安装完之后看 [[实现安全启动]]来实现相关功能。
 
@@ -77,19 +77,17 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsU
 
 ## 3.开启了 windows 快速启动 linux 无法挂载  ntfs 文件系统的分区
 
-### 3.1 原因
+- **原因**
+  
+  如果 Windows 启用了"快速启动 (Fast Startup)"或处于休眠状态，NTFS 分区会被锁定为只读。
 
-如果 Windows 启用了“快速启动 (Fast Startup)”或处于休眠状态，NTFS 分区会被锁定为只读。
-
-### 3.2 解决办法
-
-进入 windows 系统关闭安全启动。
+- **解决办法**
+  
+  进入 windows 系统关闭快速启动。
 
 ## 4.linux 与 windows共享文件
 
-### 4.1 两个系统独立
-
-#### 4.1.1 共享磁盘
+- **共享磁盘**
 
 1. Windows 分享目录，Linux 访问
 
@@ -253,7 +251,7 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsU
 
     在 Windows 文件资源管理器的地址栏输入： \\192.168.x.x\LinuxShare
 
-#### 4.1.2 共享文件
+- **共享文件**
 
 1. 使用 localsend 软件
 
