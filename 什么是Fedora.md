@@ -16,7 +16,7 @@ Fedora 是一个由社区维护基于自由开源软件的 `Linux` 发行版，�
 
 ## Fedora 各种版本的区别
 
-大多数衍生版本都基于某个特定版本（通常是 Fedora 工作站版），并使用相应的安装流程。大体分为 Editions，Spins，Atomic Desktops 和 Labs 四个类别，每一类包含数个发行版，详细说明请跳转至 [[fedora-各种发行版的详细说明]]。
+大多数衍生版本都基于某个特定版本（通常是 Fedora 工作站版），并使用相应的安装流程。大体分为 Editions，Spins，Atomic Desktops 和 Labs 四个类别，每一类包含数个发行版，详细说明请跳转至 [[Fedora-各种发行版的详细说明]]。
 
 - **Editions**
   
