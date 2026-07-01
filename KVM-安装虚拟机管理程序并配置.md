@@ -14,13 +14,21 @@ cat /proc/cpuinfo | egrep "vmx|svm"
 
 ```bash
 # 1.安装应用程序
-sudo dnf -y install bridge-utils libvirt virt-install qemu-kvm
+# Fedora 40-43:
+# sudo dnf -y install bridge-utils libvirt virt-install qemu-kvm
+
+# Fedora 44+ (bridge-utils 已弃用, 跳过):
+sudo dnf -y install libvirt virt-install qemu-kvm
 
 # 2.安装后，确认内核模块已加载
 $ lsmod | grep kvm
 
 # 3.还要安装有用的虚拟机管理工具：
 sudo dnf install libvirt-devel virt-top libguestfs-tools guestfs-tools
+
+# 4.将当前用户加入 libvirt 组 (免 sudo 管理虚拟机)
+sudo usermod -aG libvirt $USER
+# ⚠️ 需要退出重新登录后组权限才生效
 ```
 
 ## 3.启动并启用 KVM 守护进程
@@ -40,11 +48,29 @@ sudo dnf -y install virt-manager
 # 提供了一个图形界面来管理虚拟机
 ```
 
-## 5.创建一个测试实例
+## 5.配置默认 NAT 网络
 
-首先，创建一个连接到实例上的桥接网络，下面的指南会有帮助。
-在Linux中创建和配置KVM桥接网络
-一旦桥接接口准备好，使用CLI或虚拟机管理器创建一个测试实例。
+libvirtd 安装后会自动定义默认的 NAT 网络 `default`，但需要手动启动：
+
+```bash
+# 1.启动默认 NAT 网络
+sudo virsh net-start default
+
+# 2.设为开机自启
+sudo virsh net-autostart default
+
+# 3.验证 (确认 default 显示为"活跃")
+virsh net-list --all
+```
+
+默认 NAT 网络 (`virbr0`, 192.168.122.1/24) 开箱即用，**WiFi 和有线都适用**。
+
+## 6.创建一个测试实例 (桥接网络 - 仅有线)
+
+> ⚠️ **WiFi 用户注意**：WiFi 接口通常不支持桥接，桥接后虚拟机无法上网。
+> 如果你用的是 WiFi，直接使用第 5 步的默认 NAT 网络即可，跳过本节。
+
+以下步骤适用于有线网卡：
 
 - **停用占用网卡**
   
