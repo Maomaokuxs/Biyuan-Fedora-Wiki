@@ -1,0 +1,15 @@
+# Secrets
+.env
+.env.*
+*.key
+*.pem
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor temp
+*.swp
+*.swo
+*~
