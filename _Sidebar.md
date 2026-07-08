@@ -67,6 +67,7 @@
 - [[解决与Windows系统共存的问题]]
 - [[KDE登录管理器由Sddm更改为Plasmalogin]]
 - [[Btrfs文件系统之间交换子卷]]
+- [[Btrfs-多设备池休眠配置与踩坑记录]]
 
 ## 已知bug
 
