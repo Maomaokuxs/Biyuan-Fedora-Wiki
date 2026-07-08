@@ -128,6 +128,23 @@ GRUB_THEME="/usr/share/grub/themes/Tribbie/theme.txt"
 
 ---
 
+## grubenv 损坏修复
+
+启动时显示 `invalid environment block` 错误时，说明 `/boot/grub2/grubenv` 文件损坏。
+
+```bash
+# 删除损坏的 grubenv
+sudo rm -f /boot/grub2/grubenv
+
+# 重建空的 grubenv
+sudo grub2-editenv /boot/grub2/grubenv create
+
+# 重新生成 GRUB 配置文件
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+```
+
+---
+
 ## 重新生成 GRUB 配置文件
 
 ```bash
