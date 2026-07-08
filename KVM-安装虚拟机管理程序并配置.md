@@ -23,12 +23,12 @@ sudo dnf -y install libvirt virt-install qemu-kvm
 # 2.安装后，确认内核模块已加载
 $ lsmod | grep kvm
 
-# 3.还要安装有用的虚拟机管理工具：
+# 3.安装有用的虚拟机管理工具：
 sudo dnf install libvirt-devel virt-top libguestfs-tools guestfs-tools
 
 # 4.将当前用户加入 libvirt 组 (免 sudo 管理虚拟机)
 sudo usermod -aG libvirt $USER
-# ⚠️ 需要退出重新登录后组权限才生效
+# ⚠️ 注意：需要退出重新登录后组权限才生效
 ```
 
 ## 3.启动并启用 KVM 守护进程
@@ -65,7 +65,71 @@ virsh net-list --all
 
 默认 NAT 网络 (`virbr0`, 192.168.122.1/24) 开箱即用，**WiFi 和有线都适用**。
 
-## 6.创建一个测试实例 (桥接网络 - 仅有线)
+## 6.创建测试实例 (NAT 网络)
+
+对于大部分桌面用户（尤其是 WiFi 环境），使用 NAT 网络是最简单的方式。
+
+- **安装 virt-viewer**
+
+  ```bash
+  sudo dnf install -y virt-viewer
+  ```
+
+- **准备安装镜像**
+
+  将 ISO 文件复制到 QEMU 可访问的目录（`/var/lib/libvirt/images/`），避免权限问题：
+
+  ```bash
+  sudo cp ~/Downloads/Fedora-Everything-netinst-x86_64-44-1.7.iso /var/lib/libvirt/images/
+  ```
+
+- **创建虚拟机**
+
+  ```bash
+  virt-install \
+    --connect qemu:///system \
+    --name fedora-vm \
+    --ram 4096 \
+    --vcpus 4 \
+    --disk size=30,bus=virtio \
+    --cdrom /var/lib/libvirt/images/Fedora-Everything-netinst-x86_64-44-1.7.iso \
+    --os-variant detect=on,name=fedora-unknown \
+    --network network=default,model=virtio \
+    --graphics spice,listen=none \
+    --video virtio \
+    --sound none \
+    --boot uefi \
+    --check disk_size=off
+  ```
+
+  参数说明：
+
+  | 参数 | 说明 |
+  | ------ | ------ |
+  | `--connect qemu:///system` | 连接到系统 libvirtd，使用 system 会话（默认是 /session） |
+  | `--disk size=30` | 30G qcow2 磁盘，稀疏分配，不立即占满 |
+  | `--cdrom` | 指定安装 ISO，必须放在 QEMU 可读的路径下 |
+  | `--network network=default` | 使用默认 NAT 网络 |
+  | `--graphics spice,listen=none` | 启用 SPICE 图形，通过 virt-viewer 连接 |
+  | `--boot uefi` | 使用 UEFI 引导（OVMF） |
+  | `--check disk_size=off` | 跳过磁盘空间检查（稀疏分配时宿主机可能显示空间不足） |
+
+- **连接显示**
+
+  ```bash
+  virt-viewer --connect qemu:///system fedora-vm
+  ```
+
+- **常见问题**
+
+  | 问题 | 原因 | 修复 |
+  | ------ | ------ | ------ |
+  | `Permission denied` 读取 ISO | ISO 在用户目录下，QEMU 无权访问 | 复制到 /var/lib/libvirt/images/ |
+  | `network 'default' is not active` | 使用了 /session 而非 /system | 加 `--connect qemu:///system` |
+  | 连接不到图形显示 | listen=none 导致无监听端口 | 改为 listen=127.0.0.1 或安装 virt-viewer |
+  | 磁盘空间警告 | 池中剩余空间不足 | 加 `--check disk_size=off`（稀疏分配不会立即占用） |
+
+## 7.创建测试实例 (桥接网络 - 仅有线)
 
 > ⚠️ **WiFi 用户注意**：WiFi 接口通常不支持桥接，桥接后虚拟机无法上网。
 > 如果你用的是 WiFi，直接使用第 5 步的默认 NAT 网络即可，跳过本节。
