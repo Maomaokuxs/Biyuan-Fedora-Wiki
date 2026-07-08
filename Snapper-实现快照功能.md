@@ -4,12 +4,6 @@
 
 ## 1. 安装snapper，snapper-gui，btrfs-assistant等软件包
 
-- **启用 corp 仓库**
-  
-  ```bash
-  sudo dnf copr enable gasinvein/snapper-edge
-  ```
-
 - **安装 snapper，btrfs-progs 和 btrfs-assistant**
 
 1. 安装 snapper 和 btrfs-assistant
@@ -17,6 +11,8 @@
     ```bash
     sudo dnf install snapper btrfs-progs btrfs-assistant
     ```
+
+> snapper 和 btrfs-assistant 在 Fedora 官方仓库中提供，已经无需启用第三方仓库。
 
 - **(可选)安装 grub-btrfs 和 dnf5-autosnapper**
 
@@ -27,7 +23,7 @@
     - 启用第三方仓库
 
     ```bash
-    sudo dnf copr enable kylegospo/grub-btrfs  
+    sudo dnf copr enable pego-copr/grub-btrfs
     ```
 
     - 安装 grub-btrfs 软件包
@@ -39,13 +35,13 @@
     - 启用相关服务
 
     ```bash
-    sudo systemctl enable --now grub-btrfs.service
+    sudo systemctl enable --now grub-btrfsd
     ```
 
     - 确认状态
 
     ```bash
-    sudo systemctl status grub-btrfs.service
+    sudo systemctl status grub-btrfsd
     ```
 
     - 生成 grub2 配置文件
@@ -56,16 +52,30 @@
 
 2. 安装 dnf5-autosnapper
 
+    > dnf5-autosnapper 是 dnf5 的插件，执行 dnf 命令时自动创建 Snapper 快照，因为原作者没有构建 Fedora 44版本，于是我 fork 了原仓库维护了一个版本。
+
     - 启用第三方仓库
 
     ```bash
-    sudo dnf copr enable douglascdev/dnf5-autosnapper 
+    sudo dnf copr enable biyuan/dnf5-autosnapper
     ```
 
     - 安装软件包
 
     ```bash
     sudo dnf install dnf5-autosnapper
+    ```
+
+    - 验证
+
+    ```bash
+    ls /etc/dnf/libdnf5-plugins/actions.d/snapper.actions
+    ```
+
+    - 运行 dnf 命令后检查快照是否自动生成
+
+    ```bash
+    sudo snapper -c root list
     ```
 
 ---
