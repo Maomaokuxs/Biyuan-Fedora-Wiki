@@ -1,192 +1,264 @@
 # 说明
 
-COPR（Cool Other Package Repo）是 Fedora 社区的第三方软件包构建服务。你可以将自己的软件包源码提交到 COPR，它会自动在云端构建 RPM，生成可供他人使用的 yum/dnf 仓库。
+本文总结将应用程序打包为 RPM 并上传到 COPR 仓库的完整流程。内容来源于实际打包 kazumi（Flutter）、hmcl（Java）、splayer/bilibili（Electron）、rime-ice（Rime 输入法方案）等应用的经验。
 
-## 1. 准备工作
+## COPR 是什么
 
-- GitHub 账号（用于登录 COPR）
-- 完整的 RPM spec 文件
-- 源码包或 git 仓库地址
+COPR 是 Fedora 官方的个人/第三方软件仓库平台，任何人都可以上传 SRPM 或通过 CLI 触发构建，用户通过 `dnf copr enable` 启用仓库后直接用 DNF 安装。
 
-## 2. 配置 copr-cli
-
-- **安装 copr-cli**
-
-  ```bash
-  sudo dnf install copr-cli
-  ```
-
-- **获取 API Token**
-
-  浏览器打开 `https://copr.fedorainfracloud.org/api/`，用 GitHub 登录，复制生成的 Token。
-
-- **配置 Token**
-
-  ```bash
-  mkdir -p ~/.config
-  cat > ~/.config/copr << 'EOF'
-  [copr-cli]
-  login = 你的login
-  username = 你的用户名
-  token = 你的token
-  copr_url = https://copr.fedorainfracloud.org
-  EOF
-  ```
-
-- **验证**
-
-  ```bash
-  copr-cli list
-  ```
-
-## 3. 创建 COPR 项目
+## 准备工作
 
 ```bash
-copr-cli create 项目名 \
-  --description "项目描述" \
-  --chroot fedora-44-x86_64
+# 安装必要工具
+sudo dnf install rpm-build rpmdevtools copr-cli mock
+
+# 创建 RPM 构建目录结构
+rpmdev-setuptree
+
+# 登录 COPR（浏览器打开链接完成认证）
+copr-cli login
 ```
 
-`--chroot` 指定构建目标，可以多次使用来支持多个 Fedora 版本：
+## 创建 COPR 仓库
 
 ```bash
-copr-cli create 项目名 \
-  --chroot fedora-43-x86_64 \
-  --chroot fedora-44-x86_64
+# 创建仓库（名称建议简短，如 apps）
+copr-cli create apps --chroot fedora-44-x86_64 --description "个人应用仓库" --repo "https://copr.fedorainfracloud.org/coprs/你的用户名/apps/"
 ```
 
-## 4. 从本地 SRPM 构建
+## 编写 spec 文件
 
-- **准备 spec 文件**
+### 通用模板（适用于 tar.gz 二进制重打包）
 
-  spec 文件需要包含完整的构建信息，至少需要：
+```spec
+Name:       myapp
+Version:    1.0.0
+Release:    1%{?dist}
+Summary:    应用简介
+License:    GPL-3.0
+URL:        https://github.com/owner/myapp
 
-  ```spec
-  Name:           软件包名
-  Version:        版本号
-  Release:        1%{?dist}
-  Summary:        简短描述
-  License:        许可证
-  URL:            项目主页
-  Source0:        %{name}-%{version}.tar.gz
-  ```
+# 指向 GitHub Release 的 tar.gz
+Source0:    https://github.com/owner/myapp/releases/download/v%{version}/myapp_linux_%{version}_x86_64.tar.gz
+Source1:    %{name}.desktop
+Source2:    %{name}.png
 
-  如果源码需要从 GitHub 下载，Source0 写完整 URL：
+ExclusiveArch: x86_64
 
-  ```spec
-  Source0: https://github.com/用户名/仓库名/archive/refs/tags/%{version}.tar.gz
-  ```
+# 运行时依赖
+Requires:   gtk3
 
-- **使用 tito 构建 SRPM**
+%description
+应用的详细描述。
 
-  如果项目已有 `.tito` 配置，可以用 tito 快速打包：
+%prep
+%setup -q -n %{name}
 
-  ```bash
-  # 安装 tito
-  sudo dnf install tito
+%install
+# 创建目标目录
+mkdir -p %{buildroot}%{_libdir}/%{name}
+mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{_datadir}/applications
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/1024x1024/apps
 
-  # 创建 tag（格式：软件包名-版本-释出号）
-  git tag 软件包名-0.6-1
+# 复制二进制与库文件
+cp -r * %{buildroot}%{_libdir}/%{name}/
 
-  # 构建 SRPM（--offline 跳过远程 tag 检查）
-  tito build --srpm --offline
-  ```
+# 创建符号链接到 /usr/bin
+ln -s %{_libdir}/%{name}/%{name} %{buildroot}%{_bindir}/%{name}
 
-  SRPM 生成在 `/tmp/tito/` 目录下。
+# 安装桌面文件和图标
+install -m 644 %{SOURCE1} %{buildroot}%{_datadir}/applications/
+install -m 644 %{SOURCE2} %{buildroot}%{_datadir}/icons/hicolor/1024x1024/apps/%{name}.png
 
-- **提交到 COPR**
+%files
+%{_bindir}/%{name}
+%{_libdir}/%{name}/
+%{_datadir}/applications/%{name}.desktop
+%{_datadir}/icons/hicolor/1024x1024/apps/%{name}.png
 
-  ```bash
-  copr-cli build 项目名 /tmp/tito/软件包名-0.6-1.fc44.src.rpm
-  ```
+%changelog
+* %{date} %{?packager} - %{version}-%{release}
+- 初始打包
+```
 
-## 5. 从 GitHub 直接构建
+### Java 应用（jar 类型）
 
-也可以跳过本地构建，让 COPR 直接从 GitHub 拉取源码：
+```spec
+Name:       hmcl
+Version:    3.15.2
+Release:    1%{?dist}
+Summary:    Hello Minecraft! Launcher
+License:    GPL-3.0
+URL:        https://github.com/HMCL-dev/HMCL
+Source0:    https://github.com/HMCL-dev/HMCL/releases/download/v%{version}/HMCL-%{version}.jar
+Source1:    %{name}.desktop
+Source2:    %{name}.png
+
+ExclusiveArch: x86_64
+Requires:   java
+
+%description
+HMCL 是一个 Minecraft 启动器。
+
+%prep
+%setup -q -c -T
+cp %{SOURCE0} %{name}.jar
+
+%install
+mkdir -p %{buildroot}%{_libdir}/%{name}
+mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{_datadir}/applications
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/1024x1024/apps
+
+cp %{name}.jar %{buildroot}%{_libdir}/%{name}/
+
+# 生成启动脚本
+cat > %{buildroot}%{_bindir}/%{name} << 'SCRIPT'
+#!/bin/sh
+exec java -Dglass.gtk.uiScale=1.5 -jar /usr/lib64/hmcl/hmcl.jar
+SCRIPT
+chmod +x %{buildroot}%{_bindir}/%{name}
+
+install -m 644 %{SOURCE1} %{buildroot}%{_datadir}/applications/
+install -m 644 %{SOURCE2} %{buildroot}%{_datadir}/icons/hicolor/1024x1024/apps/%{name}.png
+
+%files
+%{_bindir}/%{name}
+%{_libdir}/%{name}/
+%{_datadir}/applications/%{name}.desktop
+%{_datadir}/icons/hicolor/1024x1024/apps/%{name}.png
+```
+
+### 纯数据包（noarch，如输入法方案）
+
+```spec
+Name:       rime-ice
+Version:    2025.05.21
+Release:    1%{?dist}
+Summary:    雾凇拼音 - Rime 简体中文输入方案
+License:    GPL-3.0
+URL:        https://github.com/iDvel/rime-ice
+Source0:    https://github.com/iDvel/rime-ice/archive/refs/tags/%{version}.tar.gz
+
+BuildArch:  noarch
+Requires:   rime
+
+%description
+Rime 输入法配置方案。
+
+%prep
+%autosetup -n rime-ice-%{version}
+
+%install
+mkdir -p %{buildroot}%{_datadir}/rime-data/%{name}
+cp -r * %{buildroot}%{_datadir}/rime-data/%{name}/
+
+%post
+# 安装后自动部署到当前用户的 Rime 目录
+if [ -n "$SUDO_USER" ]; then
+    USER_HOME=$(getent passwd "$SUDO_USER" | cut -d: -f6)
+    RIME_DIR="$USER_HOME/.local/share/fcitx5/rime"
+    if [ -d "$RIME_DIR" ]; then
+        ln -sf %{_datadir}/rime-data/%{name}/* "$RIME_DIR/" 2>/dev/null || true
+    fi
+fi
+
+%files
+%{_datadir}/rime-data/%{name}/
+
+%changelog
+* %{date} %{?packager} - %{version}-%{release}
+- 初始打包
+```
+
+## 构建并上传
 
 ```bash
-copr-cli buildscm 项目名 \
-  --clone-url https://github.com/用户名/仓库名 \
-  --method rpkg \
-  --commit main
+# 1. 将 spec 和相关资源放入正确位置
+cp myapp.spec ~/rpmbuild/SPECS/
+cp myapp.desktop logo.png ~/rpmbuild/SOURCES/
+
+# 2. 构建源码包（生成 .src.rpm）
+rpmbuild -bs ~/rpmbuild/SPECS/myapp.spec
+
+# 3. 上传到 COPR
+copr-cli build apps ~/rpmbuild/SRPMS/myapp-*.src.rpm
+
+# 4. 等待 COPR 构建完成（可在网页查看）
+# https://copr.fedorainfracloud.org/coprs/你的用户名/apps/
 ```
 
-参数说明：
+## 桌面文件和元数据
 
-| 参数 | 说明 |
-| ------ | ------ |
-| `--clone-url` | git 仓库地址 |
-| `--method` | 构建方法，`rpkg` 或 `tito` |
-| `--commit` | 分支名、tag 名或提交哈希 |
-| `--spec` | spec 文件路径（默认自动查找） |
+### desktop 文件
 
-## 6. 查看构建状态
+```desktop
+[Desktop Entry]
+Name=MyApp
+Comment=应用简介
+Exec=myapp
+Icon=myapp
+Terminal=false
+Type=Application
+Categories=Utility;
+```
+
+### AppStream 元数据（可选）
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<component type="desktop-application">
+  <id>myapp</id>
+  <name>MyApp</name>
+  <summary>应用简介</summary>
+  <metadata_license>GPL-3.0</metadata_license>
+  <project_license>GPL-3.0</project_license>
+</component>
+```
+
+## 更新版本
 
 ```bash
-# 查看所有构建
-copr-cli list-builds 项目名
+# 1. 修改 spec 中的 Version 和 Release
+vim ~/rpmbuild/SPECS/myapp.spec
 
-# 监视正在进行的构建
-copr-cli watch-build 构建ID
+# 2. 下载新版 tar.gz 到 SOURCES
+curl -sL "https://github.com/owner/myapp/releases/download/v新版/...tar.gz" \
+  -o ~/rpmbuild/SOURCES/myapp_新版.tar.gz
+
+# 3. 构建并上传
+rpmbuild -bs ~/rpmbuild/SPECS/myapp.spec
+copr-cli build apps ~/rpmbuild/SRPMS/myapp-*-1.fc44.src.rpm
 ```
 
-构建成功后在 `https://copr.fedorainfracloud.org/coprs/用户名/项目名/` 可以看到仓库详情。
-
-## 7. 使用构建好的软件包
-
-启用仓库后即可安装：
+## 用户安装方式
 
 ```bash
-sudo dnf copr enable 用户名/项目名
-sudo dnf install 软件包名
+# 启用仓库
+sudo dnf copr enable 用户名/apps
+
+# 安装软件
+sudo dnf install myapp
+
+# 更新
+sudo dnf upgrade myapp
 ```
 
-## 8. 常见问题
+## 不同类型应用的打包策略
 
-- **Source0 无法下载**
+| 类型 | 打包策略 | COPR 是否合适 |
+| ------ | --------- | ------------- |
+| tar.gz 二进制（如 kazumi、splayer） | 解压到 `/usr/lib64/%{name}/`，symlink 到 `/usr/bin/` | ✅ 合适 |
+| jar（如 hmcl） | 复制 jar + 生成 shell wrapper | ✅ 合适 |
+| noarch 数据包（如 rime-ice） | 复制到 `/usr/share/`，%post 脚本部署 | ✅ 合适 |
+| 源码编译（如 Rust/C 项目） | `%build` 阶段编译 | ✅ 合适但耗时较长 |
+| AppImage | 不适合 COPR（构建环境无 FUSE，大文件易截断） | ❌ 建议 opt-mgr 本地管理 |
+| 已有 RPM | 本身就是可安装包，用 DNF 或 opt-mgr 管理 | ❌ 无需二次打包 |
 
-  原因：spec 中的 Source0 没有完整的 URL。COPR 构建环境不会自动从 git 获取源码，必须给出可下载的完整地址。
+## 注意事项
 
-  ```spec
-  # 错误写法（COPR 找不到文件）
-  Source0: %{name}-%{version}.tar.gz
-
-  # 正确写法（需要完整 URL）
-  Source0: https://github.com/用户名/仓库名/archive/refs/tags/v%{version}.tar.gz
-  ```
-
-- **chroots 错误**
-
-  创建项目时须指定 `--chroot`：
-
-  ```bash
-  copr-cli create 项目名
-  # Error: chroots: '[]' is not a valid choice
-
-  copr-cli create 项目名 --chroot fedora-44-x86_64
-  # 成功
-  ```
-
-- **Tag 不存在**
-
-  tito 需要正确的 git tag 格式。默认格式为 `软件包名-版本-释出号`：
-
-  ```bash
-  git tag dnf5-autosnapper-0.6-1
-  tito build --srpm --offline
-  ```
-
-- **配置文件中缺少节标题**
-
-  ```bash
-  # 错误配置（缺少 [copr-cli]）
-  login = xxx
-  username = xxx
-
-  # 正确配置
-  [copr-cli]
-  login = xxx
-  username = xxx
-  token = xxx
-  copr_url = https://copr.fedorainfracloud.org
-  ```
+- **依赖解析**：RPM 的 `find-requires` 会自动从 ELF 二进制扫描 soname 依赖，无需手动指定，但自带的 `.so` 需要排除（`%global _requires_exceptions lib*.so`）
+- **RPATH 清理**：Flutter 等框架打包的二进制可能嵌入 CI 机器的 RPATH，需用 `chrpath -d` 清理并设置 `$ORIGIN`
+- **COPR 构建环境**：是隔离的 mock chroot，无网络（只能访问 Source URL）、无 FUSE、无 GPU
+- **图标 URL**：GitHub 图标需用 raw 链接（`raw.githubusercontent.com` 而非 `github.com` 的 blob 页面）
