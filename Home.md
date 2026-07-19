@@ -72,7 +72,6 @@
 - [[Grub-配置grub]]
 - [[Niri-配置niri]]
 - [[Fcitx5-输入法配置]]
-- [[Wine-配置与使用.md]]
 
 ## 一些问题
 
