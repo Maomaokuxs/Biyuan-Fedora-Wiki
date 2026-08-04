@@ -153,20 +153,26 @@
     sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
     ```
 
-5. 替换掉 Fedora 自带的 flathub 仓库
+5. 替换掉 Fedora 自带的 Flatpak 仓库
 
     可以解决 Kde 桌面环境带的图形化软件商店的使用。
-
-    - 移除受限的 Fedora 仓库
-
-    ```bash
-    sudo flatpak remote-delete fedora
-    ```
 
     - 添加 Flathub 完整仓库
 
     ```bash
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    ```
+
+    - 将 Fedora Flatpak 包替换为 Flathub 上的等效包
+
+    ```bash
+    flatpak install --reinstall flathub $(flatpak list --app-runtime=org.fedoraproject.Platform --columns=application | tail -n +1 )
+    ```
+
+    - 移除受限的 Fedora 仓库
+
+    ```bash
+    sudo flatpak remote-delete fedora
     ```
 
 6. (可选) Appimage 包格式支持
@@ -192,12 +198,14 @@
 
 - 更多说明建议看：
 
+  - [[使用其他包管理器]]
   - [[Dnf-常用命令]]
   - [[更新软件包和系统]]
 
 - 参考文档：
 
   - [Fedora-Noble-Setup](https://github.com/wz790/Fedora-Noble-Setup?tab=readme-ov-file#first-things)
+  - [Reddit Fedora Wiki Flatpak](https://www.reddit.com/r/Fedora/wiki/index/flatpak/?screen_view_count=5)
 
 ---
 
@@ -207,6 +215,8 @@
 sudo hostnamectl set-hostname fedora
 # fedora 改成需要的名字
 ```
+
+---
 
 ## (可选) 配置系统级快照
 
@@ -338,7 +348,7 @@ sudo hostnamectl set-hostname fedora
 
 ---
 
-## 配置 firefox 浏览器
+## 配置 Firefox 浏览器
 
 ```text
 右上角三条横线 -> 设置 -> 主页
