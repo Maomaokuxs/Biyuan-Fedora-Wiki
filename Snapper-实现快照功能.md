@@ -1,6 +1,6 @@
 # 说明
 
-本篇文章旨在提供 snapper 使用的指南。
+本篇文章旨在提供 snapper 使用的指南，如果需要一键配置脚本可以看看这个仓库[sysguides-snapper-fedora](https://github.com/SysGuides/sysguides-snapper-fedora)。
 
 ## 1. 安装snapper，snapper-gui，btrfs-assistant等软件包
 
@@ -23,7 +23,7 @@
     - 启用第三方仓库
 
     ```bash
-    sudo dnf copr enable pego-copr/grub-btrfs
+    sudo dnf copr enable biyuan/apps
     ```
 
     - 安装 grub-btrfs 软件包
