@@ -32,7 +32,13 @@ mount /dev/nvme0n1p3 /mnt/old/
 mount /dev/nvme0n1p4 /mnt/new/
 ```
 
-## 4.发送与接收子卷
+## 4.创建只读子卷
+
+```bash
+sudo btrfs subvolume snapshot -r /mnt/old/snapper_rw /mnt/old/snapper
+```
+
+## 5.发送与接收子卷
 
 ```bash
 # 1.本地发送
@@ -72,7 +78,7 @@ sudo btrfs send /mnt/old/snapper | ssh biyuan@192.168.5.7 "sudo btrfs receive /m
 # 发送完成后输出：BTRFS_IOC_SEND returned 0
 ```
 
-## 5.替换 /home 下的子卷
+## 6.替换 /home 下的子卷
 
 ```bash
 # 1.备份当前的 home 子卷
@@ -82,7 +88,7 @@ mv /mnt/new/@home/ /mnt/new/@home_backup
 btrfs subvolume snapshot /mnt/new/snapper/ /mnt/new/@home
 ```
 
-## 6.尝试挂载并检查当前的挂载情况
+## 7.尝试挂载并检查当前的挂载情况
 
 ```bash
 # 1.尝试挂载
@@ -93,7 +99,7 @@ mount -a
 df -h
 ```
 
-## 7.登出 root 账户，登录普通账户
+## 8.登出 root 账户，登录普通账户
 
 ```bash
 # 1.卸载分区
@@ -105,7 +111,7 @@ exit
 # 3.输入用户名和密码登录普通账户
 ```
 
-## 8.重启
+## 9.重启
 
 ```bash
 reboot
