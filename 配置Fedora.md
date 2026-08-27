@@ -46,6 +46,26 @@
 
 ---
 
+## 配置字体
+
+1. 启用第三方仓库
+
+    ```bash
+    sudo dnf install --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
+    ```
+
+2. 安装常用字体包
+
+    ```bash
+    sudo dnf install jetbrains-mono-fonts-all.noarch google-noto-emoji-fonts.noarch google-noto-sans-cjk-fonts.noarch jetbrainsmono-nerd-fonts fontawesome-fonts-all sarasa-gothic-fonts
+    ```
+
+- 参考文档：
+
+  - [terra](https://terrapkg.com/)
+
+---
+
 ## 配置终端代理
 
 解决终端不能访问系统代理。
