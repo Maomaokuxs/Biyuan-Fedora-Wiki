@@ -25,7 +25,7 @@ sudo dnf install mesa-vulkan-drivers vulkan-loader  libva-utils
 替换默认驱动为 freeworld 版本以获得完整编解码器支持（H.264/HEVC）：
 
 ```bash
-sudo dnf install mesa-va-drivers mesa-vdpau-drivers-freeworld --allowerasing
+sudo dnf install mesa-va-drivers mesa-va-drivers-freeworld  --allowerasing
 ```
 
 - mesa-va-drivers， Fedora 官方仓库的 Mesa VA-API 驱动，因专利原因不含 H.264/H.265
