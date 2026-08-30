@@ -30,4 +30,9 @@ fastestmirror=True
 
 # 终端输出使用彩色字体
 color=always
+
+# 防止卡镜像
+minrate=10k      # 低于10kB/s就判为卡死
+timeout=30       # 卡30秒就切镜像
+retries=2        # 单个镜像重试2次就换
 ```
