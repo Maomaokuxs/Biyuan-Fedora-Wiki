@@ -21,6 +21,13 @@ sudo usermod -aG nixbld $USER
 nix shell nixpkgs#hello -c hello
 ```
 
+## 添加执行路径
+
+```bash
+echo 'export PATH="$HOME/.nix-profile/bin:$PATH"' >> ~/.bashrc  # zsh 则改 ~/.zshrc
+source ~/.bashrc
+```
+
 ## 常用命令
 
 | 功能 | 命令 | 备注 |
