@@ -23,8 +23,10 @@
     - 启用第三方仓库
 
     ```bash
-    sudo dnf copr enable biyuan/apps
+    sudo dnf copr enable biyuan/software
     ```
+
+    > 如果之前启用过旧仓库 `biyuan/apps`，需先移除：`sudo dnf copr remove biyuan/apps`
 
     - 安装 grub-btrfs 软件包
 
