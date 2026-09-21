@@ -399,3 +399,17 @@ sudo hostnamectl set-hostname fedora
     [[images/fedora/Fedora-configs/kde-config-1.png]]
 
 ---
+
+## 推荐软件
+
+日常：btop ncdu yt-dlp aria2 mpv bluedevil
+
+中文输入：fcitx5-autostart wqy-microhei-fonts
+
+截图：flameshot grim slurp
+
+虚拟化： qemu libvirt virt-manager virt-viewer — sudo dnf group install --with-optional virtualization 一键装
+
+游戏：steam lutris wine winetricks dosbox-staging gamescope gamemode gpu-screen-recorder
+
+---
