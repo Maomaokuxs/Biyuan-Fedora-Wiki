@@ -56,7 +56,7 @@
 
 ## 配置snapper
 
-[[Snapper-实现快照功能]]
+[Snapper-实现快照功能](../05-软件配置/Snapper-实现快照功能.md)
 
 注：在自由的系统中，需要自己确定每次执行的命令是什么功能，如果不确定使用系统快照是明智的选择。
 
@@ -66,11 +66,11 @@
 
 1. NVIDIA显卡驱动
 
-    [[安装Nvidia显卡驱动并开启硬件编解码]]
+    [安装Nvidia显卡驱动并开启硬件编解码](安装Nvidia显卡驱动并开启硬件编解码.md)
 
 2. AMD 和 Intel 显卡驱动
 
-    [[安装AMD和Intel显卡驱动]]
+    [安装AMD和Intel显卡驱动](安装AMD和Intel显卡驱动.md)
 
 - 参考文档：
 
@@ -294,7 +294,7 @@ sudo hostnamectl set-hostname fedora
 
 1. 交换 home子卷
 
-    [[Btrfs文件系统之间交换子卷]]
+    [Btrfs文件系统之间交换子卷](../06-一些问题/Btrfs文件系统之间交换子卷.md)
 
 2. (可选)将 root 和 var 子卷重命名为 @root @var
 

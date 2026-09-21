@@ -19,14 +19,14 @@
 
 - 更多说明可以看：
 
-  - [[设置时区]]
-  - [[解决与Windows系统共存的问题]]
+  - [设置时区](设置时区.md)
+  - [解决与Windows系统共存的问题](../06-一些问题/解决与Windows系统共存的问题.md)
 
 ---
 
 ## 配置分辨率、刷新率和界面缩放匹配合适的屏幕显示
 
-[[images/fedora/Fedora-configs/kde-config-3.png]]
+![](../images/fedora/Fedora-configs/kde-config-3.png)
 
 ---
 
@@ -138,7 +138,7 @@
 
 - 更多说明可以看：
 
-  - [[将Home目录中的默认中文文件夹改为英文]]
+  - [将Home目录中的默认中文文件夹改为英文](将Home目录中的默认中文文件夹改为英文.md)
 
 ---
 
@@ -218,9 +218,9 @@
 
 - 更多说明建议看：
 
-  - [[使用其他包管理器]]
-  - [[Dnf-常用命令]]
-  - [[更新软件包和系统]]
+  - [使用其他包管理器](使用其他包管理器.md)
+  - [Dnf-常用命令](../04-常用命令/Dnf-常用命令.md)
+  - [更新软件包和系统](更新软件包和系统.md)
 
 - 参考文档：
 
@@ -240,7 +240,7 @@ sudo hostnamectl set-hostname fedora
 
 ## (可选) 配置系统级快照
 
-[[Snapper-实现快照功能]]
+[Snapper-实现快照功能](../05-软件配置/Snapper-实现快照功能.md)
 
 注：在自由的系统中，需要自己确定每次执行的命令是什么功能，如果不确定使用系统快照是明智的选择。
 
@@ -250,11 +250,11 @@ sudo hostnamectl set-hostname fedora
 
 1. NVIDIA显卡驱动
 
-    [[安装Nvidia显卡驱动并开启硬件编解码]]
+    [安装Nvidia显卡驱动并开启硬件编解码](安装Nvidia显卡驱动并开启硬件编解码.md)
 
 2. AMD 和 Intel 显卡驱动
 
-    [[安装AMD和Intel显卡驱动]]
+    [安装AMD和Intel显卡驱动](安装AMD和Intel显卡驱动.md)
 
 - 参考文档：
 
@@ -264,7 +264,7 @@ sudo hostnamectl set-hostname fedora
 
 ## 添加更多的音频相关组件
 
-[[音频相关组件]]
+[音频相关组件](音频相关组件.md)
 
 ---
 
@@ -337,7 +337,7 @@ sudo hostnamectl set-hostname fedora
 
 - 更多说明建议看：
 
-  - [[Fcitx5-输入法配置]]
+  - [Fcitx5-输入法配置](../05-软件配置/Fcitx5-输入法配置.md)
 
 ---
 
@@ -376,11 +376,11 @@ sudo hostnamectl set-hostname fedora
 
 1. (可选) 移除 Fedora 官方创建的标签页
 
-    [[/images/fedora/Fedora-configs/firefox-config-1.png]]
+    ![](../images/fedora/Fedora-configs/firefox-config-1.png)
 
 2. 更改搜索引擎为 Bing
 
-    [[/images/fedora/Fedora-configs/firefox-config-2.png]]
+    ![](../images/fedora/Fedora-configs/firefox-config-2.png)
 
 ---
 
@@ -392,11 +392,11 @@ sudo hostnamectl set-hostname fedora
 
 1. 修改显示和监视器设置
 
-    [[images/fedora/Fedora-configs/kde-config-2.png]]
+    ![](../images/fedora/Fedora-configs/kde-config-2.png)
 
 2. 关闭将鼠标移动至左上角屏幕边缘开启窗口平铺展示
 
-    [[images/fedora/Fedora-configs/kde-config-1.png]]
+    ![](../images/fedora/Fedora-configs/kde-config-1.png)
 
 ---
 

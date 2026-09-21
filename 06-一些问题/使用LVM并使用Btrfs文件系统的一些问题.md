@@ -7,7 +7,7 @@
 
 ## 0. 当前分区情况
 
-[[images/fedora/LVM-btrfs/disk-status-1.png]]
+![](../images/fedora/LVM-btrfs/disk-status-1.png)
 
 ## 1. 扩大容量
 
@@ -36,7 +36,7 @@ sudo btrfs filesystem resize max /
 
 - **扩容后分区挂载情况**
   
-  [[images/fedora/LVM-btrfs/disk-status-2.png]]
+  ![](../images/fedora/LVM-btrfs/disk-status-2.png)
 
 ## 2.缩小容量
 
@@ -85,7 +85,7 @@ sudo pvs
 
 - **缩小容量后**
   
-  [[images/fedora/LVM-btrfs/disk-status-3.png]]
+  ![](../images/fedora/LVM-btrfs/disk-status-3.png)
 
 ## 3. (可选) 将 LVM 管理下 btrfs 子卷发送至新的系统，或将其中的文件备份
 

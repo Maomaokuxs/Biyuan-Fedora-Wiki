@@ -71,7 +71,7 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsU
 
 - **解决办法**
 
-- 最简单的就是直接将安全启动关闭，如果有需要可以安装完之后看 [[实现安全启动]]来实现相关功能。
+- 最简单的就是直接将安全启动关闭，如果有需要可以安装完之后看 [实现安全启动](../03-系统配置/实现安全启动.md)来实现相关功能。
 
 - 如果你就是要不关闭安全启动去安装系统，那么使用用官方的 U 盘制作工具[Fedora Media Writer](https://docs.fedoraproject.org/en-US/fedora/latest/preparing-boot-media/#fedora_media_writer)。
 
