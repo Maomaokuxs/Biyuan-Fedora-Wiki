@@ -12,27 +12,20 @@ sudo vim /etc/dnf/dnf.conf
 
 ```bash
 [main]
-
-# 开启 RPM 包的 GPG 签名验证,防止软件包在传输过程中被篡改或源被劫持
+# RPM 包 GPG 签名验证（Fedora 默认 True）
 gpgcheck=True
-
-# 限制系统同时保留的内核（Kernel）最大数量
+# 同时保留的内核数量（Fedora 默认 3）
 installonly_limit=3
-
-# 卸载软件时，自动清理因其而被引入、但现在已无用的依赖包（孤立包）
+# 卸载时自动清理孤立依赖（Fedora 默认 True）
 clean_requirements_on_remove=True
-
-# 开启最高并行下载数（默认是 3，最大 20）
+# 并行下载数
 max_parallel_downloads=10
-
-# 自动选择最快镜像源
+# 自动选择最快镜像
 fastestmirror=True
-
-# 终端输出使用彩色字体
+# 终端彩色输出
 color=always
-
-# 防止卡镜像
-minrate=10k      # 低于10kB/s就判为卡死
-timeout=30       # 卡30秒就切镜像
-retries=2        # 单个镜像重试2次就换
+# 防止卡镜像：速度低于 10kB/s 持续 30 秒则切换
+minrate=10k
+timeout=30
+retries=2
 ```
