@@ -326,22 +326,17 @@ fc-cache -fv
 
 ---
 
-## 安装软件
+## 推荐软件
 
 ```bash
-fastfetch
-awww
-waypaper
-rofi
-waypaper
-hyprlock
-hypridle
-starship
-firfox
-nvim
-codium
-hellwal
-mako
-gnome-text-editor
-polkit-kde
+fastfetch 系统信息快速打印到终端的工具。
+awww      无缝切换壁纸的工具。
+waypaper  壁纸选择工具，支持多种后端。
+rofi      功能强大的应用启动器。
+hyprlock  锁屏工具。
+hypridle  休眠工具。
+starship  命令行提示符美化工具。
+nvim      流行的文本编辑器。
+hellwal   取色工具。
+mako      通知工具。
 ```
